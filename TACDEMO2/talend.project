@@ -182,21 +182,6 @@
       <relatedItems xmi:id="_jL9cqfRKEeqA8dkdHUapAQ" id="TalendStringUtil" version="Latest" type="routine"/>
       <relatedItems xmi:id="_jL9cqvRKEeqA8dkdHUapAQ" id="dateTime" version="Latest" type="routine"/>
     </ItemsRelations>
-    <ItemsRelations xmi:id="_jL9cq_RKEeqA8dkdHUapAQ">
-      <baseItem xmi:id="_jL9crPRKEeqA8dkdHUapAQ" id="_BYgnsBcDEeirjtGFD12bww" version="0.1" type="job"/>
-      <relatedItems xmi:id="_jL9crfRKEeqA8dkdHUapAQ" id="_WbpZgJiWEeaCzqXdxfBdjw" version="Latest" type="context"/>
-      <relatedItems xmi:id="_jL9crvRKEeqA8dkdHUapAQ" id="_5ARsEIpiEeOffO5TDztmGA" version="Latest" type="job"/>
-      <relatedItems xmi:id="_jL9cr_RKEeqA8dkdHUapAQ" id="Numeric" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9csPRKEeqA8dkdHUapAQ" id="Relational" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9csfRKEeqA8dkdHUapAQ" id="TalendString" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9csvRKEeqA8dkdHUapAQ" id="UUID" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9cs_RKEeqA8dkdHUapAQ" id="TalendStringUtil" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9ctPRKEeqA8dkdHUapAQ" id="DataOperation" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9ctfRKEeqA8dkdHUapAQ" id="StringHandling" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9ctvRKEeqA8dkdHUapAQ" id="TalendDataGenerator" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9ct_RKEeqA8dkdHUapAQ" id="TalendDate" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_jL9cuPRKEeqA8dkdHUapAQ" id="Mathematical" version="Latest" type="routine"/>
-    </ItemsRelations>
     <ItemsRelations xmi:id="_jL9cufRKEeqA8dkdHUapAQ">
       <baseItem xmi:id="_jL9cuvRKEeqA8dkdHUapAQ" id="_NbUQUJOKEeqz7tH_MAohag" version="0.1" type="job"/>
       <relatedItems xmi:id="_jL9cu_RKEeqA8dkdHUapAQ" id="_WbpZgJiWEeaCzqXdxfBdjw" version="Latest" type="context"/>
@@ -230,7 +215,6 @@
       <relatedItems xmi:id="_jL9c1vRKEeqA8dkdHUapAQ" id="TalendDate" version="Latest" type="routine"/>
       <relatedItems xmi:id="_jL9c1_RKEeqA8dkdHUapAQ" id="Mathematical" version="Latest" type="routine"/>
     </ItemsRelations>
-    <deletedFolders>process/Spanset/US/ERP/sik</deletedFolders>
     <migrationTask xmi:id="_z43mIPRHEeqA8dkdHUapAQ" id="org.talend.repository.localprovider.RemoveRoutineFolderTask" breaks="5.1.1" version="5.1.2" status="noimpact"/>
     <migrationTask xmi:id="_z43mIfRHEeqA8dkdHUapAQ" id="org.talend.repository.localprovider.model.migration.ChangeXmiSerialization" breaks="5.1.1" version="5.1.2" status="noimpact"/>
     <migrationTask xmi:id="_z43mIvRHEeqA8dkdHUapAQ" id="org.talend.repository.model.migration.CleanFoldersMigrationTask" breaks="5.1.1" version="5.1.2" status="noimpact"/>
