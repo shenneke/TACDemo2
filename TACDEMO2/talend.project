@@ -268,16 +268,7 @@
       <relatedItems xmi:id="_71MhwPSCEeqO4cNnRDAtpw" id="Relational" version="Latest" type="routine"/>
       <relatedItems xmi:id="_71MhwfSCEeqO4cNnRDAtpw" id="TalendStringUtil" version="Latest" type="routine"/>
       <relatedItems xmi:id="_71MhwvSCEeqO4cNnRDAtpw" id="dateTime" version="Latest" type="routine"/>
-      <relatedItems xmi:id="_71Mhw_SCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - meetings_cstm" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71MhxPSCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - notes" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71MhxfSCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - document_revisions" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71MhxvSCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - users_signatures" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71Mhx_SCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - tasks" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71MhyPSCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - emails_text" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71MhyfSCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - meetings" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71MhyvSCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - emails" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71Mhy_SCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - calls" version="Latest" type="schema"/>
-      <relatedItems xmi:id="_71MhzPSCEeqO4cNnRDAtpw" id="_Qvw5gE4BEeichvYNIA_s-g - documents" version="Latest" type="schema"/>
+      <relatedItems xmi:id="_cTSksPSDEeqO4cNnRDAtpw" id="SQLike" version="Latest" type="routine"/>
     </ItemsRelations>
     <ItemsRelations xmi:id="_727nEPSCEeqO4cNnRDAtpw">
       <baseItem xmi:id="_727nEfSCEeqO4cNnRDAtpw" id="_5ARsEIpiEeOffO5TDztmGA" version="1.0" type="job"/>
