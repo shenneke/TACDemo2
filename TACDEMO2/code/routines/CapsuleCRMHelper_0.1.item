@@ -1,0 +1,130 @@
+package routines;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+
+public class CapsuleCRMHelper {
+	static String LOGLINEHEADER = "NOUNIQUEID NOHOST ";
+
+	/**
+	 * This Method getAttachment will download Attachments to CapsuleCRM Objects
+	 * 
+	 * @param resourceUrlTmp
+	 *            the resourceUrl without the Fieldname
+	 *
+	 * @param token
+	 *            to access SugarCRM
+	 *
+	 * @param fileName
+	 *            to upload
+	 *
+	 * @param fieldname
+	 *            in SugarCRM where the file is linked
+	 *
+	 * @since 1.00
+	 */
+	public static String getAttachment(String resource_url_tpl, String token,
+			String attachmentID, String attachmentFilePath) {
+		// TODO Auto-generated method stub
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("CasuleCRMHelper.getAttachment");
+
+		logger4j.debug(LOGLINEHEADER + " -- Start  -- ");
+		logger4j.debug(LOGLINEHEADER + " -- resource_url_tpl  ---"
+				+ resource_url_tpl + "---");
+		logger4j.debug(LOGLINEHEADER + " -- token  ---" + token + "---");
+		logger4j.debug(LOGLINEHEADER + " -- attachmentFilePath  ---"
+				+ attachmentFilePath + "---");
+		logger4j.debug(LOGLINEHEADER + " -- attachmentID  ---" + attachmentID
+				+ "---");
+
+		String resource_url_tpl_fin = resource_url_tpl + attachmentID;
+
+		logger4j.debug(LOGLINEHEADER + " -- resource_url_tpl_fin  ---"
+				+ resource_url_tpl_fin + "---");
+
+		if (resource_url_tpl_fin != null && !resource_url_tpl_fin.isEmpty()
+				&& token != null && !token.isEmpty() && attachmentID != null
+				&& !attachmentID.isEmpty() && attachmentFilePath != null
+				&& !attachmentFilePath.isEmpty()) {
+			try {
+				HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+						resource_url_tpl_fin).openConnection());
+				resource_cxn.addRequestProperty("Authorization", "Bearer "
+						+ token);
+				resource_cxn.setConnectTimeout(50000000);
+				resource_cxn.setReadTimeout(60000000);
+				resource_cxn.setDoOutput(true);
+				resource_cxn.setDoInput(true);
+				resource_cxn.setRequestMethod("GET");
+				resource_cxn.setRequestProperty("Accept", "*/*;charset=UTF-8");
+				resource_cxn.setRequestProperty("Connection", "keep-alive");
+				resource_cxn.setRequestProperty("Cache-Control",
+						"no-cache, private");
+
+				logger4j.debug(LOGLINEHEADER + "resource_cxn : " + resource_cxn);
+				// read the response
+
+				int response = resource_cxn.getResponseCode();
+				logger4j.debug(LOGLINEHEADER + "response : " + response);
+				String attachmentDir = null;
+				String regEx = null;
+				if (attachmentFilePath.contains("\\")) {
+					regEx = "\\\\(?=[^\\\\]+$)";
+				} else {
+					regEx = "/(?=[^/]+$)";
+				}
+
+				String[] tokens = attachmentFilePath.split(regEx);
+				if (tokens.length > 0)
+					attachmentDir = tokens[0];
+				logger4j.debug(LOGLINEHEADER + "attachmentDir : "
+						+ attachmentDir);
+				boolean isDirectoryCreated = (new File(attachmentDir)).mkdirs();
+				if (isDirectoryCreated) {
+					// write File
+					try {
+						logger4j.debug(LOGLINEHEADER + " create File  : "
+								+ attachmentFilePath);
+						InputStream inputStream = resource_cxn.getInputStream();
+						OutputStream outputStream = new FileOutputStream(
+								attachmentFilePath);
+
+						byte[] buffer = new byte[10 * 1024];
+
+						for (int length; (length = inputStream.read(buffer)) != -1;) {
+							outputStream.write(buffer, 0, length);
+						}outputStream
+						.close();
+						logger4j.debug(LOGLINEHEADER + "Attachment file Path : "
+								+ attachmentFilePath + " created ") ;
+					} catch (FileNotFoundException exception) {
+						logger4j.error(LOGLINEHEADER
+								+ "FileNotFoundException : "
+								+ exception.toString());
+						        return "Error";
+					} catch (IOException ioException) {
+						logger4j.error(LOGLINEHEADER + "ioException : "
+								+ ioException.toString());
+						        return "Error";
+					}
+
+				}
+
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.error(LOGLINEHEADER + " Error : " + e.toString());
+				return "Error";
+			}
+		}
+		return "Success";
+	}
+}

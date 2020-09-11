@@ -1,0 +1,5311 @@
+package routines;
+
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.regex.Pattern;
+
+import org.apache.oltu.oauth2.client.OAuthClient;
+import org.apache.oltu.oauth2.client.HttpClient;
+import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
+import org.codehaus.jettison.json.JSONException;
+import org.apache.oltu.oauth2.common.message.types.GrantType;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import jdk.nashorn.internal.ir.CaseNode;
+
+import org.joda.time.LocalDateTime;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+public class JoblokalHelper {
+	static final int CONNECTION_TIMEOUT = 600000;
+	static final int READ_TIMEOUT = 600000;
+
+	private static final Pattern EMAIL = Pattern
+			.compile("^[a-zA-Z0-9][\\w\\.-_\\-]*[a-zA-Z0-9_\\-]@"
+					+ "[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$");
+
+	public static final String LOGLINEHEADERINIT = "NOUNIQUEID NOHOST";
+
+	private static final int ID = 0;
+	private static final int NAME = 1;
+	private static final int EMAIL1 = 2;
+	private static final int WEBSITE = 3;
+	private static final int BILLING_ADDRESS_POSTALCODE = 4;
+	private static final int BILLING_ADDRESS_STREET = 5;
+
+	/**
+	 * This Method checks if the E-Mail Address is valid.
+	 * 
+	 * {talendTypes} Boolean
+	 *
+	 * {Category} SpansetHelper
+	 *
+	 * {param} string("E-Mail Address") input: The emailAddress as String.
+	 *
+	 * {example} isValidEmail("stefan.henneke@provalida.de") # true.
+	 */
+	public static Boolean isValidEmail(String emailAddress) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.isValidEmail");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		emailAddress = emailAddress.replaceAll("^\\s*", "");
+		emailAddress = emailAddress.replaceAll("\\s*$", "");
+		logger4j.trace(loglineheader
+				+ " EMAIL.matcher(emailAdresse).matches(); "
+				+ EMAIL.matcher(emailAddress).matches());
+		return EMAIL.matcher(emailAddress).matches();
+	}
+
+	/**
+	 * This Method converts the Webservice Error Message back to normal and
+	 * truncates Message.
+	 * 
+	 * @param errorMsg
+	 *            error message from Webservice
+	 * 
+	 * @return errorMsg error message for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static Date dateParser2(String dateTimeString, String dateFormat) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.dateParser2");
+
+		String loglineheader = " routine run ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (dateTimeString == null) {
+			return null;
+		}
+		Date currentDate = new Date();
+		Date datum = currentDate;
+		logger4j.debug(loglineheader + "Parsing Date ##" + dateTimeString
+				+ "##");
+		logger4j.debug(loglineheader + "Parsing Format ##" + dateFormat + "##");
+		// System.out.println("Parsing ##" + dateTimeString + "##");
+		try {
+			// datum = (new
+			// SimpleDateFormat("yyyy-MM-dd")).parse(dateTimeString);
+			datum = (new SimpleDateFormat(dateFormat)).parse(dateTimeString);
+			logger4j.debug(loglineheader + "Parse Date" + datum);
+		} catch (Exception e) {
+			logger4j.error(loglineheader + "Error Parse Date" + e.toString());
+		}
+		return datum;
+	}
+
+	/**
+	 * This Method converts the Webservice Error Message back to normal and
+	 * truncates Message.
+	 * 
+	 * @param errorMsg
+	 *            error message from Webservice
+	 * 
+	 * @return errorMsg error message for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String convertWSError(String errorMsg, int anzahl) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.convertWSError");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (errorMsg != null) {
+			errorMsg = errorMsg.replaceAll("###", ";");
+			errorMsg = errorMsg.replaceAll("\\|\\|\\|", "\n");
+		}
+		return truncateMSG(errorMsg, anzahl);
+	}
+
+	/**
+	 * This Method converts the Webservice Error Message back to normal and
+	 * truncates Message.
+	 * 
+	 * @param errorMsg
+	 *            error message from Webservice
+	 * 
+	 * @return errorMsg error message for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkSelection(String input) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkSelection");
+		String loglineheader = "EPS_Test_Run";
+		Boolean returnval = false;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (input != null) {
+			input = input.replaceAll(" ", "");
+			if (input.equalsIgnoreCase("x")) {
+				returnval = true;
+			}
+		}
+		return returnval;
+	}
+
+	/**
+	 * This Method truncates Message .
+	 * 
+	 * @param message
+	 *            message talend
+	 * 
+	 * @return message truncated message
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateMSG(String message, int anzahl) {
+		if (message != null && message.length() > anzahl) {
+			return message.substring(0, anzahl - 1);
+		}
+		return message;
+	}
+
+	public static String cleanEmail(String emailAddress) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.cleanEmail");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.trace(loglineheader + " emailAddress ---" + emailAddress
+				+ "---");
+		emailAddress = emailAddress.replaceAll("^\\s*", "");
+		emailAddress = emailAddress.replaceAll("\\s*$", "");
+		logger4j.trace(loglineheader + " emailAddress ---" + emailAddress
+				+ "---");
+		return emailAddress;
+	}
+
+	/**
+	 * This Method checks if it is a Valid (single) Resource Code from Planview
+	 *
+	 * @param lastWorkPlanid
+	 *            last workplanid
+	 *
+	 * @param currentWorkPlanid
+	 *            currentWorkplanId
+	 * 
+	 * @param sequence
+	 *            currentSequnce
+	 * 
+	 * @return sequence next sequence
+	 *
+	 * @since 1.00
+	 */
+	public static BigDecimal addSequence(BigDecimal lastWorkPlanid,
+			BigDecimal currentWorkPlanid, BigDecimal sequence) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.addSequence");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.trace(loglineheader + " sequence ---" + sequence + "---");
+		if (lastWorkPlanid != currentWorkPlanid) {
+			sequence = new BigDecimal("0");
+		} else {
+			sequence = sequence.add(new BigDecimal("1"));
+		}
+		logger4j.trace(loglineheader + " sequence ---" + sequence + "---");
+		return sequence;
+	}
+
+	/**
+	 * This Method Resets the CHILD_TASK_SEQ Hash.
+	 * 
+	 * @param hashMapUsers
+	 *            CHILD_TASK_SEQ
+	 * @return hashMapUsers CHILD_TASK_SEQ
+	 */
+	public static HashMap resetChildTaskSeq2(Object chidlTaskSeq_ob,
+			String depth, String lastdepth) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.resetChildTaskSeq");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> chidlTaskSeq = new HashMap<String, BigDecimal>();
+		try {
+			chidlTaskSeq = (HashMap<String, BigDecimal>) chidlTaskSeq_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ chidlTaskSeq_ob);
+			return null;
+		}
+
+		Integer depthInt = Integer.parseInt(depth);
+		Integer lastdepthInt = Integer.parseInt(lastdepth);
+
+		if (lastdepthInt.compareTo(depthInt) > 0
+				&& !"6".equalsIgnoreCase(depth)) {
+			switch (depth) {
+			case "7":
+				chidlTaskSeq.put("8", new BigDecimal("0"));
+			case "8":
+				chidlTaskSeq.put("9", new BigDecimal("0"));
+			case "9":
+				chidlTaskSeq.put("10", new BigDecimal("0"));
+				break;
+			default:
+				break;
+			}
+		} else if ("6".equalsIgnoreCase(depth)) {
+			chidlTaskSeq.put("6", null);
+			chidlTaskSeq.put("7", new BigDecimal("0"));
+			chidlTaskSeq.put("8", new BigDecimal("0"));
+			chidlTaskSeq.put("9", new BigDecimal("0"));
+			chidlTaskSeq.put("10", new BigDecimal("0"));
+		}
+
+		return chidlTaskSeq;
+	}
+
+	/**
+	 * This Method Resets the CHILD_TASK_SEQ Hash.
+	 * 
+	 * @param hashMapUsers
+	 *            CHILD_TASK_SEQ
+	 * @return hashMapUsers CHILD_TASK_SEQ
+	 */
+	public static HashMap resetChildTaskSeq(Object chidlTaskSeq_ob) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.resetChildTaskSeq");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> chidlTaskSeq = new HashMap<String, BigDecimal>();
+		try {
+			chidlTaskSeq = (HashMap<String, BigDecimal>) chidlTaskSeq_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ chidlTaskSeq_ob);
+			return null;
+		}
+
+		chidlTaskSeq.put("6", null);
+		chidlTaskSeq.put("7", new BigDecimal("0"));
+		chidlTaskSeq.put("8", new BigDecimal("0"));
+		chidlTaskSeq.put("9", new BigDecimal("0"));
+		chidlTaskSeq.put("10", new BigDecimal("0"));
+
+		return chidlTaskSeq;
+	}
+
+	/**
+	 * This Method Resets the CHILD_TASK_SEQ Hash.
+	 * 
+	 * @param hashMapUsers
+	 *            CHILD_TASK_SEQ
+	 * @return hashMapUsers CHILD_TASK_SEQ
+	 */
+	public static HashMap setChildTaskSeq(Object chidlTaskSeq_ob, String Depth) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.setChildTaskSeq");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> chidlTaskSeq = new HashMap<String, BigDecimal>();
+		try {
+			chidlTaskSeq = (HashMap<String, BigDecimal>) chidlTaskSeq_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ chidlTaskSeq_ob);
+			return null;
+		}
+		logger4j.info(loglineheader + " -- chidlTaskSeq  -- " + chidlTaskSeq);
+		logger4j.info(loglineheader + " -- Depth  -- " + Depth);
+		if (!("6").equalsIgnoreCase(Depth)) {
+			chidlTaskSeq.put(Depth,
+					chidlTaskSeq.get(Depth).add(new BigDecimal("1")));
+		}
+		;
+
+		return chidlTaskSeq;
+	}
+
+	/**
+	 * This Method checks if it is a Valid (single) Resource Code from Planview
+	 *
+	 * @param hashMapUsers
+	 *            User Hash Map Users from PPM (already set before)
+	 *
+	 * @param ressourceCode
+	 *            ressourceCode from Planview
+	 *
+	 * @return Boolean true if the Resource is found in the Hash, else false
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean isValidUserID(Object hashMapUsers,
+			String ressourceCode, Boolean required) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.isValidUserID");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		if (ressourceCode == null) {
+			return !required;
+		}
+
+		if (getUserID(hashMapUsers, ressourceCode) == null) {
+			return !required;
+		}
+		return true;
+	}
+
+	/**
+	 * This Method returns single user_id, for the PPM DB as string over
+	 * Resource Code from Planview
+	 *
+	 * @param hashMapUsers
+	 *            User Hash Map Users from PPM/Planview Join (already set
+	 *            before)
+	 *
+	 * @param ressourceCode
+	 *            ressourceCode from Planview
+	 *
+	 * @return User_id as String,
+	 *
+	 * @since 1.00
+	 */
+	public static String getUserIDString(Object hashMapUsers,
+			String ressourceCode) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getUserIDString");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		if (ressourceCode == null) {
+			return null;
+		}
+
+		if (getUserID(hashMapUsers, ressourceCode) == null) {
+			return null;
+		}
+		return getUserID(hashMapUsers, ressourceCode).toString();
+	}
+
+	/**
+	 * This Method returns single user_id, for the PPM DB over Resource Code
+	 * from Planview
+	 *
+	 * @param hashMapUsers
+	 *            User Hash Map Users from PPM/Planview Join (already set
+	 *            before)
+	 *
+	 * @param ressourceCode
+	 *            ressourceCode from Planview
+	 *
+	 * @return BigDecimal user_id, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static BigDecimal getUserID(Object hashMapUsers, String ressourceCode) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getUserID");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> userIdHash = new HashMap<String, BigDecimal>();
+
+		if (ressourceCode == null) {
+			return null;
+		}
+
+		try {
+			userIdHash = (HashMap<String, BigDecimal>) hashMapUsers;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ hashMapUsers);
+			return null;
+		}
+
+		BigDecimal ressourceCodeID = userIdHash.get(ressourceCode);
+
+		logger4j.trace(loglineheader + " -- hashMapUsers  -- " + hashMapUsers);
+		logger4j.trace(loglineheader + " -- ressourceCode ---- "
+				+ ressourceCode);
+		logger4j.trace(loglineheader + " -- ressourceCodeID ---- "
+				+ ressourceCodeID);
+
+		return ressourceCodeID;
+	}
+
+	/**
+	 * TThis Method returns single user_name, for the PPM DB over Resource Code
+	 * from Planview
+	 *
+	 * @param hashMapUsers
+	 *            User Hash Map Users from PPM (already set before)
+	 *
+	 * @param ressourceCode
+	 *            ressourceCode from Planview
+	 *
+	 * @return user_name, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static String getUserName(Object hashMapUsers, String ressourceCode) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getUserName");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> userNameHash = new HashMap<String, String>();
+
+		if (ressourceCode == null) {
+			return null;
+		}
+
+		try {
+			userNameHash = (HashMap<String, String>) hashMapUsers;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ hashMapUsers);
+			return null;
+		}
+
+		String ressourceName = userNameHash.get(ressourceCode);
+
+		logger4j.trace(loglineheader + " -- hashMapUsers  -- " + hashMapUsers);
+		logger4j.trace(loglineheader + " -- ressourceCode ---- "
+				+ ressourceCode);
+		logger4j.trace(loglineheader + " -- ressourceName ---- "
+				+ ressourceName);
+
+		return ressourceName;
+	}
+
+	/**
+	 * This Method returns the valid Fiscal Period ID , for the PPM DB over
+	 * stat- and enddate from Planview Project
+	 *
+	 * @param hasMapFiscalPeriods
+	 *            Fiscal Periods Hash Map from PPM (already set before)
+	 *
+	 * @param ficalPeriodDate
+	 *            project, startDate from Planview
+	 *
+	 * @return ficalPeriodID, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean getFiscalPeriodIDValid(Object hasMapFiscalPeriods,
+			Date ficalPeriodDate, Boolean required) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getFiscalPeriodIDValid");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		if (ficalPeriodDate == null) {
+			return !required;
+		}
+
+		if (getFiscalPeriodID(hasMapFiscalPeriods, ficalPeriodDate) == null) {
+			return !required;
+		}
+		return true;
+	}
+
+	/**
+	 * This Method returns the valid Fiscal Period ID , for the PPM DB over
+	 * stat- and enddate from Planview Project
+	 *
+	 * @param hasMapFiscalPeriods
+	 *            Fiscal Periods Hash Map from PPM (already set before)
+	 *
+	 * @param ficalPeriodDate
+	 *            project, startDate from Planview
+	 *
+	 * @return ficalPeriodID, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static BigDecimal getFiscalPeriodID(Object hashMapFiscalPeriods,
+			Date ficalPeriodDate) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getFiscalPeriodID");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> fiscalPeriods_id_hash = new HashMap<String, BigDecimal>();
+
+		if (ficalPeriodDate == null) {
+			return null;
+		}
+
+		try {
+			fiscalPeriods_id_hash = (HashMap<String, BigDecimal>) hashMapFiscalPeriods;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ hashMapFiscalPeriods);
+			return null;
+		}
+		DateFormat df = new SimpleDateFormat("MM.yyyy");
+		String ficalPeriodDateStr = df.format(ficalPeriodDate);
+
+		BigDecimal ficalPeriodDateID = fiscalPeriods_id_hash
+				.get(ficalPeriodDateStr);
+		/*
+		 * temporarry delete later start if (ficalPeriodDateID == null) {
+		 * ficalPeriodDateID = new BigDecimal("35860"); } ; temporarry delete
+		 * later end
+		 */
+		logger4j.trace(loglineheader + " -- hasMapFiscalPeriods  -- "
+				+ hashMapFiscalPeriods);
+		logger4j.trace(loglineheader + " -- ficalPeriodDate ---- "
+				+ ficalPeriodDate);
+		logger4j.trace(loglineheader + " -- ficalPeriodDateID ---- "
+				+ ficalPeriodDateID);
+
+		return ficalPeriodDateID;
+	}
+
+	/**
+	 * This Method returns the valid Fiscal Period Name , for the PPM DB over
+	 * stat- and enddate from Planview Project
+	 *
+	 * @param hasMapFiscalPeriods
+	 *            Fiscal Periods Hash Map from PPM (already set before)
+	 *
+	 * @param ficalPeriodDate
+	 *            project, startDate from Planview
+	 *
+	 * @return ficalPeriodDateString, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static String getFiscalPeriodString(Object hasMapFiscalPeriods,
+			Date ficalPeriodDate) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getFiscalPeriodString");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> fiscalPeriods_String_hash = new HashMap<String, String>();
+
+		if (ficalPeriodDate == null) {
+			return null;
+		}
+
+		try {
+			fiscalPeriods_String_hash = (HashMap<String, String>) hasMapFiscalPeriods;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ hasMapFiscalPeriods);
+			return null;
+		}
+		DateFormat df = new SimpleDateFormat("MM.yyyy");
+		String ficalPeriodDateStr = df.format(ficalPeriodDate);
+
+		logger4j.trace(loglineheader + " -- fiscalPeriods_String_hash -- "
+				+ fiscalPeriods_String_hash);
+
+		logger4j.trace(loglineheader + " -- ficalPeriodDateStr -- "
+				+ ficalPeriodDateStr);
+
+		String ficalPeriodDateString = fiscalPeriods_String_hash
+				.get(ficalPeriodDateStr);
+
+		logger4j.trace(loglineheader + " -- ficalPeriodDateString -- "
+				+ ficalPeriodDateString);
+
+		/*
+		 * temporarry delete later start if (ficalPeriodDateString == null) {
+		 * ficalPeriodDateString = "Dezember 2010"; } ; temporarry delete later
+		 * end
+		 */
+
+		logger4j.trace(loglineheader + " -- hasMapFiscalPeriods  -- "
+				+ hasMapFiscalPeriods);
+		logger4j.trace(loglineheader + " -- ficalPeriodDate ---- "
+				+ ficalPeriodDate);
+		logger4j.trace(loglineheader + " -- ficalPeriodDateID ---- "
+				+ ficalPeriodDateString);
+
+		return ficalPeriodDateString;
+	}
+
+	/**
+	 * This Method returns the items witch are not in the lookup PPM ArrayList,
+	 * for Error Handling
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return items witch are not in the lookup PPM ArrayList
+	 *
+	 * @since 1.00
+	 */
+	public static String checkPLVlkp(Object lookupPPMArrayList_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkPLVlkp");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList_ob ---- "
+				+ lookupPPMArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated ---- "
+				+ lookupPLVcommaSeparated);
+		List<String> items = Arrays.asList(lookupPLVcommaSeparated
+				.split("\\s*,\\s*"));
+		ArrayList<String> lookupPPMArrayList = (ArrayList<String>) lookupPPMArrayList_ob;
+		for (String item : items) {
+			item = item.replaceAll("^\\s*", "");
+			item = item.replaceAll("\\s*$", "");
+			Boolean isValue = false;
+			for (String itemx : lookupPPMArrayList) {
+				itemx = itemx.replaceAll("^\\s*", "");
+				itemx = itemx.replaceAll("\\s*$", "");
+				if (itemx.equalsIgnoreCase(item)) {
+					isValue = true;
+				}
+			}
+			if (!isValue) {
+				return item;
+			}
+			/*
+			 * if (!lookupPPMArrayList.contains(item)) { return item; }
+			 */
+		}
+		return "";
+	}
+
+	/**
+	 * This Method returns the items witch are not in the lookup PPM ArrayList,
+	 * for Error Handling
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return items witch are not in the lookup PPM ArrayList
+	 *
+	 * @since 1.00
+	 */
+	public static String checkPLVlkpSingle(Object lookupPPMArrayList_ob,
+			String lookupPLV) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkPLVlkpSingle");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPLV == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList_ob ---- "
+				+ lookupPPMArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLV ---- " + lookupPLV);
+		ArrayList<String> lookupPPMArrayList = (ArrayList<String>) lookupPPMArrayList_ob;
+		lookupPLV = lookupPLV.replaceAll("^\\s*", "");
+		lookupPLV = lookupPLV.replaceAll("\\s*$", "");
+		Boolean isValue = false;
+		for (String itemx : lookupPPMArrayList) {
+			itemx = itemx.replaceAll("^\\s*", "");
+			itemx = itemx.replaceAll("\\s*$", "");
+			if (itemx.equalsIgnoreCase(lookupPLV)) {
+				isValue = true;
+			}
+		}
+		if (!isValue) {
+			return lookupPLV;
+		}
+		return "";
+	}
+
+	/**
+	 * This Method returns the a Multiple checkPLVlkpRes, for the PPM DB
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            lookup Planview ArrayList from Resources (already set before)
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return Resources witch are not in the lookup PPM ArrayList
+	 *
+	 * @since 1.00
+	 */
+	public static String checkPLVlkpRes(Object lookupPVLPPMResArrayList_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkPLVlkpRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- lookupPVLPPMResArrayList_ob  -- "
+				+ lookupPVLPPMResArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated ---- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader
+				+ " -- Result "
+				+ checkPLVlkp(lookupPVLPPMResArrayList_ob,
+						lookupPLVcommaSeparated));
+
+		return checkPLVlkp(lookupPVLPPMResArrayList_ob, lookupPLVcommaSeparated);
+	}
+
+	/**
+	 * This Method returns the a Multiple checkPLVlkpRes, for the PPM DB
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            lookup Planview ArrayList from Resources (already set before)
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return Resources witch are not in the lookup PPM ArrayList
+	 *
+	 * @since 1.00
+	 */
+	public static String checkPLVlkpResOld(Object lookupPVLResArrayList_ob,
+			Object lookupPPMArrayList_ob, String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkPLVlkpRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- lookupPVLResArrayList_ob  -- "
+				+ lookupPVLResArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList_ob ---- "
+				+ lookupPPMArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated ---- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader
+				+ " -- converter ---- "
+				+ convertRessource(lookupPVLResArrayList_ob,
+						lookupPLVcommaSeparated));
+		logger4j.trace(loglineheader
+				+ " -- Result "
+				+ checkPLVlkp(
+						lookupPPMArrayList_ob,
+						convertRessource(lookupPVLResArrayList_ob,
+								lookupPLVcommaSeparated)));
+
+		return checkPLVlkp(
+				lookupPPMArrayList_ob,
+				convertRessource(lookupPVLResArrayList_ob,
+						lookupPLVcommaSeparated));
+	}
+
+	/**
+	 * This Method returns true if all values in the lookupPLVcommaSeparated are
+	 * valid
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @param mandatory
+	 *            if true it returns false if it is a NULL Value
+	 *
+	 * @return Boolean returns true if all values in the lookupPLVcommaSeparated
+	 *         are valid
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean validPLVlkp(Object lookupPPMArrayList_ob,
+			String lookupPLVcommaSeparated, Boolean mandatory) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.validPLVlkp");
+		ArrayList<String> lookupPPMArrayList = new ArrayList<String>();
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (lookupPPMArrayList_ob == null || mandatory == null) {
+			return false;
+		}
+		if (lookupPLVcommaSeparated == null) {
+			return !mandatory;
+		}
+		List<String> items = Arrays.asList(lookupPLVcommaSeparated
+				.split("\\s*,\\s*"));
+		try {
+			for (String value : ((List<String>) lookupPPMArrayList_ob)) {
+				lookupPPMArrayList.add(value);
+			}
+			// lookupPPMArrayList = (ArrayList<String>) lookupPPMArrayList_ob ;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a List -- "
+					+ lookupPPMArrayList_ob);
+			return true;
+		}
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList  -- "
+				+ lookupPPMArrayList + "-- items -- " + items);
+		for (String item : items) {
+			item = item.replaceAll("^\\s*", "");
+			item = item.replaceAll("\\s*$", "");
+			Boolean isValue = false;
+			for (String itemx : lookupPPMArrayList) {
+				if (!itemx.isEmpty()) {
+					itemx = itemx.replaceAll("^\\s*", "");
+					itemx = itemx.replaceAll("\\s*$", "");
+					if (itemx.equalsIgnoreCase(item)) {
+						isValue = true;
+					}
+				}
+			}
+			if (!isValue) {
+				logger4j.error(loglineheader
+						+ " -- Found false  -- item : ---'" + item + "'---");
+				for (String itemx : lookupPPMArrayList) {
+					itemx = itemx.replaceAll("^\\s*", "");
+					itemx = itemx.replaceAll("\\s*$", "");
+					logger4j.trace(loglineheader
+							+ " -- Found false  -- itemx : ---'" + itemx
+							+ "'---");
+				}
+
+				return false;
+			}
+		}
+		/*
+		 * for (String item : items) { item = item.replaceAll("^\\s*", ""); item
+		 * = item.replaceAll("\\s*$", ""); if
+		 * (!lookupPPMArrayList.contains(item)) { return false; } }
+		 */
+		return true;
+	}
+
+	/**
+	 * This Method returns true if all values in the lookupPLVcommaSeparated are
+	 * valid
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @param mandatory
+	 *            if true it returns false if it is a NULL Value
+	 *
+	 * @return Boolean returns true if all values in the lookupPLVcommaSeparated
+	 *         are valid
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean validPLVlkpSingle(Object lookupPPMArrayList_ob,
+			String lookupPLV, Boolean mandatory) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.validPLVlkpSingle");
+		ArrayList<String> lookupPPMArrayList = new ArrayList<String>();
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (lookupPPMArrayList_ob == null || mandatory == null) {
+			return false;
+		}
+		if (lookupPLV == null) {
+			return !mandatory;
+		}
+		try {
+			for (String value : ((List<String>) lookupPPMArrayList_ob)) {
+				lookupPPMArrayList.add(value);
+			}
+			// lookupPPMArrayList = (ArrayList<String>) lookupPPMArrayList_ob ;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a List -- "
+					+ lookupPPMArrayList_ob);
+			return true;
+		}
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList  -- "
+				+ lookupPPMArrayList + "-- lookupPLV -- " + lookupPLV);
+		lookupPLV = lookupPLV.replaceAll("^\\s*", "");
+		lookupPLV = lookupPLV.replaceAll("\\s*$", "");
+		Boolean isValue = false;
+		for (String itemx : lookupPPMArrayList) {
+			itemx = itemx.replaceAll("^\\s*", "");
+			itemx = itemx.replaceAll("\\s*$", "");
+			if (itemx.equalsIgnoreCase(lookupPLV)) {
+				isValue = true;
+			}
+		}
+		if (!isValue) {
+			logger4j.error(loglineheader
+					+ " -- Found false  -- lookupPLV : ---'" + lookupPLV
+					+ "'---");
+			for (String itemx : lookupPPMArrayList) {
+				itemx = itemx.replaceAll("^\\s*", "");
+				itemx = itemx.replaceAll("\\s*$", "");
+				logger4j.trace(loglineheader
+						+ " -- Found false  -- itemx : ---'" + itemx + "'---");
+			}
+
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * This Method returns true if all values in the lookupPLVcommaSeparated are
+	 * valid
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            lookup Planview ArrayList from Resources (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @param mandatory
+	 *            if true it returns false if it is a NULL Value
+	 *
+	 * @return Boolean returns true if all values in the lookupPLVcommaSeparated
+	 *         are valid
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean validPLVlkpResOld(Object lookupPVLResArrayList_ob,
+			Object lookupPPMArrayList_ob, String lookupPLVcommaSeparated,
+			Boolean mandatory) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.validPLVlkpRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPVLResArrayList_ob == null || lookupPPMArrayList_ob == null
+				|| mandatory == null) {
+			return false;
+		}
+		if (lookupPLVcommaSeparated == null) {
+			return !mandatory;
+		}
+		return validPLVlkp(
+				lookupPPMArrayList_ob,
+				convertRessource(lookupPVLResArrayList_ob,
+						lookupPLVcommaSeparated), mandatory);
+	}
+
+	/**
+	 * This Method returns true if all values in the lookupPLVcommaSeparated are
+	 * valid
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            lookup Planview ArrayList from Resources (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @param mandatory
+	 *            if true it returns false if it is a NULL Value
+	 *
+	 * @return Boolean returns true if all values in the lookupPLVcommaSeparated
+	 *         are valid
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean validPLVlkpRes(Object lookupPPMArrayList_ob,
+			String lookupPLVcommaSeparated, Boolean mandatory) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.validPLVlkpRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPPMArrayList_ob == null || mandatory == null) {
+			return false;
+		}
+		if (lookupPLVcommaSeparated == null) {
+			return !mandatory;
+		}
+		return validPLVlkp(lookupPPMArrayList_ob, lookupPLVcommaSeparated,
+				mandatory);
+	}
+
+	/**
+	 * This Method generates a LookupValue for PPM for single and multiple
+	 * Lookupvalues
+	 *
+	 * @param user_id_hash_ob
+	 *            user_id hash with Email Address as Key and USER_ID as value
+	 *            (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String single and multiple Lookup values for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMUIDlkp(Object user_id_hash_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.generatePPMUIDlkp");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, Integer> user_id_hash = new HashMap<String, Integer>();
+
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+
+		List<String> username = Arrays.asList(lookupPLVcommaSeparated
+				.split("\\s*,\\s*"));
+		try {
+			user_id_hash = (HashMap<String, Integer>) user_id_hash_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ user_id_hash_ob);
+			return null;
+		}
+
+		ArrayList<String> username_ArrayList = new ArrayList<String>();
+		for (String user : username) {
+			logger4j.trace(loglineheader + " -- user  = " + user + " user id "
+					+ user_id_hash.get(user));
+			try {
+				username_ArrayList.add(user_id_hash.get(user).toString());
+			} catch (Exception e) {
+				logger4j.info(loglineheader + " -- can not add user_id-- "
+						+ user_id_hash.get(user) + " to user_id_hash");
+				username_ArrayList.add("0");
+			}
+		}
+		logger4j.trace(loglineheader + " -- user_id_hash_ob  -- "
+				+ user_id_hash_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated ---- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader + " -- username_ArrayList ---- "
+				+ username_ArrayList);
+		logger4j.trace(loglineheader + " -- genDeliminterStringFromArray ---- "
+				+ genDeliminterStringFromArray(username_ArrayList, "#@#"));
+
+		return genDeliminterStringFromArray(username_ArrayList, "#@#");
+	}
+
+	/**
+	 * This Method generates a LookupValue for PPM for single Lookupvalues
+	 *
+	 * @param plvLookupHash_ob
+	 *            Key Value hash with PLVValue as (PPM)Key and Code (PPM)Value
+	 *            (already set before)
+	 *
+	 * @param lookupPLVvalue
+	 *            Values from Planview
+	 *
+	 * @return String single Lookup Code for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMlkpSingle(Object plvLookupHash_ob,
+			String lookupPLVvalue) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.generatePPMlkpSingle");
+
+		String loglineheader = "Planview_Test_Run";
+		String lookupPPMcode = null;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> plvLookupHash = new HashMap<String, String>();
+
+		if (lookupPLVvalue == null) {
+			return lookupPPMcode;
+		}
+
+		try {
+			plvLookupHash = (HashMap<String, String>) plvLookupHash_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ plvLookupHash_ob);
+			return lookupPPMcode;
+		}
+		try {
+			lookupPPMcode = plvLookupHash.get(lookupPLVvalue);
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ plvLookupHash_ob);
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- plvLookupHash_ob  -- "
+				+ plvLookupHash_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVvalue ---- "
+				+ lookupPLVvalue);
+		logger4j.trace(loglineheader + " -- lookupPPMcode ---- "
+				+ lookupPPMcode);
+		return lookupPPMcode;
+	}
+
+	/**
+	 * This Method generates a LookupValue for single and multiple Lookupvalues
+	 * from Ressources
+	 *
+	 * @param user_id_hash_ob
+	 *            user_id hash with Email Address as Key and USER_ID as value
+	 *            (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String single and multiple Lookup values for PPM from
+	 *         Ressources
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMUIDlkpRes(Object lookupPVLResArrayList_ob,
+			Object user_id_hash_ob, String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.generatePPMUIDlkpRes");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.trace(loglineheader + " -- lookupPVLResArrayList_ob  -- "
+				+ lookupPVLResArrayList_ob);
+		logger4j.trace(loglineheader + " -- user_id_hash_ob  -- "
+				+ user_id_hash_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated  -- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader
+				+ " -- generatePPMUIDlkp  -- "
+				+ generatePPMUIDlkp(
+						user_id_hash_ob,
+						convertRessource(lookupPVLResArrayList_ob,
+								lookupPLVcommaSeparated)));
+
+		return generatePPMUIDlkp(
+				user_id_hash_ob,
+				convertRessource(lookupPVLResArrayList_ob,
+						lookupPLVcommaSeparated));
+	}
+
+	/**
+	 * This Method generates a PPM Lookupvalue from a kommma sepperated String
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            user_id hash with Email Address as Key and USER_ID as value
+	 *            (already set before)
+	 *
+	 * @param ppmlookup
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String single and multiple Lookup/User values for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMlookupRes(Object lookupPVLResArrayList_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.generatePPMlookupRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+		String ppmlookup = convertRessource(lookupPVLResArrayList_ob,
+				lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader + " -- lookupPVLResArrayList_ob  -- "
+				+ lookupPVLResArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated  -- "
+				+ lookupPLVcommaSeparated);
+		return generatePPMlookup(ppmlookup);
+	}
+
+	/**
+	 * This Method generates a sepperated String from ArrayList<String>
+	 *
+	 * @param ArrayList
+	 *            <String> values to be kommaseperated
+	 *
+	 * @param ppmlookup
+	 *            values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String with "separator" as separator
+	 *
+	 * @since 1.00
+	 */
+	public static String genDeliminterStringFromArray(
+			ArrayList<String> username, String separator) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.genDeliminterStringFromArray");
+		String loglineheader = "Planview_Test_Run";
+		int total = username.size() * separator.length();
+		for (String user_id : username) {
+			total += user_id.toString().length();
+		}
+
+		StringBuilder sb = new StringBuilder(total);
+		for (String user_id : username) {
+			sb.append(separator).append(user_id);
+		}
+
+		String delimmiterString = sb.substring(separator.length()); // remove
+																	// leading
+																	// separator
+		logger4j.trace(loglineheader + " -- username  -- " + username);
+		logger4j.trace(loglineheader + " -- separator  -- " + separator);
+		logger4j.trace(loglineheader + " -- delimmiterString  -- "
+				+ delimmiterString);
+
+		return delimmiterString;
+	}
+
+	/**
+	 * This Method generates a PPM Users single and multiple Lookupvalue as
+	 * String
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            > values to be kommasepperated Ressources
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String with separator
+	 *
+	 * @since 1.00
+	 */
+
+	public static String convertRessource(Object lookupPVLResArrayList_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.convertRessource");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (lookupPVLResArrayList_ob == null || lookupPLVcommaSeparated == null
+				|| lookupPLVcommaSeparated.isEmpty()) {
+			return "";
+		}
+		HashMap<String, String> lookupPVLResArrayList = new HashMap<String, String>();
+		List<String> items = Arrays.asList(lookupPLVcommaSeparated
+				.split("\\s*,\\s*"));
+		try {
+			lookupPVLResArrayList = (HashMap<String, String>) lookupPVLResArrayList_ob;
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- is not a HashMap -- "
+					+ lookupPVLResArrayList);
+			return "";
+		}
+		ArrayList<String> username_ArrayList = new ArrayList<String>();
+		for (String item : items) {
+			item = item.replaceAll("^\\s*", "");
+			item = item.replaceAll("\\s*$", "");
+			if (item != null) {
+				try {
+					username_ArrayList.add(lookupPVLResArrayList.get(item)
+							.toString());
+				} catch (Exception e) {
+					logger4j.error(loglineheader + " -- item -- " + item
+							+ " can not be added " + e.getMessage());
+					return "";
+				}
+			}
+		}
+		logger4j.trace(loglineheader + " -- lookupPVLResArrayList_ob  -- "
+				+ lookupPVLResArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated  -- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader + " -- username_ArrayList  -- "
+				+ username_ArrayList);
+		logger4j.trace(loglineheader + " -- genDeliminterStringFromArray  -- "
+				+ genDeliminterStringFromArray(username_ArrayList, ","));
+
+		return genDeliminterStringFromArray(username_ArrayList, ",");
+	}
+
+	/**
+	 * This Method returns the a single lookupValueCode, for the PPM DB
+	 *
+	 * @param lookupValueHash
+	 *            lookup Value Hash Map from PPM (already set before)
+	 *
+	 * @param lookupValueMean
+	 *            the Meaning of the Lookup
+	 *
+	 * @return lookupValueCode, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static String getPPMLookupValueCodeMulti(Object lookupValueHash,
+			String lookupValueMean) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getPPMLookupValueCodeMulti");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> lookupValueHashMap = new HashMap<String, String>();
+
+		if (lookupValueMean == null) {
+			return null;
+		}
+
+		try {
+			lookupValueHashMap = (HashMap<String, String>) lookupValueHash;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ lookupValueHash);
+			return null;
+		}
+
+		List<String> lookupValueMeanArray = Arrays.asList(lookupValueMean
+				.split("\\s*,\\s*"));
+
+		ArrayList<String> lookupValueCodeArray = new ArrayList<String>();
+		for (String item : lookupValueMeanArray) {
+			item = item.replaceAll("^\\s*", "");
+			item = item.replaceAll("\\s*$", "");
+			if (item != null) {
+				try {
+					lookupValueCodeArray.add(lookupValueHashMap.get(item));
+				} catch (Exception e) {
+					logger4j.error(loglineheader + " -- item -- " + item
+							+ " can not be added " + e.getMessage());
+					return "";
+				}
+			}
+		}
+
+		StringBuilder b = new StringBuilder();
+		boolean erstmals = true;
+		for (String code : lookupValueCodeArray) {
+			if (!erstmals) {
+				b.append("#@#");
+			}
+			b.append(code);
+			if (erstmals) {
+				erstmals = false;
+			}
+		}
+		String lookupValueCode = b.toString();
+
+		logger4j.trace(loglineheader + " -- lookupValueHash  -- "
+				+ lookupValueHash);
+		logger4j.trace(loglineheader + " -- lookupValueMean ---- "
+				+ lookupValueMean);
+		logger4j.trace(loglineheader + " -- lookupValueCode ---- "
+				+ lookupValueCode);
+
+		return lookupValueCode;
+	}
+
+	/**
+	 * This Method returns the a single lookupValueCode, for the PPM DB
+	 *
+	 * @param lookupValueHash
+	 *            lookup Value Hash Map from PPM (already set before)
+	 *
+	 * @param lookupValueMean
+	 *            the Meaning of the Lookup
+	 *
+	 * @return lookupValueCode, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static String getPPMLookupValueCode(Object lookupValueHash,
+			String lookupValueMean) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getPPMLookupValueCode");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> lookupValueHashMap = new HashMap<String, String>();
+
+		if (lookupValueMean == null) {
+			return null;
+		}
+
+		try {
+			lookupValueHashMap = (HashMap<String, String>) lookupValueHash;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ lookupValueHash);
+			return null;
+		}
+
+		String lookupValueCode = lookupValueHashMap.get(lookupValueMean);
+
+		logger4j.trace(loglineheader + " -- lookupValueHash  -- "
+				+ lookupValueHash);
+		logger4j.trace(loglineheader + " -- lookupValueMean ---- "
+				+ lookupValueMean);
+		logger4j.trace(loglineheader + " -- lookupValueCode ---- "
+				+ lookupValueCode);
+
+		return lookupValueCode;
+	}
+
+	/**
+	 * This Method generates a PPM Lookupvalue from a kommma sepperated String
+	 *
+	 * @param ppmlookup
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String single and multiple Lookup/User values for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMlookup(String ppmlookup) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.generatePPMlookup");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (ppmlookup == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- ppmlookup before -- " + ppmlookup);
+
+		if (ppmlookup.contains(",")) {
+			ppmlookup = ppmlookup.replaceAll("\\s*,\\s*", "#@#");
+			ppmlookup = ppmlookup.replaceAll("^\\s*", "");
+			ppmlookup = ppmlookup.replaceAll("\\s*$", "");
+		}
+		logger4j.trace(loglineheader + " -- ppmlookup after -- " + ppmlookup);
+		return ppmlookup;
+	}
+
+	/**
+	 * This Method generates a Ressource Chunk for parallel Timesheet Webservice
+	 * execution
+	 *
+	 * @param ressourceCodesObj
+	 *            a ArryList generated by talend (distinct ressource_code from
+	 *            timesheet )
+	 *
+	 * @return kommma sepperated Ressource String for the selection of
+	 *         Timesheets
+	 *
+	 * @since 1.00
+	 */
+	public static String getRessourceChunk(Object ressourceCodesObj,
+			Integer chunk) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.generatePPMlookup");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		Integer gesamt = 0;
+		Integer teiler = 3;
+		Integer anteil1 = 0;
+		Integer anteil = 0;
+		Integer rest = 0;
+		Integer start = 0;
+		Integer ende = 0;
+		String result = "0";
+
+		ArrayList<String> ressourceCodesAnteil = new ArrayList<String>();
+		ArrayList<String> ressourceCodes = (ArrayList<String>) ressourceCodesObj;
+
+		if (ressourceCodes != null && !ressourceCodes.isEmpty()) {
+			gesamt = ressourceCodes.size();
+			logger4j.warn(loglineheader + " gesamt : " + gesamt);
+
+			if (gesamt != 0) {
+				anteil = gesamt / teiler;
+				rest = gesamt - anteil * teiler;
+				anteil1 = anteil + rest;
+			}
+			logger4j.warn(loglineheader + " anteil1 : " + anteil1);
+			logger4j.warn(loglineheader + " anteil : " + anteil);
+			logger4j.warn(loglineheader + " rest : " + rest);
+
+			switch (chunk) {
+			case 1:
+				start = 0;
+				ende = anteil;
+				break;
+			case 2:
+				start = anteil;
+				ende = anteil + anteil;
+				break;
+			case 3:
+				start = anteil1 + anteil;
+				ende = gesamt;
+				break;
+			default:
+				break;
+			}
+
+			for (int i = start; i < ende; i++) {
+				ressourceCodesAnteil.add(ressourceCodes.get(i));
+			}
+
+			String separator = ",";
+			int total = ressourceCodesAnteil.size() * separator.length();
+			for (String ressourceCode : ressourceCodesAnteil) {
+				total += ressourceCode.toString().length();
+			}
+
+			StringBuilder sb = new StringBuilder(total);
+			for (String ressourceCode : ressourceCodesAnteil) {
+				sb.append(separator).append(ressourceCode);
+			}
+
+			result = sb.substring(separator.length()); // remove leading
+														// separator
+		}
+
+		logger4j.warn(loglineheader + " result : " + result);
+		return result;
+
+	}
+
+	/**
+	 * This Method returns the a pathNameListArray, for the TimeSheetBulkLoad
+	 *
+	 * @param vfWpTaskIdNameHashMap
+	 *            Hash Map TaskId and TaskName (already set before)
+	 *
+	 * @param vfPathIdList
+	 *            the Task Path Id List from DB
+	 *
+	 * @return pathNameListArray, for the TimeSheetBulkLoad
+	 *
+	 * @since 1.00
+	 */
+	public static String createWorkItemDescription(
+			Object vfWpTaskIdNameHashMap, String vfPathIdList, BigDecimal taskId) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.createWorkItemDescription");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> vfWpTaskIdNameHashMapTmp = new HashMap<String, String>();
+
+		if (vfWpTaskIdNameHashMap == null) {
+			return null;
+		}
+
+		if (taskId == null) {
+			return null;
+		}
+
+		logger4j.trace(loglineheader + " -- vfWpTaskIdNameHashMap  = "
+				+ vfWpTaskIdNameHashMap);
+
+		try {
+			vfWpTaskIdNameHashMapTmp = (HashMap<String, String>) vfWpTaskIdNameHashMap;
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- is not a hashmap -- "
+					+ vfWpTaskIdNameHashMap);
+			return null;
+		}
+
+		logger4j.trace(loglineheader + " -- vfWpTaskIdNameHashMapTmp  = "
+				+ vfWpTaskIdNameHashMapTmp);
+
+		logger4j.debug(loglineheader + " vfPathIdList = " + vfPathIdList);
+
+		if (vfPathIdList == null) {
+			vfPathIdList = taskId.toString();
+		} else if (vfPathIdList.contains(":")) {
+			vfPathIdList = vfPathIdList + taskId.toString();
+		} else {
+			vfPathIdList = vfPathIdList + ":" + taskId.toString();
+		}
+
+		logger4j.debug(loglineheader + " vfPathIdList = " + vfPathIdList);
+
+		List<String> pathIdListArray = Arrays.asList(vfPathIdList
+				.split("\\s*:\\s*"));
+		ArrayList<String> pathNameListArrayTemp = new ArrayList<String>();
+
+		for (String item : pathIdListArray) {
+			// item = item.replaceAll("^\\s*", "");
+			// item = item.replaceAll("\\s*$", "");
+			if (item != null) {
+				try {
+					pathNameListArrayTemp.add((String) vfWpTaskIdNameHashMapTmp
+							.get(item));
+				} catch (Exception e) {
+					logger4j.error(loglineheader + " -- item -- " + item
+							+ " can not be added " + e.getMessage());
+				}
+			}
+		}
+
+		StringBuilder b = new StringBuilder();
+		boolean erstmals = true;
+		for (String code : pathNameListArrayTemp) {
+			if (!erstmals) {
+				b.append("#@#");
+			}
+			b.append(code);
+			if (erstmals) {
+				erstmals = false;
+			}
+		}
+		String pathNameListArray = b.toString();
+		pathNameListArray = pathNameListArray.replaceAll("^null...", "");
+
+		logger4j.debug(loglineheader + " -- vfPathIdList  -- " + vfPathIdList);
+		logger4j.debug(loglineheader + " -- pathNameListArrayTemp ---- "
+				+ pathNameListArrayTemp);
+		logger4j.debug(loglineheader + " -- pathNameListArray ---- "
+				+ pathNameListArray);
+
+		return pathNameListArray;
+	}
+
+	public static Date dateParser(String dateTimeString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.dateParser");
+
+		String loglineheader = " routine run ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (dateTimeString == null) {
+			return null;
+		}
+		Date currentDate = new Date();
+		Date datum = currentDate;
+		// System.out.println("Parsing ##" + dateTimeString + "##");
+		try {
+			// datum = (new
+			// SimpleDateFormat("yyyy-MM-dd")).parse(dateTimeString);
+			datum = (new SimpleDateFormat("MMM dd yyyy hh:mma"))
+					.parse(dateTimeString);
+			logger4j.info(loglineheader + "Parse Date" + datum);
+		} catch (Exception e) {
+			try {
+				// datum = (new
+				// SimpleDateFormat("yyyy-MM-dd")).parse(dateTimeString);
+				datum = (new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"))
+						.parse(dateTimeString);
+				logger4j.info(loglineheader + "Parse Date" + datum);
+			} catch (Exception e7) {
+				try {
+					// datum = (new
+					// SimpleDateFormat("yyyy-MM-dd")).parse(dateTimeString);
+					datum = (new SimpleDateFormat("yyyyMMdd"))
+							.parse(dateTimeString);
+					logger4j.info(loglineheader + "Parse Date" + datum);
+				} catch (Exception e1) {
+					try {
+						datum = (new SimpleDateFormat("MMM  dd yyyy  hh:mma"))
+								.parse(dateTimeString);
+					} catch (Exception e2) {
+						try {
+							datum = (new SimpleDateFormat("MMM dd yyyy  hh:mma"))
+									.parse(dateTimeString);
+						} catch (Exception e3) {
+							try {
+								datum = (new SimpleDateFormat(
+										"MMM dd HH:mm:ss zzz yyyy",
+										Locale.ENGLISH)).parse(dateTimeString);
+							} catch (Exception e4) {
+								try {
+									datum = (new SimpleDateFormat(
+											"EEE MMM dd HH:mm:ss zzz yyyy",
+											Locale.ENGLISH))
+											.parse(dateTimeString);
+								} catch (Exception e5) {
+									try {
+										datum = (new SimpleDateFormat(
+												"dd.MM.yyyy"))
+												.parse(dateTimeString);
+									} catch (Exception e6) {
+										logger4j.info(loglineheader
+												+ "cannot Parse Date ---"
+												+ dateTimeString
+												+ "--- take currentDate: "
+												+ datum);
+										/*
+										 * e.printStackTrace();
+										 * e2.printStackTrace();
+										 * System.out.println("Parsing Error :"
+										 * + e);
+										 * System.out.println("Parsing Error :"
+										 * + e2);
+										 * System.out.println("Parsing Error :"
+										 * + e3);
+										 */
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return datum;
+	}
+
+	/**
+	 * This Method converts the JASON String to a SugarCRM readable.
+	 * 
+	 * @param jasonString
+	 *            error message from Webservice
+	 * 
+	 * @return jasonString error message for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String convertToSugarJASON(String jasonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.convertToSugarJASON");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jasonString  ---" + jasonString
+				+ "---");
+
+		if (jasonString == null || jasonString.isEmpty()) {
+			return jasonString;
+		}
+		jasonString = jasonString.replaceAll("^\\{\"root\":", "");
+		jasonString = jasonString.replaceAll("\\}\\s*$", "}");
+		logger4j.info(loglineheader + " -- jasonString  ---" + jasonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- Ende  -- ");
+		return jasonString;
+	}
+
+	/**
+	 * This Method gets the Access Token from the SugarCRM Server for the Rest
+	 * Interface.
+	 * 
+	 * @param tokenURL
+	 * 
+	 * @param username
+	 * 
+	 * @param password
+	 * 
+	 * @return response the access_token , the expiresIn , the Status
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getAccessToken(String tokenURL,
+			String username, String password) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getAccessToken");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- tokenURL  ---" + tokenURL + "---");
+		logger4j.debug(loglineheader + " -- username  ---" + username + "---");
+		logger4j.debug(loglineheader + " -- password  ---" + password + "---");
+
+		HashMap<String, String> response = new HashMap<String, String>();
+
+		try {
+
+			OAuthClientRequest request = OAuthClientRequest
+					.tokenLocation(tokenURL).setGrantType(GrantType.PASSWORD)
+					.setClientId("sugar").setClientSecret("")
+					.setParameter("username", username)
+					.setParameter("password", password)
+					.setParameter("platform", "base").buildBodyMessage();
+
+			OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+
+			OAuthJSONAccessTokenResponse jsonResponse = oAuthClient
+					.accessToken(request);
+
+			response.put("access_token", jsonResponse.getAccessToken());
+			// response.put("expiresIn","105");
+			response.put("expiresIn", jsonResponse.getExpiresIn().toString());
+			response.put("status", "ok");
+			logger4j.debug(loglineheader + " -- End  -- ");
+
+			return response;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger4j.error(loglineheader + e.toString());
+			response.put("status", "ERROR");
+			return response;
+		}
+	}
+
+	/**
+	 * This Method gets the Access Token from the SugarCRM Server for the Rest
+	 * Interface.
+	 * 
+	 * @param tokenURL
+	 * 
+	 * @param username
+	 * 
+	 * @param password
+	 * 
+	 * @return response the access_token , the expiresIn , the Status
+	 *
+	 * @since 1.00
+	 */
+	public static String getAccessTokenOnly(String tokenURL, String username,
+			String password) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getAccessTokenOnly");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- tokenURL  ---" + tokenURL + "---");
+		logger4j.debug(loglineheader + " -- username  ---" + username + "---");
+		logger4j.debug(loglineheader + " -- password  ---" + password + "---");
+
+		HashMap<String, String> response = new HashMap<String, String>();
+
+		try {
+
+			OAuthClientRequest request = OAuthClientRequest
+					.tokenLocation(tokenURL).setGrantType(GrantType.PASSWORD)
+					.setClientId("sugar").setClientSecret("")
+					.setParameter("username", username)
+					.setParameter("password", password)
+					.setParameter("platform", "base").buildBodyMessage();
+
+			OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+
+			OAuthJSONAccessTokenResponse jsonResponse = oAuthClient
+					.accessToken(request);
+			String token = jsonResponse.getAccessToken();
+			logger4j.debug(loglineheader + "renew Access Token ---" + token
+					+ "---");
+			logger4j.debug(loglineheader + " -- End  -- ");
+			return token;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			response.put("status", "ERROR");
+			return "ERROR";
+		}
+	}
+
+	/**
+	 * This Method updates an SugarCRM Entry over the Rest Interface.
+	 * 
+	 * @param resourceUrl
+	 * 
+	 * @param token
+	 * 
+	 * @param jsonString
+	 * 
+	 * @return status
+	 *
+	 * @since 1.00
+	 */
+	public static String putSugarCRMEntry(String resourceUrl, String token,
+			String jsonString) {
+
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.putSugarCRMEntry");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceURL  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		// String resourceUrl = tokenURL.replace(":account-id", ACCOUNT_ID);
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("PUT");
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept", "application/json");
+
+			logger4j.debug(loglineheader + " resource_cxn created = "
+					+ resource_cxn.toString());
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+			logger4j.debug(loglineheader + " outputstream = " + os.toString());
+
+			// read the response
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode = resource_cxn.getResponseCode();
+			logger4j.debug(loglineheader + " -- responseCode  -- "
+					+ responseCode);
+			logger4j.debug(loglineheader + " -- Result  -- " + result);
+			logger4j.debug(loglineheader + " -- End  -- ");
+			if (responseCode.equals(200)) {
+				return "Ok : " + responseCode + result;
+			}
+			return "ERROR : " + responseCode + result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger4j.error(loglineheader + " -- Error -- jsonString  ---"
+					+ jsonString + "---");
+			logger4j.error(loglineheader + " -- Error  -- " + e.toString());
+			logger4j.error(loglineheader + " -- End  -- ");
+			return "Error " + e.toString();
+		}
+
+	}
+
+	/**
+	 * This Method updates an SugarCRM Entry over the Rest Interface.
+	 * 
+	 * @param resourceUrl
+	 * 
+	 * @param token
+	 * 
+	 * @param jsonString
+	 * 
+	 * @return status
+	 *
+	 * @since 1.00
+	 */
+	public static String postSugarCRMEntry(String resourceUrl, String token,
+			String jsonString) {
+
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.putSugarCRMEntry");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceURL  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		// String resourceUrl = tokenURL.replace(":account-id", ACCOUNT_ID);
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("POST");
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept", "application/json");
+
+			logger4j.debug(loglineheader + " resource_cxn created = "
+					+ resource_cxn.toString());
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+			logger4j.debug(loglineheader + " outputstream = " + os.toString());
+
+			// read the response
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode = resource_cxn.getResponseCode();
+			logger4j.debug(loglineheader + " -- responseCode  -- "
+					+ responseCode);
+			logger4j.debug(loglineheader + " -- Result  -- " + result);
+			logger4j.debug(loglineheader + " -- End  -- ");
+			if (responseCode.equals(200)) {
+				return "Ok : " + responseCode + result;
+			}
+			return "ERROR : " + responseCode + result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger4j.error(loglineheader + " -- Error -- jsonString  ---"
+					+ jsonString + "---");
+			logger4j.error(loglineheader + " -- Error  -- " + e.toString());
+			logger4j.error(loglineheader + " -- End  -- ");
+			return "Error " + e.toString();
+		}
+
+	}
+	
+	/**
+	 * This Method updates an SugarCRM Entry over the Rest Interface.
+	 *
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param jsonString
+	 *
+	 * @return status
+	 *
+	 * @since 1.00
+	 */
+	public static String postSugarCRMEntry(String resourceUrl, String token,
+			Object jsonObject) {
+
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.postSugarCRMEntry");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonObject  --"
+				+ jsonObject.toString() + "--");
+
+		JSONObject toJsonObj = new JSONObject();
+		try {
+			toJsonObj = (JSONObject) jsonObject;
+			logger4j.debug(loglineheader + " -- toJsonObj.get(email) --"
+					+ toJsonObj.get("email") + "--");
+			logger4j.debug(loglineheader + " -- toJsonObj  --"
+					+ toJsonObj.toString() + "--");
+
+		} catch (Exception e) {
+			logger4j.warn(loglineheader + "-- can not parse Object -- toJsonObj  --"
+					+ toJsonObj.toString() + "-- error : " + e.toString());
+		}
+		logger4j.debug(loglineheader + " -- toJsonObj  --"
+				+ toJsonObj.toString() + "--");
+		return postSugarCRMEntry(resourceUrl, token, toJsonObj.toJSONString());
+	}
+	
+	/**
+	 * This Method updates an SugarCRM Entry over the Rest Interface.
+	 *
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param jsonString
+	 *
+	 * @return status
+	 *
+	 * @since 1.00
+	 */
+	public static String putSugarCRMEntry(String resourceUrl, String token,
+			Object jsonObject) {
+
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.putSugarCRMEntry");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonObject  --"
+				+ jsonObject.toString() + "--");
+
+		JSONObject toJsonObj = new JSONObject();
+		try {
+			toJsonObj = (JSONObject) jsonObject;
+			logger4j.debug(loglineheader + " -- toJsonObj.get(email) --"
+					+ toJsonObj.get("email") + "--");
+			logger4j.debug(loglineheader + " -- toJsonObj  --"
+					+ toJsonObj.toString() + "--");
+		} catch (Exception e) {
+			logger4j.warn(loglineheader + "-- can not Parse Object -- toJsonObj  --"
+					+ toJsonObj.toString() + "-- error : " + e.toString());
+		}
+		logger4j.debug(loglineheader + " -- toJsonObj  --"
+				+ toJsonObj.toString() + "--");
+	
+		return putSugarCRMEntry(resourceUrl, token, toJsonObj.toJSONString());
+	}
+
+	/**
+	 * This Method truncates the Json String so that only Elements
+	 * 
+	 * @param jsonString
+	 * 
+	 * @return NewJsonString
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateJsonString(String jsonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.truncateJsonstring");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		String NewJsonString = "";
+		if (jsonString == null || jsonString.isEmpty()) {
+			return jsonString;
+		}
+
+		String[] jsonArray = jsonString.split(",");
+
+		for (String jsonElement : jsonArray) {
+			if (jsonElement != null && !jsonElement.isEmpty()
+					&& !(jsonElement.indexOf("[]") > 0)) {
+				NewJsonString = NewJsonString + jsonElement + ",";
+			}
+			;
+		}
+		char first = NewJsonString.charAt(0);
+		char compare = "{".charAt(0);
+		if (first != compare) {
+			NewJsonString = "{" + NewJsonString;
+		}
+		NewJsonString = NewJsonString.replaceAll(",$", "");
+		NewJsonString = NewJsonString.replaceAll("---null---", "");
+		NewJsonString = NewJsonString.replaceAll("\"false\"", "false");
+		NewJsonString = NewJsonString.replaceAll("\"true\"", "true");
+		NewJsonString = NewJsonString + "}";
+		NewJsonString = NewJsonString.replaceAll("}}$", "}");
+		logger4j.info(loglineheader + " -- NewJsonString  ---" + NewJsonString
+				+ "---");
+		logger4j.trace(loglineheader + " -- End  -- ");
+
+		return NewJsonString;
+	}
+
+	/**
+	 * This Method truncates the Json String so that only Elements
+	 * 
+	 * @param jsonString
+	 * 
+	 * @return NewJsonString
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateJsonString2(String jsonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.truncateJsonString2");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		String NewJsonString = "";
+		if (jsonString == null || jsonString.isEmpty()) {
+			return jsonString;
+		}
+		jsonString = jsonString.replace("^.", "");
+		jsonString = jsonString.replace(".$", "");
+		String[] jsonArray = jsonString.split(",");
+
+		for (String jsonElement : jsonArray) {
+			if (jsonElement != null && !jsonElement.isEmpty()
+					&& !(jsonElement.indexOf("[]") > 0)) {
+				NewJsonString = NewJsonString + jsonElement + ",";
+			}
+			;
+		}
+		NewJsonString = "{" + NewJsonString;
+		NewJsonString = NewJsonString.replaceAll(",$", "");
+		NewJsonString = NewJsonString + "}";
+		NewJsonString = NewJsonString.replaceAll("}}$", "}");
+		NewJsonString = NewJsonString.replaceFirst("\\{\\{", "\\{");
+		NewJsonString = NewJsonString.replaceAll("\"false\"", "false");
+		NewJsonString = NewJsonString.replaceAll("\"true\"", "true");
+		logger4j.info(loglineheader + " -- NewJsonString  ---" + NewJsonString
+				+ "---");
+		logger4j.trace(loglineheader + " -- End  -- ");
+
+		return NewJsonString;
+	}
+
+	/**
+	 * This Method truncates the Json String so that only Elements
+	 *
+	 * @param jsonString
+	 *
+	 * @return NewJsonString
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateJsonString3(String jsonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.truncateJsonString2");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		String NewJsonString = "";
+		if (jsonString == null || jsonString.isEmpty()) {
+			return jsonString;
+		}
+		jsonString = jsonString.replace("^.", "");
+		jsonString = jsonString.replace(".$", "");
+		String[] jsonArray = jsonString.split(",");
+
+		for (String jsonElement : jsonArray) {
+			if (jsonElement != null && !jsonElement.isEmpty()
+					&& !(jsonElement.indexOf("[]") > 0)) {
+				NewJsonString = NewJsonString + jsonElement + ",";
+			}
+			;
+		}
+
+		NewJsonString = "{" + NewJsonString;
+		NewJsonString = NewJsonString.replaceAll(",$", "");
+		NewJsonString = NewJsonString + "}";
+		NewJsonString = NewJsonString.replaceAll("}}$", "}");
+		NewJsonString = NewJsonString.replaceFirst("\\{\\{", "\\{");
+		NewJsonString = NewJsonString.replaceAll("\"false\"", "false");
+		NewJsonString = NewJsonString.replaceFirst("\"\\[", "\\[");
+		NewJsonString = NewJsonString.replaceFirst("\\]\"", "\\]");
+		NewJsonString = NewJsonString.replaceAll("\\\\", "");
+		NewJsonString = NewJsonString.replaceAll("\"true\"", "true");
+		logger4j.info(loglineheader + " -- NewJsonString  ---" + NewJsonString
+				+ "---");
+		logger4j.trace(loglineheader + " -- End  -- ");
+
+		return NewJsonString;
+	}
+
+	/**
+	 * This Method truncates the Json String so that only Elements
+	 *
+	 * @param jsonObject
+	 *
+	 * @return NewJsonString
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateJsonString4(Object jsonObject) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.truncateJsonString4");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonObject
+				+ "---");
+		JSONObject newJsonObject = new JSONObject();
+
+		try {
+			newJsonObject = (JSONObject) jsonObject;
+		} catch (Exception e) {
+			logger4j.debug(loglineheader + " -- newJsonObject  ---"
+					+ newJsonObject + "---");
+		}
+		logger4j.debug(loglineheader + " -- newJsonObject.toString()  ---"
+				+ newJsonObject.toString() + "---");
+		return newJsonObject.toString();
+	}
+
+	/**
+	 * This Method checks the ID if it is a SugarCRM ID Interface.
+	 * 
+	 * @param idString
+	 * 
+	 * @return Boolean
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean isID(String idString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.isID");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- idString  ---" + idString);
+		Integer Zahl = 36;
+		if (idString != null && !idString.isEmpty()) {
+			Integer id = (Integer) idString.length();
+			logger4j.debug(loglineheader + " -- length ID String ---"
+					+ id.toString());
+			logger4j.debug(loglineheader + " -- End  -- ");
+			return id.equals(Zahl);
+		}
+		return false;
+	}
+
+	/**
+	 * This Method checks the ID if it is a SugarCRM ID Interface.
+	 * 
+	 * @param idString
+	 * 
+	 * @return Boolean
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean isIDspecial(String idString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.isID");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- idString  ---" + idString);
+		Integer Zahl = 36;
+		if (idString != null && !idString.isEmpty()) {
+			Integer id = (Integer) idString.length();
+			logger4j.info(loglineheader + " -- length ID String ---"
+					+ id.toString());
+			logger4j.debug(loglineheader + " -- End  -- ");
+			return id.equals(Zahl);
+		}
+		if (idString == null || idString.isEmpty()) {
+			logger4j.info(loglineheader + " -- ID String is null or empty ---");
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * This Method removes NULL
+	 * 
+	 * @param removeNULL
+	 * 
+	 * @return input without NULL
+	 *
+	 * @since 1.00
+	 */
+	public static String removeNULL(String input) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.removeNULL");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (input != null && !input.isEmpty()) {
+			input = input.replaceAll("^\\s*NULL\\s*$", "");
+			input = input.replaceAll("^\\s+", "");
+			input = input.replaceAll("\\s+$", "");
+			input = input.replaceAll("#X#X#", "\"");
+		}
+		return input;
+	}
+
+	/**
+	 * This Method gets the the Element from a json String Interface.
+	 * 
+	 * @param jsonString
+	 * 
+	 * @param jsonElement
+	 * 
+	 * @return content of the jsonElement
+	 *
+	 * @since 1.00
+	 */
+	public static String getJsonElement(String jsonString, String jsonElement) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getJsonElement");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonElement  ---" + jsonElement
+				+ "---");
+		String elementValue = null;
+		if (jsonString != null && !jsonString.isEmpty() && jsonElement != null
+				&& !jsonElement.isEmpty()) {
+			try {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject = (JSONObject) jsonParser
+						.parse(jsonString);
+				logger4j.debug(loglineheader + " jsonElement Value "
+						+ jsonObject.get(jsonElement));
+				elementValue = jsonObject.get(jsonElement).toString();
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.debug(loglineheader + " -- ERROR  -- " + e.toString());
+			}
+		}
+		logger4j.debug(loglineheader + "jsonElement ---" + jsonElement + "---"
+				+ " elementValue ---" + elementValue + "---");
+		logger4j.debug(loglineheader + " -- End  -- ");
+		return elementValue;
+	}
+
+	/**
+	 * This Method gets the the Element from a json String Interface.
+	 * 
+	 * @param jsonString
+	 * 
+	 * @param jsonElement
+	 * 
+	 * @return content of the jsonElement
+	 *
+	 * @since 1.00
+	 */
+	public static String putJsonElement(String jsonString, String jsonElement,
+			String jsonValue) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.putJsonElement");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonElement  ---" + jsonElement
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonValue  ---" + jsonValue + "---");
+
+		if (jsonString != null && !jsonString.isEmpty() && jsonElement != null
+				&& !jsonElement.isEmpty()) {
+			try {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject = (JSONObject) jsonParser
+						.parse(jsonString);
+
+				jsonObject.put(jsonElement, jsonValue);
+				jsonString = jsonObject.toJSONString();
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.debug(loglineheader + " -- ERROR  -- " + e.toString());
+			}
+		}
+		logger4j.debug(loglineheader + "jsonElement ---" + jsonElement + "---"
+				+ "jsonValue ---" + jsonValue + "---" + " jsonString ---"
+				+ jsonString + "---");
+		logger4j.debug(loglineheader + " -- End  -- ");
+		return jsonString;
+	}
+
+	/**
+	 * This Method gets the the Element from a json String Interface.
+	 * 
+	 * @param jsonString
+	 * 
+	 * @param jsonElement
+	 * 
+	 * @return content of the jsonElement
+	 *
+	 * @since 1.00
+	 */
+	public static String putJsonElementCheckID(String jsonString,
+			String jsonElement, String jsonValue, String currentValue) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.putJsonElement");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonElement  ---" + jsonElement
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonValue  ---" + jsonValue + "---");
+		logger4j.debug(loglineheader + " -- currentValue  ---" + currentValue
+				+ "---");
+
+		if (jsonString != null && !jsonString.isEmpty() && jsonElement != null
+				&& !jsonElement.isEmpty() && !JoblokalHelper.isID(currentValue)) {
+			try {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject = (JSONObject) jsonParser
+						.parse(jsonString);
+
+				jsonObject.put(jsonElement, jsonValue);
+				jsonString = jsonObject.toJSONString();
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.debug(loglineheader + " -- ERROR  -- " + e.toString());
+			}
+		}
+		logger4j.debug(loglineheader + "jsonElement ---" + jsonElement + "---"
+				+ "jsonValue ---" + jsonValue + "---" + " jsonString ---"
+				+ jsonString + "---");
+		logger4j.debug(loglineheader + " -- End  -- ");
+		return jsonString;
+	}
+
+	/**
+	 * This Method waitUntil waits until the currentime reaches the timeString.
+	 * 
+	 * @param timeString
+	 *
+	 * @since 1.00
+	 */
+	public static void waitUntil(String timeString, Integer waitTimeInMs) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.waitUntil");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- waitUntil  ---" + timeString
+				+ "---");
+		Boolean waitForStart = true;
+		if (timeString != null && !timeString.isEmpty()) {
+			Date currentDate = new Date();
+			try {
+				while (waitForStart) {
+					LocalDateTime testDate = new LocalDateTime();
+					Integer days = testDate.getDayOfMonth();
+					Integer month = testDate.getMonthOfYear();
+					Integer year = testDate.getYear();
+					String dateTimeString = days.toString() + "-"
+							+ month.toString() + "-" + year.toString() + " "
+							+ timeString;
+					Date expireDate = dateTime
+							.dateParserSchramm(dateTimeString);
+					currentDate = new Date();
+					if (dateTime.compare(currentDate, expireDate)) {
+						waitForStart = false;
+					}
+					logger4j.warn(loglineheader + " wait until : "
+							+ expireDate.toString());
+					Thread.sleep(waitTimeInMs);
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.error(loglineheader + " -- ERROR  -- " + e.toString());
+			}
+		}
+
+	}
+
+	/**
+	 * This Method getModuleID returns the id from the shearching Modulet
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param fieldValue
+	 *
+	 * @return the id
+	 *
+	 * @since 1.00
+	 */
+	public static String getModuleID(String resourceUrl, String token,
+			String field, String fieldValue) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getModuleID");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- field  ---" + field + "---");
+		logger4j.debug(loglineheader + " -- fieldValue  ---" + fieldValue
+				+ "---");
+		// String resourceUrl =
+		// "https://schrammcrmtest.sugaropencloud.eu/rest/v10/Accounts/filter" ;
+		// String token = "ec92a7a7-8a27-4eb2-a72b-71aa261cac6b" ;
+		// String jsonString = "{\"name\":\"PPE Services Limited\" }";
+		String id = null;
+		if (resourceUrl != null && !resourceUrl.isEmpty() && token != null
+				&& !token.isEmpty() && field != null && !field.isEmpty()
+				&& fieldValue != null && !fieldValue.isEmpty()) {
+
+			String jsonString = "{\"filter\":[{ \""
+					+ field
+					+ "\":\""
+					+ fieldValue
+					+ "\"}],\"max_num\":1,\"offset\":0,\"fields\":\"id\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+			logger4j.info(loglineheader + "jsonString : ---" + jsonString
+					+ "---");
+			try {
+				HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+						resourceUrl).openConnection());
+				resource_cxn.addRequestProperty("OAuth-Token", token);
+				resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+				resource_cxn.setReadTimeout(READ_TIMEOUT);
+				resource_cxn.setDoOutput(true);
+				resource_cxn.setDoInput(true);
+				resource_cxn.setRequestMethod("POST");
+				resource_cxn.setFollowRedirects(true);
+				resource_cxn.setRequestProperty("Content-Type",
+						"application/json; charset=UTF-8");
+				resource_cxn.setRequestProperty("Accept", "application/json");
+
+				OutputStream os = resource_cxn.getOutputStream();
+				os.write(jsonString.getBytes("UTF-8"));
+				os.close();
+
+				logger4j.info(loglineheader + "resource_cxn : " + resource_cxn);
+				// read the response
+				Integer responseCode = resource_cxn.getResponseCode();
+				logger4j.debug(loglineheader + "responseCode : " + responseCode);
+
+				InputStream in = new BufferedInputStream(
+						resource_cxn.getInputStream());
+				String result = org.apache.commons.io.IOUtils.toString(in,
+						"UTF-8");
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				logger4j.debug(loglineheader + "result : " + result);
+
+				JSONParser jsonParser = new JSONParser();
+
+				try {
+					JSONObject jsonObject = (JSONObject) jsonParser
+							.parse(result);
+					for (Object key : jsonObject.keySet()) {
+						String keyStr = (String) key;
+						JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+						logger4j.debug(loglineheader + "key: " + keyStr
+								+ " value: " + keyvalue);
+						for (Object o : keyvalue) {
+							if (o instanceof JSONObject) {
+								if (((JSONObject) o).containsKey("id")) {
+									String checkObj = ((JSONObject) o)
+											.get("id").getClass().getName();
+									logger4j.debug(loglineheader + " checkObj "
+											+ checkObj);
+									if ("java.lang.String"
+											.contentEquals(checkObj)) {
+										id = (String) ((JSONObject) o)
+												.get("id");
+									} else {
+										id = Long
+												.toString((Long) ((JSONObject) o)
+														.get("id"));
+									}
+								}
+								logger4j.debug(loglineheader + " id :" + id);
+							}
+						}
+					}
+				} catch (ClassCastException e) {
+					logger4j.debug(loglineheader + " jsonParser : "
+							+ e.toString());
+				} catch (Exception e) {
+					// TODO: handle exception
+					logger4j.error(loglineheader + " jsonParser : "
+							+ e.toString());
+				}
+				logger4j.debug(loglineheader + "The id is: " + id);
+
+			} catch (Exception e) {
+				logger4j.error(loglineheader + " Error : " + e.toString());
+
+			}
+		}
+
+		return id;
+	}
+
+	/**
+	 * This Method getModuleField returns the fieldToReturn from the shearching
+	 * Module
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param fieldValue
+	 *
+	 * @param fieldToReturn
+	 *
+	 * @return the fieldToReturnValue
+	 *
+	 * @since 1.00
+	 */
+	public static String getModuleField(String resourceUrl, String token,
+			String field, String fieldValue, String fieldToReturn) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getModuleField");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- field  ---" + field + "---");
+		logger4j.debug(loglineheader + " -- fieldValue  ---" + fieldValue
+				+ "---");
+		logger4j.debug(loglineheader + " -- fieldToReturn  ---" + fieldToReturn
+				+ "---");
+		// String resourceUrl =
+		// "https://schrammcrmtest.sugaropencloud.eu/rest/v10/Accounts/filter" ;
+		// String token = "ec92a7a7-8a27-4eb2-a72b-71aa261cac6b" ;
+		// String jsonString = "{\"name\":\"PPE Services Limited\" }";
+		String fieldToReturnValue = null;
+		if (resourceUrl != null && !resourceUrl.isEmpty() && token != null
+				&& !token.isEmpty() && field != null && !field.isEmpty()
+				&& fieldValue != null && !fieldValue.isEmpty()) {
+
+			String jsonString = "{\"filter\":[{ \""
+					+ field
+					+ "\":\""
+					+ fieldValue
+					+ "\"}],\"max_num\":1,\"offset\":0,\"fields\":\"id\",\"fields\":"
+					+ "\""
+					+ fieldToReturn
+					+ "\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+			logger4j.debug(loglineheader + "jsonString : ---" + jsonString
+					+ "---");
+			try {
+				HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+						resourceUrl).openConnection());
+				resource_cxn.addRequestProperty("OAuth-Token", token);
+				resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+				resource_cxn.setReadTimeout(READ_TIMEOUT);
+				resource_cxn.setDoOutput(true);
+				resource_cxn.setDoInput(true);
+				resource_cxn.setRequestMethod("POST");
+				resource_cxn.setFollowRedirects(true);
+				resource_cxn.setRequestProperty("Content-Type",
+						"application/json; charset=UTF-8");
+				resource_cxn.setRequestProperty("Accept", "application/json");
+
+				OutputStream os = resource_cxn.getOutputStream();
+				os.write(jsonString.getBytes("UTF-8"));
+				os.close();
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				// read the response
+				Integer responseCode = resource_cxn.getResponseCode();
+
+				InputStream in = new BufferedInputStream(
+						resource_cxn.getInputStream());
+				String result = org.apache.commons.io.IOUtils.toString(in,
+						"UTF-8");
+
+				Integer responseCode2 = resource_cxn.getResponseCode();
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				logger4j.debug(loglineheader + "result : " + result);
+
+				JSONParser jsonParser = new JSONParser();
+
+				try {
+					JSONObject jsonObject = (JSONObject) jsonParser
+							.parse(result);
+					for (Object key : jsonObject.keySet()) {
+						String keyStr = (String) key;
+						JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+						logger4j.debug(loglineheader + "key: " + keyStr
+								+ " value: " + keyvalue);
+						for (Object o : keyvalue) {
+							if (o instanceof JSONObject) {
+								fieldToReturnValue = (String) ((JSONObject) o)
+										.get(fieldToReturn);
+								logger4j.debug(loglineheader
+										+ " fieldToReturnValue :"
+										+ fieldToReturnValue);
+							}
+						}
+
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+
+				logger4j.debug(loglineheader + "The " + fieldToReturn + " is: "
+						+ fieldToReturnValue);
+
+			} catch (Exception e) {
+				logger4j.error(loglineheader + " Error : " + e.toString());
+
+			}
+		}
+
+		return fieldToReturnValue;
+	}
+
+	/**
+	 * This Method getUserHash the ID from then shearching Account
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getUserHash(String resourceUrl,
+			String token) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getUserHash");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		HashMap<String, String> userIDHashMap = new HashMap<String, String>();
+		String jsonString = "{\"filter\":[{\"txt_erp_id_c\":{\"$not_null\":\"\"}}],\"max_num\":10000,\"offset\":0,\"fields\":\"id\",\"fields\":\"name\",\"fields\":\"txt_erp_id_c\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+			resource_cxn.setReadTimeout(READ_TIMEOUT);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("POST");
+			resource_cxn.setFollowRedirects(true);
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept", "application/json");
+
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+			// read the response
+			Integer responseCode = resource_cxn.getResponseCode();
+
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode2 = resource_cxn.getResponseCode();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+
+			logger4j.debug(loglineheader + "result : " + result);
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject;
+			try {
+				jsonObject = (JSONObject) jsonParser.parse(result);
+				for (Object key : jsonObject.keySet()) {
+					// based on you key types
+					String keyStr = (String) key;
+					JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+					// Print key and value
+					logger4j.debug(loglineheader + "key: " + keyStr
+							+ " value: " + keyvalue);
+
+					for (Object o : keyvalue) {
+						if (o instanceof JSONObject) {
+							userIDHashMap.put((String) ((JSONObject) o)
+									.get("txt_erp_id_c"),
+									(String) ((JSONObject) o).get("id"));
+						}
+					}
+
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			logger4j.debug(loglineheader + "userIDHashMap: " + userIDHashMap);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return userIDHashMap;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkIfNotNull(Integer value) {
+
+		return value != null;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static String convertToString(Integer value) {
+		String strgValue = null;
+		if (checkIfNotNull(value)) {
+			strgValue = value.toString();
+		}
+		return strgValue;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkIfNotNullFloat(Float value) {
+
+		return value != null;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static String convertToStringFloat(Float value) {
+		String strgValue = null;
+		if (checkIfNotNullFloat(value)) {
+			strgValue = value.toString();
+		}
+		return strgValue;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkIfNotNullDouble(Double value) {
+
+		return value != null;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static String convertToStringDouble(Double value) {
+		String strgValue = null;
+		if (checkIfNotNullDouble(value)) {
+			strgValue = value.toString();
+		}
+		return strgValue;
+	}
+
+	/**
+	 * This Method getMaxLength get the max length of value from a key value
+	 * pair and saves it in a hashmap
+	 * 
+	 * @param keyValueObject
+	 *
+	 * @param key
+	 *
+	 * @param value
+	 *
+	 * @return the <key> <value.length()> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, Integer> getMaxLength(Object keyValueObject,
+			String key, String value) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getMaxLength");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+		logger4j.debug(loglineheader + " -- value  ---" + value + "---");
+		HashMap<String, Integer> keyValueHashMap = new HashMap<String, Integer>();
+		try {
+			keyValueHashMap = (HashMap<String, Integer>) keyValueObject;
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- is not a hashmap -- "
+					+ keyValueObject);
+			return null;
+		}
+		if (key != null) {
+			if (keyValueHashMap != null && keyValueHashMap.get(key) != null) {
+				// logger4j.warn(loglineheader + " update key : " + key +
+				// " length : " + ((value != null) ? value.length() : 0));
+				if (keyValueHashMap.get(key) <= ((value != null) ? value
+						.length() : 0)) {
+					keyValueHashMap.put(key, (value != null) ? value.length()
+							: 0);
+				}
+			} else {
+				// logger4j.warn(loglineheader + " add key : " + key +
+				// " length : " + ((value != null) ? value.length() : 0));
+				keyValueHashMap.put(key, (value != null) ? value.length() : 0);
+			}
+
+		} else {
+			logger4j.error(loglineheader + " Key is null ");
+		}
+		return keyValueHashMap;
+	}
+
+	/**
+	 * This Method getMaxLength get the max length of value from a key value
+	 * pair and saves it in a hashmap
+	 * 
+	 * @param keyValueObject
+	 *
+	 * @param key
+	 *
+	 * @param value
+	 *
+	 * @return the <key> <value.length()> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static void printMaxLength(Object keyValueObject) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.printMaxLength");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, Integer> keyValueHashMap = new HashMap<String, Integer>();
+		try {
+			keyValueHashMap = (HashMap<String, Integer>) keyValueObject;
+
+			for (String key : keyValueHashMap.keySet()) {
+				logger4j.warn(key + " : " + keyValueHashMap.get(key));
+			}
+
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ keyValueObject);
+		}
+	}
+
+	/**
+	 * This Method split the Fullname in Salutaion,Firstname, Lastname
+	 * 
+	 * @param fullname
+	 *
+	 * @return the new String[] { Salutaion,Firstname, Lastname }
+	 *
+	 * @since 1.00
+	 */
+	public static String[] splitname(String fullname) {
+		String[] strgValue = new String[3];
+		String[] name = null;
+		String salutaion = null;
+		String firstName = null;
+		String lastName = null;
+		Integer laenge = null;
+		boolean isMale = false;
+		boolean isFeMale = false;
+		boolean isMrMale = false;
+		boolean isPak = false;
+		if (fullname != null && !fullname.isEmpty()) {
+			isMale = fullname.contains("Bpk.");
+			isFeMale = fullname.contains("Ibu.");
+			isMrMale = fullname.contains("Mr.");
+			isPak = fullname.contains("Pak.");
+
+			fullname = fullname.replaceAll("Bpk. ", "");
+			fullname = fullname.replaceAll("Ibu. ", "");
+			fullname = fullname.replaceAll("Mr. ", "");
+			fullname = fullname.replaceAll("Pak. ", "");
+			fullname = fullname.replaceAll("^\\s*", "");
+			fullname = fullname.replaceAll("\\s*$", "");
+
+			if (fullname.contains("-")) {
+				strgValue = (new String[] { "", "Not Named", "Not Named" });
+				return strgValue;
+			}
+			;
+			name = fullname.split(" ");
+			laenge = name.length;
+			salutaion = (isMale) ? "Bpk." : (isFeMale) ? "Ibu."
+					: (isMrMale) ? "Mr." : (isPak) ? "Pak." : "";
+			lastName = name[laenge - 1];
+			firstName = fullname.replaceAll(lastName, "");
+			strgValue = (new String[] { salutaion, firstName, lastName });
+		}
+		return strgValue;
+	}
+
+	/**
+	 * This Method convertBooleanToInteger
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static String convertBooleanToInteger(Boolean value) {
+
+		if (value != null) {
+			if (value) {
+				return "1";
+			} else {
+				return "0";
+			}
+		}
+		return "0";
+	}
+
+	/**
+	 * This Method convertBooleanToInteger
+	 * 
+	 * @param jsonString
+	 *
+	 * @param jsonElement
+	 *            the key
+	 *
+	 * @return the elementValue
+	 *
+	 * @since 1.00
+	 */
+	public static String getElement(String jsonString, String jsonElement) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getElement");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonElement  ---" + jsonElement
+				+ "---");
+		String elementValue = null;
+		if (jsonString != null && !jsonString.isEmpty() && jsonElement != null
+				&& !jsonElement.isEmpty()) {
+			try {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject = (JSONObject) jsonParser
+						.parse(jsonString);
+				logger4j.debug(loglineheader + " jsonElement Value "
+						+ jsonObject.get(jsonElement));
+
+				elementValue = jsonObject.get(jsonElement).toString();
+				logger4j.debug(loglineheader + "elementValue : ---"
+						+ elementValue + "---");
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.error(loglineheader + "Error : " + e.toString());
+			}
+		}
+		return elementValue;
+	}
+
+	/**
+	 * This Method firstCharUpperCase
+	 * 
+	 * @param str
+	 *
+	 * @return the String first Char Upper Case
+	 *
+	 * @since 1.00
+	 */
+
+	public static String firstCharUpperCase(String str) {
+		if (str == null || str.isEmpty()) {
+			return str;
+		}
+		return str.substring(0, 1).toUpperCase() + str.substring(1);
+	}
+
+	/**
+	 * This Method getElement2 returns Array of Tags
+	 *
+	 * @param jsonString
+	 *            the jsonString
+	 *
+	 * @param key
+	 *            the key to search for the search String
+	 *
+	 * @return tagsArray from Capsule
+	 *
+	 * @since 1.00
+	 */
+	public static String getElement2(String jsonString, String key) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getElement2");
+
+		HashMap<String, String> typeMap = new HashMap<String, String>();
+		typeMap.put("organisation", "Accounts");
+		typeMap.put("person", "Contacts");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+		String result = "";
+		if (jsonString != null && !"null".equalsIgnoreCase(jsonString)
+				&& key != null) {
+			try {
+				logger4j.debug(loglineheader + " -- try  ---");
+
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject;
+				logger4j.debug(loglineheader + " -- object  ---");
+
+				jsonObject = (JSONObject) jsonParser.parse(jsonString);
+				logger4j.debug(loglineheader + " -- jsonParser  ---");
+
+				if ("type".equalsIgnoreCase(key)) {
+					logger4j.debug(loglineheader + " -- get type  ---");
+					result = typeMap.get((String) jsonObject.get(key));
+				} else {
+					logger4j.debug(loglineheader + " -- get id  ---");
+					result = (((Object) jsonObject.get(key))).toString();
+					if ("null".equalsIgnoreCase(result)) {
+						result = "";
+					}
+				}
+				logger4j.debug(loglineheader + " --- result  ---" + result
+						+ "---");
+			} catch (Exception e) {
+				logger4j.debug(loglineheader
+						+ " -- Error JsonHelper.getElement2  ---"
+						+ e.toString());
+				result = "";
+			}
+
+		}
+		return result;
+
+	}
+
+	/**
+	 * This Method convertTextToBoolean returns Boolean
+	 *
+	 * @param value
+	 *            the jsonString
+	 *
+	 * @return returns Boolean
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean convertTextToBoolean(String value) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.convertTextToBoolean");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start convertTextToBoolean -- ");
+		logger4j.debug(loglineheader + " -- value  ---" + value + "---");
+		Boolean valueBool = null;
+		if (value != null) {
+			valueBool = "true".equalsIgnoreCase(value);
+		}
+		logger4j.debug(loglineheader + " -- valueBool  ---" + valueBool + "---");
+		return valueBool;
+	}
+
+	/**
+	 * This Method getTagsHash the ID from the shearching Tag
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @return the <name> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getTagsHash(String resourceUrl,
+			String token) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getTagsHash");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader
+				+ " -- Start JoblokalHelper.getTagsHash -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		HashMap<String, String> tagsIDHashMap = new HashMap<String, String>();
+		String jsonString = "{\"filter\":[{\"name\":{\"$not_null\":\"\"}}],\"max_num\":10000,\"offset\":0,\"fields\":\"id,name\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+			resource_cxn.setReadTimeout(READ_TIMEOUT);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("POST");
+			resource_cxn.setFollowRedirects(true);
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept",
+					"application/json; charset=UTF-8");
+
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+			// read the response
+			Integer responseCode = resource_cxn.getResponseCode();
+
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode2 = resource_cxn.getResponseCode();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+
+			logger4j.debug(loglineheader + "result : " + result);
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject;
+			try {
+				jsonObject = (JSONObject) jsonParser.parse(result);
+				for (Object key : jsonObject.keySet()) {
+					// based on you key types
+					String keyStr = (String) key;
+					JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+					// Print key and value
+					logger4j.debug(loglineheader + "key: " + keyStr
+							+ " value: " + keyvalue);
+
+					for (Object o : keyvalue) {
+						if (o instanceof JSONObject) {
+							tagsIDHashMap.put(
+									(String) ((JSONObject) o).get("name"),
+									(String) ((JSONObject) o).get("id"));
+						}
+					}
+
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			logger4j.debug(loglineheader + "tagsIDHashMap: " + tagsIDHashMap);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return tagsIDHashMap;
+	}
+
+	/**
+	 * This Method getObjectHash creates a hashmap from the field (key) and the
+	 * id(Value) filtered for capsule_quelle
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param id
+	 *
+	 * @param capsule_quelle
+	 *
+	 * @return the <name> <id> HashMap objectIDHashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getObjectHash(String resourceUrl,
+			String token, String field, String id, String capsule_quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getObjectHash");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader
+				+ " -- Start JoblokalHelper.getObjectHash -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		HashMap<String, String> objectIDHashMap = new HashMap<String, String>();
+		String hasNoNext = "\"next_offset\":-1";
+		if (resourceUrl != null && token != null && field != null && id != null
+				&& capsule_quelle != null) {
+
+			Integer offset = 0;
+			Integer max_num = 1000;
+			Boolean hasNext = true;
+
+			String jsonString = "{\"filter\":[{\"$and\":[{\""
+					+ field
+					+ "\" : {\"$not_null\" : \"\"}},{\"capsule_quelle_c\":\""
+					+ capsule_quelle
+					+ "\"}]}],\"max_num\":"
+					+ max_num
+					+ ",\"offset\":"
+					+ offset
+					+ ",\"fields\" : \""
+					+ id
+					+ ","
+					+ field
+					+ "\",\"order_by\" : \"date_entered\",\"favorites\" : false,\"my_items\" : false}";
+
+			do {
+
+				try {
+					HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+							resourceUrl).openConnection());
+					resource_cxn.addRequestProperty("OAuth-Token", token);
+					resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+					resource_cxn.setReadTimeout(READ_TIMEOUT);
+					resource_cxn.setDoOutput(true);
+					resource_cxn.setDoInput(true);
+					resource_cxn.setRequestMethod("POST");
+					resource_cxn.setFollowRedirects(true);
+					resource_cxn.setRequestProperty("Content-Type",
+							"application/json; charset=UTF-8");
+					resource_cxn.setRequestProperty("Accept",
+							"application/json; charset=UTF-8");
+
+					OutputStream os = resource_cxn.getOutputStream();
+					os.write(jsonString.getBytes("UTF-8"));
+					os.close();
+
+					logger4j.debug(loglineheader + "resource_cxn : "
+							+ resource_cxn);
+					// read the response
+					Integer responseCode = resource_cxn.getResponseCode();
+
+					InputStream in = new BufferedInputStream(
+							resource_cxn.getInputStream());
+					String result = org.apache.commons.io.IOUtils.toString(in,
+							"UTF-8");
+
+					Integer responseCode2 = resource_cxn.getResponseCode();
+
+					logger4j.debug(loglineheader + "resource_cxn : "
+							+ resource_cxn);
+
+					logger4j.debug(loglineheader + "result : " + result);
+					if (result != null) {
+
+						hasNext = !result.contains(hasNoNext);
+						offset = offset + max_num;
+
+						jsonString = "{\"filter\":[{\"$and\":[{\""
+								+ field
+								+ "\" : {\"$not_null\" : \"\"}},{\"capsule_quelle_c\":\""
+								+ capsule_quelle
+								+ "\"}]}],\"max_num\":"
+								+ max_num
+								+ ",\"offset\":"
+								+ offset
+								+ ",\"fields\" : \""
+								+ id
+								+ ","
+								+ field
+								+ "\",\"order_by\" : \"date_entered\",\"favorites\" : false,\"my_items\" : false}";
+
+						JSONParser jsonParser = new JSONParser();
+						JSONObject jsonObject;
+						try {
+							jsonObject = (JSONObject) jsonParser.parse(result);
+							for (Object key : jsonObject.keySet()) {
+								// based on you key types
+								String keyStr = (String) key;
+								JSONArray keyvalue = (JSONArray) jsonObject
+										.get(keyStr);
+
+								// Print key and value
+								logger4j.debug(loglineheader + "key: " + keyStr
+										+ " value: " + keyvalue);
+
+								for (Object o : keyvalue) {
+									if (o instanceof JSONObject) {
+										objectIDHashMap.put(
+												(String) ((JSONObject) o)
+														.get(field),
+												(String) ((JSONObject) o)
+														.get(id));
+									}
+								}
+
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
+
+					if (objectIDHashMap != null) {
+						logger4j.warn(loglineheader + "objectIDHashMap: "
+								+ objectIDHashMap.size());
+					}
+
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+
+				}
+			} while (hasNext);
+		}
+		logger4j.debug(loglineheader + "objectIDHashMap: " + objectIDHashMap);
+		return objectIDHashMap;
+	}
+
+	/**
+	 * This Method getObjectHash2 creates a hashmap from the field (key) and the
+	 * id(Value)
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param id
+	 *
+	 * @return the <name> <id> HashMap objectIDHashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getObjectHash2(String resourceUrl,
+			String token, String field, String id) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getObjectHash");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader
+				+ " -- Start JoblokalHelper.getObjectHash -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		HashMap<String, String> objectIDHashMap = new HashMap<String, String>();
+		String hasNoNext = "\"next_offset\":-1";
+		if (resourceUrl != null && token != null && field != null && id != null) {
+
+			Integer offset = 0;
+			Integer max_num = 1000;
+			Boolean hasNext = true;
+
+			String jsonString = "{\"filter\":[{\""
+					+ field
+					+ "\":{\"$not_null\":\"\"}}],\"max_num\":"
+					+ max_num
+					+ ",\"offset\":"
+					+ offset
+					+ ",\"fields\":\""
+					+ id
+					+ ","
+					+ field
+					+ "\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+			do {
+
+				try {
+					HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+							resourceUrl).openConnection());
+					resource_cxn.addRequestProperty("OAuth-Token", token);
+					resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+					resource_cxn.setReadTimeout(READ_TIMEOUT);
+					resource_cxn.setDoOutput(true);
+					resource_cxn.setDoInput(true);
+					resource_cxn.setRequestMethod("POST");
+					resource_cxn.setFollowRedirects(true);
+					resource_cxn.setRequestProperty("Content-Type",
+							"application/json; charset=UTF-8");
+					resource_cxn.setRequestProperty("Accept",
+							"application/json; charset=UTF-8");
+
+					OutputStream os = resource_cxn.getOutputStream();
+					os.write(jsonString.getBytes("UTF-8"));
+					os.close();
+
+					logger4j.debug(loglineheader + "resource_cxn : "
+							+ resource_cxn);
+					// read the response
+					Integer responseCode = resource_cxn.getResponseCode();
+
+					InputStream in = new BufferedInputStream(
+							resource_cxn.getInputStream());
+					String result = org.apache.commons.io.IOUtils.toString(in,
+							"UTF-8");
+
+					Integer responseCode2 = resource_cxn.getResponseCode();
+
+					logger4j.debug(loglineheader + "resource_cxn : "
+							+ resource_cxn);
+
+					logger4j.debug(loglineheader + "result : " + result);
+					if (result != null) {
+
+						hasNext = !result.contains(hasNoNext);
+						offset = offset + max_num;
+
+						jsonString = "{\"filter\":[{\""
+								+ field
+								+ "\":{\"$not_null\":\"\"}}],\"max_num\":"
+								+ max_num
+								+ ",\"offset\":"
+								+ offset
+								+ ",\"fields\":\""
+								+ id
+								+ ","
+								+ field
+								+ "\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+						JSONParser jsonParser = new JSONParser();
+						JSONObject jsonObject;
+						try {
+							jsonObject = (JSONObject) jsonParser.parse(result);
+							for (Object key : jsonObject.keySet()) {
+								// based on you key types
+								String keyStr = (String) key;
+								JSONArray keyvalue = (JSONArray) jsonObject
+										.get(keyStr);
+
+								// Print key and value
+								logger4j.debug(loglineheader + "key: " + keyStr
+										+ " value: " + keyvalue);
+
+								for (Object o : keyvalue) {
+									if (o instanceof JSONObject) {
+										objectIDHashMap.put(
+												(String) ((JSONObject) o)
+														.get(field),
+												(String) ((JSONObject) o)
+														.get(id));
+									}
+								}
+
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
+					if (objectIDHashMap != null) {
+						logger4j.warn(loglineheader + "objectIDHashMap: "
+								+ objectIDHashMap.size());
+
+					}
+
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+
+				}
+			} while (hasNext);
+		}
+		logger4j.info(loglineheader + "objectIDHashMap: " + objectIDHashMap);
+		return objectIDHashMap;
+	}
+
+	/**
+	 * This Method getObjectHashType creates a hashmap from the field (key) and
+	 * the id(Value) filtered for capsule_quelle
+	 *
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param id
+	 *
+	 * @param capsule_quelle
+	 *
+	 * @return the <name> <id> HashMap objectIDHashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getObjectHashType(String resourceUrl,
+			String token, String field, String capsule_quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getObjectHash");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader
+				+ " -- Start JoblokalHelper.getObjectHash -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		String id = "id";
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		HashMap<String, String> objectIDHashMap = new HashMap<String, String>();
+		String hasNoNext = "\"next_offset\":-1";
+		String type = "Accounts";
+		if (resourceUrl != null && token != null && id != null
+				&& capsule_quelle != null) {
+
+			if (resourceUrl.contains("Contacts")) {
+				type = "Contacts";
+			}
+
+			Integer offset = 0;
+			Integer max_num = 1000;
+			Boolean hasNext = true;
+
+			String jsonString = "{\"filter\":[{\""
+					+ field
+					+ "\":{\"$not_null\":\"\"}}],\"max_num\":"
+					+ max_num
+					+ ",\"offset\":"
+					+ offset
+					+ ",\"fields\":\""
+					+ id
+					+ ","
+					+ field
+					+ "\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+			do {
+
+				try {
+					HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+							resourceUrl).openConnection());
+					resource_cxn.addRequestProperty("OAuth-Token", token);
+					resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+					resource_cxn.setReadTimeout(READ_TIMEOUT);
+					resource_cxn.setDoOutput(true);
+					resource_cxn.setDoInput(true);
+					resource_cxn.setRequestMethod("POST");
+					resource_cxn.setFollowRedirects(true);
+					resource_cxn.setRequestProperty("Content-Type",
+							"application/json; charset=UTF-8");
+					resource_cxn.setRequestProperty("Accept",
+							"application/json; charset=UTF-8");
+
+					OutputStream os = resource_cxn.getOutputStream();
+					os.write(jsonString.getBytes("UTF-8"));
+					os.close();
+
+					logger4j.debug(loglineheader + "resource_cxn : "
+							+ resource_cxn);
+					// read the response
+					Integer responseCode = resource_cxn.getResponseCode();
+
+					InputStream in = new BufferedInputStream(
+							resource_cxn.getInputStream());
+					String result = org.apache.commons.io.IOUtils.toString(in,
+							"UTF-8");
+
+					logger4j.debug(loglineheader + "resource_cxn : "
+							+ resource_cxn);
+
+					logger4j.debug(loglineheader + "result : " + result);
+					if (result != null) {
+
+						hasNext = !result.contains(hasNoNext);
+						offset = offset + max_num;
+
+						jsonString = "{\"filter\":[{\""
+								+ field
+								+ "\":{\"$not_null\":\"\"}}],\"max_num\":"
+								+ max_num
+								+ ",\"offset\":"
+								+ offset
+								+ ",\"fields\":\""
+								+ id
+								+ ","
+								+ field
+								+ "\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+						JSONParser jsonParser = new JSONParser();
+						JSONObject jsonObject;
+						try {
+							jsonObject = (JSONObject) jsonParser.parse(result);
+							for (Object key : jsonObject.keySet()) {
+								// based on you key types
+								String keyStr = (String) key;
+								JSONArray keyvalue = (JSONArray) jsonObject
+										.get(keyStr);
+
+								// Print key and value
+								logger4j.debug(loglineheader + "key: " + keyStr
+										+ " value: " + keyvalue);
+
+								for (Object o : keyvalue) {
+									if (o instanceof JSONObject) {
+										objectIDHashMap.put(
+												(String) ((JSONObject) o)
+														.get(id), type);
+									}
+								}
+
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
+
+					if (objectIDHashMap != null) {
+						logger4j.warn(loglineheader + "objectIDHashMap: "
+								+ objectIDHashMap.size());
+					}
+
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+
+				}
+			} while (hasNext);
+		}
+		logger4j.debug(loglineheader + "objectIDHashMap: " + objectIDHashMap);
+		return objectIDHashMap;
+	}
+
+	/**
+	 * This Method getUserHash the ID from then shearching Account
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getUserNameHash(String resourceUrl,
+			String token) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getUserNameHash");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		HashMap<String, String> userIDHashMap = new HashMap<String, String>();
+		String jsonString = "{\"filter\":[{\"name\":{\"$not_null\":\"\"}}],\"max_num\":10000,\"offset\":0,\"fields\":\"id,name,user_name\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(READ_TIMEOUT);
+			resource_cxn.setReadTimeout(50000);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("POST");
+			resource_cxn.setFollowRedirects(true);
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept", "application/json");
+
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+			// read the response
+			Integer responseCode = resource_cxn.getResponseCode();
+
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode2 = resource_cxn.getResponseCode();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+
+			logger4j.debug(loglineheader + "result : " + result);
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject;
+			try {
+				jsonObject = (JSONObject) jsonParser.parse(result);
+				for (Object key : jsonObject.keySet()) {
+					// based on you key types
+					String keyStr = (String) key;
+					JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+					// Print key and value
+					logger4j.debug(loglineheader + "key: " + keyStr
+							+ " value: " + keyvalue);
+
+					for (Object o : keyvalue) {
+						if (o instanceof JSONObject) {
+							userIDHashMap.put(
+									(String) ((JSONObject) o).get("name"),
+									(String) ((JSONObject) o).get("id"));
+						}
+					}
+
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			logger4j.debug(loglineheader + "userIDHashMap: " + userIDHashMap);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return userIDHashMap;
+	}
+
+	/**
+	 * Calculates the similarity (a number within 0 and 1) between two strings.
+	 */
+	public static double similarity(String s1, String s2) {
+		if ((s1 == null || s1.isEmpty()) || (s2 == null || s2.isEmpty())) {
+			return 0;
+		}
+
+		String longer = s1, shorter = s2;
+		if (s1.length() < s2.length()) { // longer should always have greater
+			// length
+			longer = s2;
+			shorter = s1;
+		}
+		int longerLength = longer.length();
+		if (longerLength == 0) {
+			return 1.0; /* both strings are zero length */
+		}
+		/*
+		 * // If you have Apache Commons Text, you can use it to calculate the
+		 * edit distance: LevenshteinDistance levenshteinDistance = new
+		 * LevenshteinDistance(); return (longerLength -
+		 * levenshteinDistance.apply(longer, shorter)) / (double) longerLength;
+		 */
+
+		return ((longerLength - editDistance(longer, shorter)) / (double) longerLength) * 100;
+
+	}
+
+	// Example implementation of the Levenshtein Edit Distance
+	// See http://rosettacode.org/wiki/Levenshtein_distance#Java
+	public static int editDistance(String s1, String s2) {
+		s1 = s1.toLowerCase();
+		s2 = s2.toLowerCase();
+
+		int[] costs = new int[s2.length() + 1];
+		for (int i = 0; i <= s1.length(); i++) {
+			int lastValue = i;
+			for (int j = 0; j <= s2.length(); j++) {
+				if (i == 0)
+					costs[j] = j;
+				else {
+					if (j > 0) {
+						int newValue = costs[j - 1];
+						if (s1.charAt(i - 1) != s2.charAt(j - 1))
+							newValue = Math.min(Math.min(newValue, lastValue),
+									costs[j]) + 1;
+						costs[j - 1] = lastValue;
+						lastValue = newValue;
+					}
+				}
+			}
+			if (i > 0)
+				costs[s2.length()] = lastValue;
+		}
+		return costs[s2.length()];
+	}
+
+	public static void printSimilarity(String s, String t) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.printSimilarity");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " s = " + s + " t = " + t
+				+ " similarity " + (similarity(s, t)));
+	}
+
+	public static void printSimilarityPercent(String s, String t,
+			Integer percent) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.printSimilarity");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		if (similarity(s, t) > percent) {
+			logger4j.debug(loglineheader + " s = " + s + " t = " + t
+					+ " similarity " + (similarity(s, t)));
+		}
+	}
+
+	/**
+	 * This Method getObjectHashDubl creates a hashmap from the id (key) and the
+	 * fields (Values)
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param fields
+	 *
+	 * @param id
+	 *
+	 * @return the <id> <HashMap<String,string>> HashMap objectIDHashMap
+	 *
+	 * @since 1.00
+	 */
+	public static List<String[]> getObjectHashDubl(String resourceUrl,
+			String token, String field, String fields, String id) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.getObjectHashDubl");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader
+				+ " -- Start JoblokalHelper.getObjectHash -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- fields  ---" + fields + "---");
+
+		List<String[]> objectIDHashMap = new ArrayList<String[]>();
+
+		String hasNoNext = "\"next_offset\":-1";
+		if (resourceUrl != null && token != null && field != null
+				&& fields != null && id != null) {
+			fields = fields.replaceAll(":", ",");
+			Integer offset = 0;
+			Integer max_num = 1000;
+			Boolean hasNext = true;
+
+			String jsonString = "{\"filter\":[{\""
+					+ field
+					+ "\":{\"$not_null\":\"\"}}],\"max_num\":"
+					+ max_num
+					+ ",\"offset\":"
+					+ offset
+					+ ",\"fields\":\""
+					+ id
+					+ ","
+					+ fields
+					+ "\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+			do {
+
+				try {
+					HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+							resourceUrl).openConnection());
+					resource_cxn.addRequestProperty("OAuth-Token", token);
+					resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+					resource_cxn.setReadTimeout(READ_TIMEOUT);
+					resource_cxn.setDoOutput(true);
+					resource_cxn.setDoInput(true);
+					resource_cxn.setRequestMethod("POST");
+					resource_cxn.setFollowRedirects(true);
+					resource_cxn.setRequestProperty("Content-Type",
+							"application/json; charset=UTF-8");
+					resource_cxn.setRequestProperty("Accept",
+							"application/json; charset=UTF-8");
+
+					OutputStream os = resource_cxn.getOutputStream();
+					os.write(jsonString.getBytes("UTF-8"));
+					os.close();
+
+					logger4j.debug(loglineheader + "resource_cxn : "
+							+ resource_cxn);
+					// read the response
+					Integer responseCode = resource_cxn.getResponseCode();
+
+					InputStream in = new BufferedInputStream(
+							resource_cxn.getInputStream());
+					String result = org.apache.commons.io.IOUtils.toString(in,
+							"UTF-8");
+
+					Integer responseCode2 = resource_cxn.getResponseCode();
+
+					logger4j.debug(loglineheader + "resource_cxn : "
+							+ resource_cxn);
+
+					logger4j.debug(loglineheader + "result : " + result);
+					if (result != null) {
+
+						hasNext = !result.contains(hasNoNext);
+						offset = offset + max_num;
+
+						jsonString = "{\"filter\":[{\""
+								+ field
+								+ "\":{\"$not_null\":\"\"}}],\"max_num\":"
+								+ max_num
+								+ ",\"offset\":"
+								+ offset
+								+ ",\"fields\":\""
+								+ id
+								+ ","
+								+ fields
+								+ "\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+						JSONParser jsonParser = new JSONParser();
+						JSONObject jsonObject;
+						try {
+							jsonObject = (JSONObject) jsonParser.parse(result);
+							for (Object key : jsonObject.keySet()) {
+								// based on you key types
+								String keyStr = (String) key;
+								JSONArray keyvalue = (JSONArray) jsonObject
+										.get(keyStr);
+
+								// Print key and value
+								logger4j.debug(loglineheader + "key: " + keyStr
+										+ " value: " + keyvalue);
+
+								for (Object o : keyvalue) {
+									if (o instanceof JSONObject) {
+										String[] fieldsArray = fields
+												.split(",");
+										String idGet = (String) ((JSONObject) o)
+												.get("id");
+										String name = null;
+										String email1 = null;
+										String website = null;
+										String billing_address_postalcode = null;
+										String billing_address_street = null;
+										for (String fieldsValue : fieldsArray) {
+											switch (fieldsValue) {
+											case "name":
+												name = (String) ((JSONObject) o)
+														.get(fieldsValue);
+												break;
+											case "email1":
+												email1 = (String) ((JSONObject) o)
+														.get(fieldsValue);
+												break;
+											case "website":
+												website = (String) ((JSONObject) o)
+														.get(fieldsValue);
+												break;
+											case "billing_address_postalcode":
+												billing_address_postalcode = (String) ((JSONObject) o)
+														.get(fieldsValue);
+												break;
+											case "billing_address_street":
+												billing_address_street = (String) ((JSONObject) o)
+														.get(fieldsValue);
+												break;
+											default:
+												break;
+											}
+										}
+										logger4j.debug(loglineheader
+												+ "result : "
+												+ " idGet = "
+												+ idGet
+												+ "name"
+												+ name
+												+ " email1 "
+												+ email1
+												+ " website "
+												+ website
+												+ " billing_address_postalcode "
+												+ billing_address_postalcode
+												+ "billing_address_street"
+												+ billing_address_street);
+										objectIDHashMap.add(new String[] {
+												idGet, name, email1, website,
+												billing_address_postalcode,
+												billing_address_street });
+									}
+								}
+							}
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
+					if (objectIDHashMap != null) {
+						logger4j.warn(loglineheader + "objectIDHashMap: "
+								+ objectIDHashMap.size());
+
+					}
+
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+
+				}
+			} while (hasNext);
+		}
+
+		logger4j.info(loglineheader + "objectIDHashMap: " + objectIDHashMap);
+		for (String[] objectIDHashMapArray : objectIDHashMap) {
+			String idGet = objectIDHashMapArray[ID];
+			String name = objectIDHashMapArray[NAME];
+			String email1 = objectIDHashMapArray[EMAIL1];
+			String website = objectIDHashMapArray[WEBSITE];
+			String billing_address_postalcode = objectIDHashMapArray[BILLING_ADDRESS_POSTALCODE];
+			String billing_address_street = objectIDHashMapArray[BILLING_ADDRESS_STREET];
+			logger4j.info(loglineheader + "objectIDHashMap : Key = " + idGet
+					+ " name = " + name + " email1 = " + email1 + " website = "
+					+ website + " billing_address_postalcode = "
+					+ billing_address_postalcode + " billing_address_street "
+					+ billing_address_street);
+		}
+		return objectIDHashMap;
+	}
+
+	/**
+	 * This Method checkIfCompanyIsDuplicate checks Company Duplication id (key)
+	 * and the fields (Values)
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param fields
+	 *
+	 * @param id
+	 *
+	 * @return the boolean true if Company is Duplicate
+	 *
+	 * @since 1.00
+	 */
+
+	public static Boolean checkIfCompanyIsDuplicate(Object objectIDHashMapObj,
+			String id, String name, String email1, String website,
+			String billing_address_postalcode, String billing_address_street) {
+		// TODO Auto-generated method stub
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkIfCompanyIsDuplicate");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+
+		logger4j.debug(loglineheader + " -- Start -- ");
+		logger4j.debug(loglineheader + " -- objectIDHashMapObj  ---"
+				+ objectIDHashMapObj + "---");
+		logger4j.debug(loglineheader + " -- id  ---" + id + "---");
+		logger4j.debug(loglineheader + " -- name  ---" + name + "---");
+		logger4j.debug(loglineheader + " -- email1  ---" + email1 + "---");
+		logger4j.debug(loglineheader + " -- website  ---" + website + "---");
+		logger4j.debug(loglineheader + " -- billing_address_postalcode  ---"
+				+ billing_address_postalcode + "---");
+		logger4j.debug(loglineheader + " -- billing_address_street  ---"
+				+ billing_address_street + "---");
+		List<String[]> objectIDHashMap = new ArrayList<String[]>();
+		Boolean isDuplicate = false;
+		try {
+			objectIDHashMap = (List<String[]>) objectIDHashMapObj;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ objectIDHashMapObj);
+			return null;
+		}
+
+		for (String[] objectIDHashMapArray : objectIDHashMap) {
+			logger4j.debug(loglineheader + " id " + objectIDHashMapArray[ID]);
+			logger4j.debug(loglineheader + " name  "
+					+ objectIDHashMapArray[NAME]);
+			logger4j.debug(loglineheader + " email1 "
+					+ objectIDHashMapArray[EMAIL1]);
+			logger4j.debug(loglineheader + " website "
+					+ objectIDHashMapArray[WEBSITE]);
+			logger4j.debug(loglineheader + " billing_address_postalcode "
+					+ objectIDHashMapArray[BILLING_ADDRESS_POSTALCODE]);
+			logger4j.debug(loglineheader + " billing_address_street "
+					+ objectIDHashMapArray[BILLING_ADDRESS_STREET]);
+
+			String idHash = objectIDHashMapArray[ID];
+			String nameHash = objectIDHashMapArray[NAME];
+			String email1Hash = objectIDHashMapArray[EMAIL1];
+			String websiteHash = objectIDHashMapArray[WEBSITE];
+			String billing_address_postalcode_Hash = objectIDHashMapArray[BILLING_ADDRESS_POSTALCODE];
+			String billing_address_street_Hash = objectIDHashMapArray[BILLING_ADDRESS_STREET];
+
+			if ((id != null && idHash != null && !id.isEmpty()
+					&& !idHash.isEmpty() && !id.equalsIgnoreCase(idHash))
+					|| id == null) {
+
+				Boolean isSameDomain = false;
+
+				logger4j.debug(loglineheader + "check email1 or website ");
+				if ((email1 != null && !email1.isEmpty())
+						|| (website != null && !website.isEmpty())) {
+					logger4j.debug(loglineheader + "there is a Domain to check");
+					logger4j.debug(loglineheader + "check email1");
+
+					if ((email1 != null && !email1.isEmpty())
+							&& (email1Hash != null && !email1Hash.isEmpty())
+							&& email1.replaceAll(".*@", "").equalsIgnoreCase(
+									email1Hash.replaceAll(".*@", ""))) {
+						isSameDomain = true;
+						logger4j.debug(loglineheader + "email1 match");
+					}
+					logger4j.debug(loglineheader + "check website");
+
+					if ((website != null && !website.isEmpty())
+							&& websiteHash != null
+							&& websiteHash.isEmpty()
+							&& website
+									.replaceAll("h.*//", "")
+									.replaceAll("/.*", "")
+									.equalsIgnoreCase(
+											websiteHash.replaceAll("h.*//", "")
+													.replaceAll("/.*", ""))) {
+						isSameDomain = true;
+						logger4j.debug(loglineheader + "website match");
+					}
+				}
+
+				logger4j.debug(loglineheader + "check name");
+				printSimilarity(name, nameHash);
+				Double companyNamePercSim = similarity(name, nameHash);
+
+				printSimilarity(billing_address_postalcode,
+						billing_address_postalcode_Hash);
+				Double companyZipPercSim = similarity(
+						billing_address_postalcode,
+						billing_address_postalcode_Hash);
+
+				printSimilarity(billing_address_street,
+						billing_address_street_Hash);
+				Double companyStreetPercSim = similarity(
+						billing_address_street, billing_address_street_Hash);
+
+				if (isSameDomain) {
+					if (companyNamePercSim >= 95) {
+						if (companyZipPercSim > 99 && companyStreetPercSim > 74) {
+							isDuplicate = true;
+						}
+					} else if (companyNamePercSim > 50) {
+						if (companyZipPercSim > 99 && companyStreetPercSim > 84) {
+							isDuplicate = true;
+						}
+					}
+				} else {
+					if (companyNamePercSim >= 95) {
+						if (companyZipPercSim > 99 && companyStreetPercSim > 84) {
+							isDuplicate = true;
+
+						}
+					}
+				}
+				if (isDuplicate) {
+					logger4j.warn(loglineheader + "id = " + id
+							+ " isDifferentTo = " + idHash);
+					logger4j.warn(loglineheader + "name = " + name
+							+ " matching = " + nameHash + " similarity = "
+							+ companyNamePercSim);
+					logger4j.warn(loglineheader + "email1 = " + email1
+							+ " matching = " + email1Hash + " similarity = "
+							+ isSameDomain);
+					logger4j.warn(loglineheader + "website = " + website
+							+ " matching = " + websiteHash + " similarity = "
+							+ isSameDomain);
+					logger4j.warn(loglineheader + "billing_address_street = "
+							+ billing_address_street + " matching = "
+							+ billing_address_street_Hash + " similarity = "
+							+ companyStreetPercSim);
+					logger4j.warn(loglineheader
+							+ "billing_address_postalcode = "
+							+ billing_address_postalcode + " matching = "
+							+ billing_address_postalcode_Hash
+							+ " similarity = " + companyZipPercSim);
+					return isDuplicate;
+				}
+			}
+		}
+
+		logger4j.debug(loglineheader + "isDublicate : " + isDuplicate);
+		return isDuplicate;
+	}
+
+	/**
+	 * This Method addCompanyToHash adds Company to Hash id (key) and the fields
+	 * (Values)
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param fields
+	 *
+	 * @param id
+	 *
+	 * @return the boolean true if Company is Duplicate
+	 *
+	 * @since 1.00
+	 */
+
+	public static List<String[]> addCompanyToHash(Object objectIDHashMapObjTmp,
+			String id, String name, String email1, String website,
+			String billing_address_postalcode, String billing_address_street) {
+		// TODO Auto-generated method stub
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkIfCompanyIsDuplicate");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+
+		logger4j.info(loglineheader + " -- Start -- ");
+		logger4j.debug(loglineheader + " -- objectIDHashMapObj  ---"
+				+ objectIDHashMapObjTmp + "---");
+		logger4j.debug(loglineheader + " -- id  ---" + id + "---");
+		logger4j.debug(loglineheader + " -- name  ---" + name + "---");
+		logger4j.debug(loglineheader + " -- email1  ---" + email1 + "---");
+		logger4j.debug(loglineheader + " -- website  ---" + website + "---");
+		logger4j.debug(loglineheader + " -- billing_address_postalcode  ---"
+				+ billing_address_postalcode + "---");
+		logger4j.debug(loglineheader + " -- billing_address_street  ---"
+				+ billing_address_street + "---");
+
+		List<String[]> objectIDHashMap = new ArrayList<String[]>();
+		try {
+			objectIDHashMap = (List<String[]>) objectIDHashMapObjTmp;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ objectIDHashMapObjTmp);
+			return objectIDHashMap;
+		}
+		if (!objectIDHashMap.contains(id)) {
+			objectIDHashMap.add(new String[] { id, name, email1, website,
+					billing_address_postalcode, billing_address_street });
+		}
+
+		return objectIDHashMap;
+
+	}
+
+	/**
+	 * This Method createJSONContact creates a json File for Contacts (Values)
+	 *
+	 * @param id
+	 * @param name
+	 * @param date_entered
+	 *
+	 * @return the boolean true if Company is Duplicate
+	 *
+	 * @since 1.00
+	 */
+
+	public static Object createJSONContact(String id, String name,
+			String date_entered, String date_modified, String modified_user_id,
+			String modified_by_name, String modified_user_link,
+			String created_by, String created_by_name, String created_by_link,
+			String description, Boolean deleted, String salutation,
+			String first_name, String last_name, String full_name,
+			String title, String facebook, String twitter, String googleplus,
+			String department, Boolean do_not_call, String phone_home,
+			String phone_mobile, String phone_work, String phone_other,
+			String phone_fax, String primary_address_street,
+			String primary_address_street_2, String primary_address_street_3,
+			String primary_address_city, String primary_address_state,
+			String primary_address_postalcode, String primary_address_country,
+			String alt_address_street, String alt_address_street_2,
+			String alt_address_street_3, String alt_address_city,
+			String alt_address_state, String alt_address_postalcode,
+			String alt_address_country, String assistant,
+			String assistant_phone, String picture, String email_and_name1,
+			String lead_source, String account_name, String accounts,
+			String account_id, String dnb_principal_id,
+			String opportunity_role_fields, String opportunities,
+			String opportunity_role_id, String opportunity_role,
+			String reports_to_id, String report_to_name,
+			String reports_to_link, String birthdate, String portal_name,
+			Boolean portal_active, String portal_password,
+			String portal_password1, String portal_app,
+			String preferred_language, String dp_business_purpose___,
+			Date dp_consent_last_updated, String campaign_id,
+			String campaign_name, String campaign_contacts,
+			String c_accept_status_fields, String calls,
+			String m_accept_status_fields, String meetings,
+			String accept_status_id, String accept_status_name,
+			String accept_status_calls, String accept_status_meetings,
+			Boolean sync_contact, Boolean mkto_sync, String mkto_id,
+			String mkto_lead_score, Boolean following, Boolean my_favorite,
+			String tag___, String locked_fields___, String assigned_user_id,
+			String assigned_user_name, String assigned_user_link,
+			String team_count, String team_count_link, String team_name___,
+			Object email, String email1, String email2, String invalid_email,
+			String email_opt_out, String email_addresses_non_primary,
+			String organisation_c, String organisation_adr_postalcode_c,
+			String organisation_adr_city_c, String organisation_adr_state_c,
+			String organisation_adr_street_c,
+			String organisation_adr_country_c, String capsule_quelle_c,
+			String capsule_type_c, String capsule_last_contact_c,
+			String e_mail_2_c, String e_mail_3_c, String e_mail_4_c,
+			String capsule_crm_id_c, String capsule_organisation_id_c,
+			String phone_office_c, String phone_postal_c, String phone_null_c,
+			String status_c, String about_c, String website_c,
+			String website_2_c, String stellenumsatz_gesamt_c, String _acl,
+			String _module) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.createJSONContact");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+
+		logger4j.debug(loglineheader + " -- Start -- ");
+		logger4j.debug(loglineheader + " -- email  ---" + email + "---");
+		JSONObject toJsonObj = new JSONObject();
+
+		toJsonObj.put("id", id);
+		toJsonObj.put("name", name);
+		toJsonObj.put("date_entered", date_entered);
+		toJsonObj.put("date_modified", date_modified);
+		toJsonObj.put("modified_user_id", modified_user_id);
+		toJsonObj.put("modified_by_name", modified_by_name);
+		toJsonObj.put("modified_user_link", modified_user_link);
+		toJsonObj.put("created_by", created_by);
+		toJsonObj.put("created_by_name", created_by_name);
+		toJsonObj.put("created_by_link", created_by_link);
+		toJsonObj.put("description", description);
+		toJsonObj.put("deleted", deleted);
+		toJsonObj.put("salutation", salutation);
+		toJsonObj.put("first_name", first_name);
+		toJsonObj.put("last_name", last_name);
+		toJsonObj.put("full_name", full_name);
+		toJsonObj.put("title", title);
+		toJsonObj.put("facebook", facebook);
+		toJsonObj.put("twitter", twitter);
+		toJsonObj.put("googleplus", googleplus);
+		toJsonObj.put("department", department);
+		toJsonObj.put("do_not_call", do_not_call);
+		toJsonObj.put("phone_home", phone_home);
+		toJsonObj.put("phone_mobile", phone_mobile);
+		toJsonObj.put("phone_work", phone_work);
+		toJsonObj.put("phone_other", phone_other);
+		toJsonObj.put("phone_fax", phone_fax);
+		toJsonObj.put("primary_address_street", primary_address_street);
+		toJsonObj.put("primary_address_street_2", primary_address_street_2);
+		toJsonObj.put("primary_address_street_3", primary_address_street_3);
+		toJsonObj.put("primary_address_city", primary_address_city);
+		toJsonObj.put("primary_address_state", primary_address_state);
+		toJsonObj.put("primary_address_postalcode", primary_address_postalcode);
+		toJsonObj.put("primary_address_country", primary_address_country);
+		toJsonObj.put("alt_address_street", alt_address_street);
+		toJsonObj.put("alt_address_street_2", alt_address_street_2);
+		toJsonObj.put("alt_address_street_3", alt_address_street_3);
+		toJsonObj.put("alt_address_city", alt_address_city);
+		toJsonObj.put("alt_address_state", alt_address_state);
+		toJsonObj.put("alt_address_postalcode", alt_address_postalcode);
+		toJsonObj.put("alt_address_country", alt_address_country);
+		toJsonObj.put("assistant", assistant);
+		toJsonObj.put("assistant_phone", assistant_phone);
+		toJsonObj.put("picture", picture);
+		toJsonObj.put("email_and_name1", email_and_name1);
+		toJsonObj.put("lead_source", lead_source);
+		toJsonObj.put("account_name", account_name);
+		toJsonObj.put("accounts", accounts);
+		toJsonObj.put("account_id", account_id);
+		toJsonObj.put("dnb_principal_id", dnb_principal_id);
+		toJsonObj.put("opportunity_role_fields", opportunity_role_fields);
+		toJsonObj.put("opportunities", opportunities);
+		toJsonObj.put("opportunity_role_id", opportunity_role_id);
+		toJsonObj.put("opportunity_role", opportunity_role);
+		toJsonObj.put("reports_to_id", reports_to_id);
+		toJsonObj.put("report_to_name", report_to_name);
+		toJsonObj.put("reports_to_link", reports_to_link);
+		toJsonObj.put("birthdate", birthdate);
+		toJsonObj.put("portal_name", portal_name);
+		toJsonObj.put("portal_active", portal_active);
+		toJsonObj.put("portal_password", portal_password);
+		toJsonObj.put("portal_password1", portal_password1);
+		toJsonObj.put("portal_app", portal_app);
+		toJsonObj.put("preferred_language", preferred_language);
+		toJsonObj.put("dp_business_purpose___", dp_business_purpose___);
+		toJsonObj.put("dp_consent_last_updated", dp_consent_last_updated);
+		toJsonObj.put("campaign_id", campaign_id);
+		toJsonObj.put("campaign_name", campaign_name);
+		toJsonObj.put("campaign_contacts", campaign_contacts);
+		toJsonObj.put("c_accept_status_fields", c_accept_status_fields);
+		toJsonObj.put("calls", calls);
+		toJsonObj.put("m_accept_status_fields", m_accept_status_fields);
+		toJsonObj.put("meetings", meetings);
+		toJsonObj.put("accept_status_id", accept_status_id);
+		toJsonObj.put("accept_status_name", accept_status_name);
+		toJsonObj.put("accept_status_calls", accept_status_calls);
+		toJsonObj.put("accept_status_meetings", accept_status_meetings);
+		toJsonObj.put("sync_contact", sync_contact);
+		toJsonObj.put("mkto_sync", mkto_sync);
+		toJsonObj.put("mkto_id", mkto_id);
+		toJsonObj.put("mkto_lead_score", mkto_lead_score);
+		toJsonObj.put("following", following);
+		toJsonObj.put("my_favorite", my_favorite);
+		toJsonObj.put("tag___", tag___);
+		toJsonObj.put("locked_fields___", locked_fields___);
+		toJsonObj.put("assigned_user_id", assigned_user_id);
+		toJsonObj.put("assigned_user_name", assigned_user_name);
+		toJsonObj.put("assigned_user_link", assigned_user_link);
+		toJsonObj.put("team_count", team_count);
+		toJsonObj.put("team_count_link", team_count_link);
+		toJsonObj.put("team_name___", team_name___);
+		JSONParser jsonParser = new JSONParser();
+        JSONArray emailJArray = new JSONArray();
+		try {			
+			emailJArray = (JSONArray) jsonParser.parse(email.toString());
+		} catch (Exception e) {
+			logger4j.warn(loglineheader + " -- emailJArray.toString()  ---"
+					+ emailJArray.toString() + "---" + e.toString());		
+			}
+
+		toJsonObj.put("email", emailJArray);
+		toJsonObj.put("email1", email1);
+		toJsonObj.put("email2", email2);
+		toJsonObj.put("invalid_email", invalid_email);
+		toJsonObj.put("email_opt_out", email_opt_out);
+		toJsonObj.put("email_addresses_non_primary",
+				email_addresses_non_primary);
+		toJsonObj.put("organisation_c", organisation_c);
+		toJsonObj.put("organisation_adr_postalcode_c",
+				organisation_adr_postalcode_c);
+		toJsonObj.put("organisation_adr_city_c", organisation_adr_city_c);
+		toJsonObj.put("organisation_adr_state_c", organisation_adr_state_c);
+		toJsonObj.put("organisation_adr_street_c", organisation_adr_street_c);
+		toJsonObj.put("organisation_adr_country_c", organisation_adr_country_c);
+		toJsonObj.put("capsule_quelle_c", capsule_quelle_c);
+		toJsonObj.put("capsule_type_c", capsule_type_c);
+		toJsonObj.put("capsule_last_contact_c", capsule_last_contact_c);
+		toJsonObj.put("e_mail_2_c", e_mail_2_c);
+		toJsonObj.put("e_mail_3_c", e_mail_3_c);
+		toJsonObj.put("e_mail_4_c", e_mail_4_c);
+		toJsonObj.put("capsule_crm_id_c", capsule_crm_id_c);
+		toJsonObj.put("capsule_organisation_id_c", capsule_organisation_id_c);
+		toJsonObj.put("phone_office_c", phone_office_c);
+		toJsonObj.put("phone_postal_c", phone_postal_c);
+		toJsonObj.put("phone_null_c", phone_null_c);
+		toJsonObj.put("status_c", status_c);
+		toJsonObj.put("about_c", about_c);
+		toJsonObj.put("website_c", website_c);
+		toJsonObj.put("website_2_c", website_2_c);
+		toJsonObj.put("stellenumsatz_gesamt_c", stellenumsatz_gesamt_c);
+		toJsonObj.put("_acl", _acl);
+		toJsonObj.put("_module", _module);
+
+		logger4j.debug(loglineheader + " -- toJsonObj  ---"
+				+ toJsonObj.toJSONString() + "---");
+
+		return toJsonObj;
+	}
+
+	/**
+	 * This Method createJSONAccount creates a json File for Accounts (Values)
+	 *
+	 * @param id
+	 * @param name
+	 * @param date_entered
+	 *
+	 * @return the boolean true if Company is Duplicate
+	 *
+	 * @since 1.00
+	 */
+
+	public static Object createJSONAccount(String id, String name,
+			String date_entered, String date_modified,
+			Integer modified_user_id, String modified_by_name,
+			String modified_user_link, String created_by,
+			String created_by_name, String created_by_link, String description,
+			Boolean deleted, String facebook, String twitter,
+			String googleplus, String account_type, String industry,
+			String annual_revenue, String phone_fax,
+			String billing_address_street, String billing_address_street_2,
+			String billing_address_street_3, String billing_address_street_4,
+			String billing_address_city, String billing_address_state,
+			String billing_address_postalcode, String billing_address_country,
+			String rating, String phone_office, String phone_alternate,
+			String website, String ownership, String employees,
+			String ticker_symbol, String shipping_address_street,
+			String shipping_address_street_2, String shipping_address_street_3,
+			String shipping_address_street_4, String shipping_address_city,
+			String shipping_address_state, String shipping_address_postalcode,
+			String shipping_address_country, String parent_id, String sic_code,
+			String duns_num, String parent_name, String member_of,
+			String campaign_id, String campaign_name, String campaign_accounts,
+			Boolean following, Boolean my_favorite, String tag___,
+			String locked_fields___, String assigned_user_id,
+			String assigned_user_name, String assigned_user_link,
+			String team_count, String team_count_link, String team_name___,
+			Object email, String email1, String email2, String invalid_email,
+			String email_opt_out, String email_addresses_non_primary,
+			String e_mail_2_c, String e_mail_3_c, String e_mail_4_c,
+			String txt_kundenkonto1_type_c, String txt_kundenkonto2_type_c,
+			String txt_kundenkonto3_type_c, String txt_kundenkonto4_type_c,
+			String url_kundenkonto1_link_c, String url_kundenkonto2_link_c,
+			String url_kundenkonto3_link_c, String url_kundenkonto4_link_c,
+			String stellenumsatz_gesamt_c, String anzahl_positionenanzeigen_c,
+			String kanaele_ma_suche_c, Boolean arbeitsamt_c,
+			Boolean andere_portale_c, Boolean tageszeitung_c,
+			Boolean eigene_firmenwebseite_c, String aktuelle_ma_suche_c,
+			String neueinstellungen_geplant_c, String welcher_zeitraum_c,
+			String wird_ausgebildet_c, String accounts_accounts_2accounts_ida,
+			String mailing_city_c, String mailing_state_c,
+			String mailing_street_c, String mailing_country_c,
+			String mailing_postalcode_c, String organisation_c, String about_c,
+			String capsule_organisation_c, String capsule_quelle_c,
+			String capsule_type_c, String orga_adr_street_c,
+			String orga_adr_city_c, String orga_adr_country_c,
+			String orga_adr_postalcode_c, String orga_adr_state_c,
+			String adresse_2_street_c, String adresse_2_city_c,
+			String adresse_2_state_c, String adresse_2_country_c,
+			String adresse_2_postalcode_c, String adresse_3_street_c,
+			String adresse_3_state_c, String adresse_3_postalcode_c,
+			String adresse_3_city_c, String adresse_3_country_c,
+			String adresse_4_city_c, String adresse_4_street_c,
+			String adresse_4_postalcode_c, String adresse_4_state_c,
+			String adresse_4_country_c, String adresse_5_state_c,
+			String adresse_5_city_c, String adresse_5_postalcode_c,
+			String adresse_5_street_c, String adresse_5_country_c,
+			String capsule_last_contact_c, String telefon_2_c,
+			String telefon_3_c, String mobiltelefon_c, String fax_phone_c,
+			String work_web_c, String website_2_c,
+			String capsule_adress_type_c, String capsule_adress_id_c,
+			String capsule_crm_id_c, String bild_url_c,
+			Boolean cbox_capsule_duplicate_c, String _acl, String _module) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.createJSONAccount");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+
+		logger4j.debug(loglineheader + " -- Start -- ");
+		logger4j.debug(loglineheader + " -- email  ---" + email + "---");
+
+		JSONObject toJsonObj = new JSONObject();
+		toJsonObj.put("id", id);
+		toJsonObj.put("name", name);
+		toJsonObj.put("date_entered", date_entered);
+		toJsonObj.put("date_modified", date_modified);
+		toJsonObj.put("modified_user_id", modified_user_id);
+		toJsonObj.put("modified_by_name", modified_by_name);
+		toJsonObj.put("modified_user_link", modified_user_link);
+		toJsonObj.put("created_by", created_by);
+		toJsonObj.put("created_by_name", created_by_name);
+		toJsonObj.put("created_by_link", created_by_link);
+		toJsonObj.put("description", description);
+		toJsonObj.put("deleted", deleted);
+		toJsonObj.put("facebook", facebook);
+		toJsonObj.put("twitter", twitter);
+		toJsonObj.put("googleplus", googleplus);
+		toJsonObj.put("account_type", account_type);
+		toJsonObj.put("industry", industry);
+		toJsonObj.put("annual_revenue", annual_revenue);
+		toJsonObj.put("phone_fax", phone_fax);
+		toJsonObj.put("billing_address_street", billing_address_street);
+		toJsonObj.put("billing_address_street_2", billing_address_street_2);
+		toJsonObj.put("billing_address_street_3", billing_address_street_3);
+		toJsonObj.put("billing_address_street_4", billing_address_street_4);
+		toJsonObj.put("billing_address_city", billing_address_city);
+		toJsonObj.put("billing_address_state", billing_address_state);
+		toJsonObj.put("billing_address_postalcode", billing_address_postalcode);
+		toJsonObj.put("billing_address_country", billing_address_country);
+		toJsonObj.put("rating", rating);
+		toJsonObj.put("phone_office", phone_office);
+		toJsonObj.put("phone_alternate", phone_alternate);
+		toJsonObj.put("website", website);
+		toJsonObj.put("ownership", ownership);
+		toJsonObj.put("employees", employees);
+		toJsonObj.put("ticker_symbol", ticker_symbol);
+		toJsonObj.put("shipping_address_street", shipping_address_street);
+		toJsonObj.put("shipping_address_street_2", shipping_address_street_2);
+		toJsonObj.put("shipping_address_street_3", shipping_address_street_3);
+		toJsonObj.put("shipping_address_street_4", shipping_address_street_4);
+		toJsonObj.put("shipping_address_city", shipping_address_city);
+		toJsonObj.put("shipping_address_state", shipping_address_state);
+		toJsonObj.put("shipping_address_postalcode",
+				shipping_address_postalcode);
+		toJsonObj.put("shipping_address_country", shipping_address_country);
+		toJsonObj.put("parent_id", parent_id);
+		toJsonObj.put("sic_code", sic_code);
+		toJsonObj.put("duns_num", duns_num);
+		toJsonObj.put("parent_name", parent_name);
+		toJsonObj.put("member_of", member_of);
+		toJsonObj.put("campaign_id", campaign_id);
+		toJsonObj.put("campaign_name", campaign_name);
+		toJsonObj.put("campaign_accounts", campaign_accounts);
+		toJsonObj.put("following", following);
+		toJsonObj.put("my_favorite", my_favorite);
+		toJsonObj.put("tag___", tag___);
+		toJsonObj.put("locked_fields___", locked_fields___);
+		toJsonObj.put("assigned_user_id", assigned_user_id);
+		toJsonObj.put("assigned_user_name", assigned_user_name);
+		toJsonObj.put("assigned_user_link", assigned_user_link);
+		toJsonObj.put("team_count", team_count);
+		toJsonObj.put("team_count_link", team_count_link);
+		toJsonObj.put("team_name___", team_name___);
+		JSONParser jsonParser = new JSONParser();
+        JSONArray emailJArray = new JSONArray();
+		try {			
+			emailJArray = (JSONArray) jsonParser.parse(email.toString());
+		} catch (Exception e) {
+			logger4j.warn(loglineheader + " -- emailJArray.toString()  ---"
+					+ emailJArray.toString() + "---" + e.toString());		
+			}
+		logger4j.debug(loglineheader + " -- emailJArray.toString()  ---"
+				+ emailJArray.toString() + "---");
+		toJsonObj.put("email", emailJArray);
+		toJsonObj.put("email1", email1);
+		toJsonObj.put("email2", email2);
+		toJsonObj.put("invalid_email", invalid_email);
+		toJsonObj.put("email_opt_out", email_opt_out);
+		toJsonObj.put("email_addresses_non_primary",
+				email_addresses_non_primary);
+		toJsonObj.put("e_mail_2_c", e_mail_2_c);
+		toJsonObj.put("e_mail_3_c", e_mail_3_c);
+		toJsonObj.put("e_mail_4_c", e_mail_4_c);
+		toJsonObj.put("txt_kundenkonto1_type_c", txt_kundenkonto1_type_c);
+		toJsonObj.put("txt_kundenkonto2_type_c", txt_kundenkonto2_type_c);
+		toJsonObj.put("txt_kundenkonto3_type_c", txt_kundenkonto3_type_c);
+		toJsonObj.put("txt_kundenkonto4_type_c", txt_kundenkonto4_type_c);
+		toJsonObj.put("url_kundenkonto1_link_c", url_kundenkonto1_link_c);
+		toJsonObj.put("url_kundenkonto2_link_c", url_kundenkonto2_link_c);
+		toJsonObj.put("url_kundenkonto3_link_c", url_kundenkonto3_link_c);
+		toJsonObj.put("url_kundenkonto4_link_c", url_kundenkonto4_link_c);
+		toJsonObj.put("stellenumsatz_gesamt_c", stellenumsatz_gesamt_c);
+		toJsonObj.put("anzahl_positionenanzeigen_c",
+				anzahl_positionenanzeigen_c);
+		toJsonObj.put("kanaele_ma_suche_c", kanaele_ma_suche_c);
+		toJsonObj.put("arbeitsamt_c", arbeitsamt_c);
+		toJsonObj.put("andere_portale_c", andere_portale_c);
+		toJsonObj.put("tageszeitung_c", tageszeitung_c);
+		toJsonObj.put("eigene_firmenwebseite_c", eigene_firmenwebseite_c);
+		toJsonObj.put("aktuelle_ma_suche_c", aktuelle_ma_suche_c);
+		toJsonObj.put("neueinstellungen_geplant_c", neueinstellungen_geplant_c);
+		toJsonObj.put("welcher_zeitraum_c", welcher_zeitraum_c);
+		toJsonObj.put("wird_ausgebildet_c", wird_ausgebildet_c);
+		toJsonObj.put("accounts_accounts_2accounts_ida",
+				accounts_accounts_2accounts_ida);
+		toJsonObj.put("mailing_city_c", mailing_city_c);
+		toJsonObj.put("mailing_state_c", mailing_state_c);
+		toJsonObj.put("mailing_street_c", mailing_street_c);
+		toJsonObj.put("mailing_country_c", mailing_country_c);
+		toJsonObj.put("mailing_postalcode_c", mailing_postalcode_c);
+		toJsonObj.put("organisation_c", organisation_c);
+		toJsonObj.put("about_c", about_c);
+		toJsonObj.put("capsule_organisation_c", capsule_organisation_c);
+		toJsonObj.put("capsule_quelle_c", capsule_quelle_c);
+		toJsonObj.put("capsule_type_c", capsule_type_c);
+		toJsonObj.put("orga_adr_street_c", orga_adr_street_c);
+		toJsonObj.put("orga_adr_city_c", orga_adr_city_c);
+		toJsonObj.put("orga_adr_country_c", orga_adr_country_c);
+		toJsonObj.put("orga_adr_postalcode_c", orga_adr_postalcode_c);
+		toJsonObj.put("orga_adr_state_c", orga_adr_state_c);
+		toJsonObj.put("adresse_2_street_c", adresse_2_street_c);
+		toJsonObj.put("adresse_2_city_c", adresse_2_city_c);
+		toJsonObj.put("adresse_2_state_c", adresse_2_state_c);
+		toJsonObj.put("adresse_2_country_c", adresse_2_country_c);
+		toJsonObj.put("adresse_2_postalcode_c", adresse_2_postalcode_c);
+		toJsonObj.put("adresse_3_street_c", adresse_3_street_c);
+		toJsonObj.put("adresse_3_state_c", adresse_3_state_c);
+		toJsonObj.put("adresse_3_postalcode_c", adresse_3_postalcode_c);
+		toJsonObj.put("adresse_3_city_c", adresse_3_city_c);
+		toJsonObj.put("adresse_3_country_c", adresse_3_country_c);
+		toJsonObj.put("adresse_4_city_c", adresse_4_city_c);
+		toJsonObj.put("adresse_4_street_c", adresse_4_street_c);
+		toJsonObj.put("adresse_4_postalcode_c", adresse_4_postalcode_c);
+		toJsonObj.put("adresse_4_state_c", adresse_4_state_c);
+		toJsonObj.put("adresse_4_country_c", adresse_4_country_c);
+		toJsonObj.put("adresse_5_state_c", adresse_5_state_c);
+		toJsonObj.put("adresse_5_city_c", adresse_5_city_c);
+		toJsonObj.put("adresse_5_postalcode_c", adresse_5_postalcode_c);
+		toJsonObj.put("adresse_5_street_c", adresse_5_street_c);
+		toJsonObj.put("adresse_5_country_c", adresse_5_country_c);
+		toJsonObj.put("capsule_last_contact_c", capsule_last_contact_c);
+		toJsonObj.put("telefon_2_c", telefon_2_c);
+		toJsonObj.put("telefon_3_c", telefon_3_c);
+		toJsonObj.put("mobiltelefon_c", mobiltelefon_c);
+		toJsonObj.put("fax_phone_c", fax_phone_c);
+		toJsonObj.put("work_web_c", work_web_c);
+		toJsonObj.put("website_2_c", website_2_c);
+		toJsonObj.put("capsule_adress_type_c", capsule_adress_type_c);
+		toJsonObj.put("capsule_adress_id_c", capsule_adress_id_c);
+		toJsonObj.put("capsule_crm_id_c", capsule_crm_id_c);
+		toJsonObj.put("bild_url_c", bild_url_c);
+		toJsonObj.put("cbox_capsule_duplicate_c", cbox_capsule_duplicate_c);
+		toJsonObj.put("_acl", _acl);
+		toJsonObj.put("_module", _module);
+
+		logger4j.debug(loglineheader + " -- toJsonObj.toJSONString()  ---"
+				+ toJsonObj.toJSONString() + "---");
+
+		return toJsonObj;
+	}
+
+	/**
+	 * This Method checkList checks the id (key) (Values)
+	 *
+	 * @param jsonString
+	 *
+	 * @return the jasonobjectCount
+	 *
+	 * @since 1.00
+	 */
+	public static Integer checkCount(String jsonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkCount");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+
+		logger4j.info(loglineheader + " -- Start -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		Integer responseCount = 0;
+		logger4j.debug(loglineheader + " -- count  ---" + responseCount + "---");
+		JSONParser jsonParser = new JSONParser();
+
+		try {
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
+			for (Object key : jsonObject.keySet()) {
+				// based on you key types
+				String keyStr = (String) key;
+				JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+				responseCount = keyvalue.size();
+			}
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- count  ---" + e.toString()
+					+ "---");
+		}
+		logger4j.debug(loglineheader + " -- count  ---" + responseCount + "---");
+		return responseCount;
+	}
+
+	/**
+	 * This Method checkList checks the id (key) (Values)
+	 *
+	 * @param jsonObj
+	 * @param jsonString
+	 *
+	 * @return the jasonobjectCount
+	 *
+	 * @since 1.00
+	 */
+	public static Integer checkCount(String jsonObj, String jsonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkCount");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+
+		logger4j.info(loglineheader + " -- Start -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		Integer responseCount = 0;
+		logger4j.debug(loglineheader + " -- count  ---" + responseCount + "---");
+		JSONParser jsonParser = new JSONParser();
+
+		try {
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(jsonString);
+			for (Object key : jsonObject.keySet()) {
+				// based on you key types
+				String keyStr = (String) key;
+				JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+				if (jsonObj.equalsIgnoreCase(keyStr)) {
+					responseCount = keyvalue.size();
+				}
+			}
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- count  ---" + e.toString()
+					+ "---");
+		}
+		logger4j.debug(loglineheader + " -- count  ---" + responseCount + "---");
+		return responseCount;
+	}
+
+	/**
+	 * This Method checkDateAfter check two Textbased Date Strings if first is
+	 * greater then second
+	 *
+	 * @param dateTimeUpdateString
+	 *
+	 * @param dateTimeStringBefore
+	 *
+	 * @return Boolean true if dateTimeUpdateString > dateTimeStringBefore
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkDateAfter(String dateTimeUpdateString,
+			String dateTimeStringBefore) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JoblokalHelper.checkDateAfter");
+
+		String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+		String loglineheader = " routine run ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		Boolean isAfter = false;
+
+		if (dateTimeUpdateString == null) {
+			return isAfter;
+		}
+
+		if (dateTimeStringBefore == null) {
+			return isAfter;
+		}
+
+		Date currentDate = new Date();
+		Date dateTimeUpdate = currentDate;
+		Date dateTimeBefore = currentDate;
+		logger4j.debug(loglineheader + "Parsing Date ##" + dateTimeUpdateString
+				+ "##");
+		logger4j.debug(loglineheader + "Parsing Date ##" + dateTimeStringBefore
+				+ "##");
+		logger4j.debug(loglineheader + "Parsing Format ##" + dateFormat + "##");
+
+		dateTimeUpdate = dateParser2(dateTimeUpdateString, dateFormat);
+		dateTimeBefore = dateParser2(dateTimeStringBefore, dateFormat);
+
+		isAfter = dateTimeUpdate.after(dateTimeBefore);
+
+		logger4j.debug(loglineheader + " isAfter --" + isAfter + "--");
+
+		return isAfter;
+	}
+
+	/**
+	 * This Method checkList checks the id (key) (Values)
+	 *
+	 * @param checkListArray
+	 *
+	 * @param id
+	 *
+	 * @return the boolean true if Company is Duplicate
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkList(List<String[]> checkListArray, String id) {
+		for (String[] objectIDHashMapArray : checkListArray) {
+			String idArray = objectIDHashMapArray[ID];
+			if (id.equalsIgnoreCase(idArray)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	 /**
+     * This Method rewrites the Json String and removes empty array [] with null 
+     * (creates a Json Object from a String and convert it to a String )
+     *
+     * @param jsonString
+     *
+     * @return a jsonString
+     *
+     * @since 1.00
+     */
+    public static String rewriteJsonString(String jsonString)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarCRMHelper.truncateJsonString2");
+        JSONParser jsonParser = new JSONParser();
+        JSONObject toJsonObj = new JSONObject();
+
+        try {
+            toJsonObj = (JSONObject) jsonParser
+                    .parse(jsonString);
+
+            for (Object key : toJsonObj.keySet()) {
+                // based on you key types
+                if (toJsonObj.get(key) instanceof JSONArray && !toJsonObj.containsValue(key)) {
+                    toJsonObj.put(key, null);
+                }
+            }
+        }
+        catch (ParseException e) {
+            logger4j.error(LOGLINEHEADERINIT + " can not parse jsonString = --" + jsonString + "--");
+            return jsonString;
+        }
+        logger4j.debug(LOGLINEHEADERINIT + " toJsonObj = --" + toJsonObj.toJSONString() + "--");
+
+        return toJsonObj.toJSONString();
+    }
+    
+	 /**
+     * This Method rewrites the Json String and removes empty array [] with null 
+     * (creates a Json Object from a String and convert it to a String )
+     *
+     * @param jsonString
+     *
+     * @return a jsonString
+     *
+     * @since 1.00
+     */
+    public static String rewriteJsonStringOpenTasks(String jsonString)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarCRMHelper.truncateJsonString2");
+        JSONParser jsonParser = new JSONParser();
+        JSONObject toJsonObj = new JSONObject();
+
+        try {
+            toJsonObj = (JSONObject) jsonParser
+                    .parse(jsonString);
+
+            for (Object key : toJsonObj.keySet()) {
+                // based on you key types
+                if (toJsonObj.get(key) instanceof JSONArray && !toJsonObj.containsValue(key)) {
+                	if ("description".equalsIgnoreCase((String) key)) {
+  	                      toJsonObj.put(key, "");
+					} else {
+		                  toJsonObj.put(key, null);
+					}
+                }
+            }
+        }
+        catch (ParseException e) {
+            logger4j.error(LOGLINEHEADERINIT + " can not parse jsonString = --" + jsonString + "--");
+            return jsonString;
+        }
+        logger4j.debug(LOGLINEHEADERINIT + " toJsonObj = --" + toJsonObj.toJSONString() + "--");
+
+        return toJsonObj.toJSONString();
+    }
+    
+    /**
+     * This Method copyObject creates a hashmap from the field (key) and the
+     * id(Value)
+     *
+     * @param sourceResourceUrl
+     *
+     * @param sourceToken
+     *
+     * @param targetResourceUrl
+     *
+     * @param targetToken
+     *     *
+     * @param field
+     *
+     * @param id
+     *     *     *
+     * @param modul
+     *
+     * @param max_num_max
+     *
+     * @param sourceAPI
+     *
+     * @param targetAPI
+     *
+     * @return the <name> <id> HashMap objectIDHashMap
+     *
+     * @since 1.00
+     */
+    public static HashMap<String, String> copyObject(String sourceResourceUrl, String targetResourceUrl,
+            String sourceToken, String targetToken, String field, String modul, Integer max_num_max, String sourceAPI, String targetAPI) throws ParseException
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("JoblokalHelper.copyObject");
+        String loglineheader = "NOUNIQUEID NOHOST ";
+        logger4j.debug(loglineheader
+                + " -- Start JoblokalHelper.copyObject -- ");
+        logger4j.debug(loglineheader + " -- resourceUrl  ---" + sourceResourceUrl
+                + "---");
+        logger4j.debug(loglineheader + " -- token  ---" + sourceToken + "---");
+        HashMap<String, String> objectIDHashMap = new HashMap<String, String>();
+        String hasNoNext = "\"next_offset\":-1";
+        String filter = "filter";
+        String bulk = "bulk";
+        Integer responseOK = 200;
+
+        if (sourceResourceUrl != null && targetResourceUrl != null && sourceToken != null && field != null) {
+
+            String sourceResourceUrlFinal = sourceResourceUrl + "/rest/" + sourceAPI + "/" + modul + "/" + filter;
+            String targetResourceUrlFinal = targetResourceUrl + "/rest/" + targetAPI + "/" + bulk;
+            Integer offset = 0;
+            Integer max_num = max_num_max;
+            Boolean hasNext = true;
+
+            String jsonString = "{\"filter\":[{\""
+                    + field
+                    + "\":{\"$not_null\":\"\"}}],\"max_num\":"
+                    + max_num
+                    + ",\"offset\":"
+                    + offset
+                    + "}";
+
+            do {
+                try {
+                    HttpURLConnection resource_cxn_target = (HttpURLConnection) (new URL(
+                            targetResourceUrlFinal).openConnection());
+                    resource_cxn_target.addRequestProperty("OAuth-Token", targetToken);
+                    resource_cxn_target.setConnectTimeout(CONNECTION_TIMEOUT);
+                    resource_cxn_target.setReadTimeout(READ_TIMEOUT);
+                    resource_cxn_target.setDoOutput(true);
+                    resource_cxn_target.setDoInput(true);
+                    resource_cxn_target.setRequestMethod("POST");
+                    resource_cxn_target.setFollowRedirects(true);
+                    resource_cxn_target.setRequestProperty("Content-Type",
+                            "application/json; charset=UTF-8");
+                    resource_cxn_target.setRequestProperty("Accept",
+                            "application/json; charset=UTF-8");
+
+                    HttpURLConnection resource_cxn_source = (HttpURLConnection) (new URL(
+                            sourceResourceUrlFinal).openConnection());
+                    resource_cxn_source.addRequestProperty("OAuth-Token", sourceToken);
+                    resource_cxn_source.setConnectTimeout(CONNECTION_TIMEOUT);
+                    resource_cxn_source.setReadTimeout(READ_TIMEOUT);
+                    resource_cxn_source.setDoOutput(true);
+                    resource_cxn_source.setDoInput(true);
+                    resource_cxn_source.setRequestMethod("POST");
+                    resource_cxn_source.setRequestProperty("Content-Type",
+                            "application/json; charset=UTF-8");
+                    resource_cxn_source.setRequestProperty("Accept",
+                            "application/json; charset=UTF-8");
+
+                    OutputStream os = resource_cxn_source.getOutputStream();
+                    os.write(jsonString.getBytes("UTF-8"));
+                    os.close();
+
+                    logger4j.debug(loglineheader + " resource_cxn_source : "
+                            + resource_cxn_source);
+                    // read the response
+                    Integer responseCode = resource_cxn_source.getResponseCode();
+
+                    if (!responseCode.equals(responseOK)) {
+                        logger4j.warn(loglineheader + " Status : " + Integer.toString(responseCode));
+                    }
+                    else {
+
+                        InputStream in = new BufferedInputStream(
+                                resource_cxn_source.getInputStream());
+                        String result = org.apache.commons.io.IOUtils.toString(in,
+                                "UTF-8");
+
+                        logger4j.debug(loglineheader + "resource_cxn_source : "
+                                + resource_cxn_source);
+
+                        logger4j.debug(loglineheader + "result : " + result);
+                        // System.out.println(loglineheader + "result : " + result);
+                        if (result != null) {
+
+                            hasNext = !result.contains(hasNoNext);
+                            offset = offset + max_num;
+
+                            jsonString = "{\"filter\":[{\""
+                                    + field
+                                    + "\":{\"$not_null\":\"\"}}],\"max_num\":"
+                                    + max_num
+                                    + ",\"offset\":"
+                                    + offset
+                                    + "}";
+
+                            JSONParser jsonParser = new JSONParser();
+                            JSONObject jsonObject;
+                            try {
+                                jsonObject = (JSONObject) jsonParser.parse(result);
+                                JSONObject jsonObject2 = new JSONObject();
+                                JSONArray keyvalue2 = new JSONArray();
+                                String ids[];
+                                ids = new String[max_num_max];
+                                Integer counter = 0;
+                                for (Object key : jsonObject.keySet()) {
+                                    // based on you key types
+                                    String keyStr = (String) key;
+                                    if (keyStr != null && !keyStr.isEmpty() && keyStr.startsWith("records")) {
+
+                                        JSONArray keyvalue = (JSONArray) jsonObject
+                                                .get(keyStr);
+
+                                        // Print key and value
+                                        logger4j.debug(loglineheader + "key: " + keyStr
+                                                + " value: " + keyvalue);
+
+                                        for (Object o : keyvalue) {
+                                            if (o instanceof JSONObject) {
+                                                jsonObject2.put("url", "/" + targetAPI + "/" + modul);
+                                                jsonObject2.put("method", "POST");
+                                                jsonObject2.put("data", o);
+                                                String jsonObject2String = jsonObject2.toString();
+                                                keyvalue2.add(jsonParser.parse(jsonObject2String));
+                                                ids[counter] = (String) ((JSONObject) o).get("id");
+                                                objectIDHashMap.put((String) ((JSONObject) o).get("id"), "generated");
+                                                counter++;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                JSONObject finalJsonObject = new JSONObject();
+                                finalJsonObject.put("requests", keyvalue2);
+                                logger4j.debug(" result finalJsonObject : " + finalJsonObject.toJSONString());
+
+                                System.out.println(" result finalJsonObject : " + finalJsonObject.toJSONString());
+
+                                OutputStream os2 = resource_cxn_target.getOutputStream();
+                                os2.write(finalJsonObject.toJSONString().getBytes("UTF-8"));
+                                os2.close();
+
+                                logger4j.debug(loglineheader + " resource_cxn_target : "
+                                        + resource_cxn_target);
+                                // read the response
+
+                                Integer responseCode2 = resource_cxn_target.getResponseCode();
+
+                                if (!responseCode2.equals(responseOK)) {
+                                    logger4j.warn(loglineheader + " Status : " + Integer.toString(responseCode2)) ;
+                                }
+                                else {
+
+                                    InputStream in2 = new BufferedInputStream(
+                                            resource_cxn_target.getInputStream());
+                                    String result2 = org.apache.commons.io.IOUtils.toString(in2,
+                                            "UTF-8");
+
+                                    logger4j.debug(loglineheader + "resource_cxn_target : "
+                                            + resource_cxn_target);
+
+                                    logger4j.debug(loglineheader + "result2 : " + result2);
+                                    System.out.println(loglineheader + "result2 : " + result2);
+
+                                    JSONParser jsonParser2 = new JSONParser();
+                                    JSONArray jsonResultObject = (JSONArray) jsonParser.parse(result2);
+                                    System.out.println(loglineheader + "result2 : " + result2);
+                                    counter = 0;
+                                    for (Object o2 : jsonResultObject) {
+                                        objectIDHashMap.put(ids[counter], Long.toString((Long) ((JSONObject) o2).get("status")) + " : " + (String) (((JSONObject) o2).get("contents")).toString());
+                                        counter++;
+                                    }
+                                }
+                            }
+                            catch (Exception e) {
+                                e.printStackTrace();
+                                // TODO: handle exception
+                            }
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    // TODO: handle exception
+                    e.printStackTrace();
+                }
+            }
+            while (hasNext);
+        }
+        logger4j.info(loglineheader
+                + "objectIDHashMap: " + objectIDHashMap);
+        return objectIDHashMap;
+    }    
+}

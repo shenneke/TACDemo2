@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendJSON="http://www.talend.org/json" xmlns:TalendMetadata="http://www.talend.org/metadata/connection/2010" xmlns:orgomg.cwm.resource.record="http:///orgomg/cwm/resource/record.ecore">
+  <TalendJSON:JSONFileConnection xmi:id="_t-25oH7EEeihMp_oSxbuxQ" name="EmailJL" dataPackage="_t-25r37EEeihMp_oSxbuxQ" JSONFilePath="C:/Projekte/Joblocal/JSON/Capsule/email.json" Encoding="UTF-8" readbyMode="JSONPATH">
+    <schema xmi:id="_t-25oX7EEeihMp_oSxbuxQ" LimitBoucle="50" AbsoluteXPathQuery="$.entries[*]">
+      <schemaTargets xmi:id="_t-25on7EEeihMp_oSxbuxQ" RelativeXPathQuery="id" TagName="id"/>
+      <schemaTargets xmi:id="_t-25o37EEeihMp_oSxbuxQ" RelativeXPathQuery="attachments[*]" TagName="attachments___"/>
+      <schemaTargets xmi:id="_t-25pH7EEeihMp_oSxbuxQ" RelativeXPathQuery="parties[*]" TagName="parties___"/>
+      <schemaTargets xmi:id="_t-25pX7EEeihMp_oSxbuxQ" RelativeXPathQuery="creator" TagName="creator"/>
+      <schemaTargets xmi:id="_t-25pn7EEeihMp_oSxbuxQ" RelativeXPathQuery="subject" TagName="subject"/>
+      <schemaTargets xmi:id="_t-25p37EEeihMp_oSxbuxQ" RelativeXPathQuery="createdAt" TagName="createdAt"/>
+      <schemaTargets xmi:id="_t-25qH7EEeihMp_oSxbuxQ" RelativeXPathQuery="updatedAt" TagName="updatedAt"/>
+      <schemaTargets xmi:id="_t-25qX7EEeihMp_oSxbuxQ" RelativeXPathQuery="content" TagName="content"/>
+      <schemaTargets xmi:id="_t-25qn7EEeihMp_oSxbuxQ" RelativeXPathQuery="entryAt" TagName="entryAt"/>
+      <schemaTargets xmi:id="_t-25q37EEeihMp_oSxbuxQ" RelativeXPathQuery="participants[*]" TagName="participants___"/>
+      <schemaTargets xmi:id="_t-25rH7EEeihMp_oSxbuxQ" RelativeXPathQuery="type" TagName="type"/>
+      <schemaTargets xmi:id="_t-25rX7EEeihMp_oSxbuxQ" RelativeXPathQuery="kase" TagName="kase"/>
+      <schemaTargets xmi:id="_t-25rn7EEeihMp_oSxbuxQ" RelativeXPathQuery="opportunity" TagName="opportunity"/>
+    </schema>
+  </TalendJSON:JSONFileConnection>
+  <orgomg.cwm.resource.record:RecordFile xmi:id="_t-25r37EEeihMp_oSxbuxQ" name="default" dataManager="_t-25oH7EEeihMp_oSxbuxQ">
+    <ownedElement xsi:type="TalendMetadata:MetadataTable" xmi:id="_t-25sH7EEeihMp_oSxbuxQ" id="_lt7lQH7EEeihMp_oSxbuxQ" label="metadataEmailJL">
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgwH7qEeiKV5KCVvV4DQ" label="id" length="-1" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgwX7qEeiKV5KCVvV4DQ" label="attachments___" length="1387" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgwn7qEeiKV5KCVvV4DQ" label="parties___" length="320" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgw37qEeiKV5KCVvV4DQ" label="creator" length="141" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgxH7qEeiKV5KCVvV4DQ" label="subject" length="74" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgxX7qEeiKV5KCVvV4DQ" label="createdAt" length="-1" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgxn7qEeiKV5KCVvV4DQ" label="updatedAt" length="-1" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgx37qEeiKV5KCVvV4DQ" label="content" length="6813" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgyH7qEeiKV5KCVvV4DQ" label="entryAt" length="-1" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgyX7qEeiKV5KCVvV4DQ" label="participants___" length="322" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgyn7qEeiKV5KCVvV4DQ" label="type" length="5" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgy37qEeiKV5KCVvV4DQ" label="kase" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_GDEgzH7qEeiKV5KCVvV4DQ" label="opportunity" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+    </ownedElement>
+  </orgomg.cwm.resource.record:RecordFile>
+</xmi:XMI>

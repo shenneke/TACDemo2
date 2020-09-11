@@ -1,0 +1,362 @@
+package routines;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.List;
+import java.util.Arrays;
+
+/*
+ * user specification: 
+ */
+public class CustomStringOperation {
+	
+	public static final String LOGLINEHEADERINIT = "NOUNIQUEID NOHOST";
+
+	
+	public static Integer convertPLZ(String postleitz) {
+		int result = 0 ;
+		try{
+			result = Integer.parseInt(postleitz) ;
+			} catch (Exception e) {
+			} finally {
+			}
+		return result ;
+	}
+
+	/**
+	 * Input of String to check
+	 * 
+	 * Output the String to Check without Suffix
+	 */
+	public static String getNameWithoutSuffix(String stringToCheck) {
+
+		HashMap<String, String> replace_hash = new HashMap<>();
+		replace_hash.put("Ž", "'");
+
+		HashMap<Integer, String> suffixe = new HashMap<>();
+		suffixe.put(1, "_E-Fax");
+		suffixe.put(2, "_UVP");
+		suffixe.put(3, "_VP");
+		suffixe.put(4, "_VP mit Support");
+		suffixe.put(5, "_Sip-Trunk");
+		suffixe.put(6, "_RS");
+		suffixe.put(7, "_CentrexX");
+		suffixe.put(8, "_RB");
+		suffixe.put(9, "_Leiche");
+		suffixe.put(10, "_Test");
+		suffixe.put(11, "_Teststellung");
+		suffixe.put(12, "_PP");
+		suffixe.put(13, "_PP mit Support");
+		suffixe.put(14, "_Reseller");
+		suffixe.put(15, "_Rebiller");
+		suffixe.put(16, "_Partnerteststellung");
+		suffixe.put(17, "_PP ohne Support");
+		suffixe.put(18, "_SP zu RS");
+		suffixe.put(19, " E-Fax");
+		suffixe.put(20, "_UVP");
+		suffixe.put(21, " VP");
+		suffixe.put(22, " VP mit Support");
+		suffixe.put(23, " Sip-Trunk");
+		suffixe.put(24, " RS");
+		suffixe.put(25, " CentrexX");
+		suffixe.put(26, " RB");
+		suffixe.put(27, " Leiche");
+		suffixe.put(28, " Test");
+		suffixe.put(29, " Teststellung");
+		suffixe.put(30, " PP");
+		suffixe.put(31, " PP mit Support");
+		suffixe.put(32, " Reseller");
+		suffixe.put(33, " Rebiller");
+		suffixe.put(34, " Partnerteststellung");
+		suffixe.put(35, " PP ohne Support");
+		suffixe.put(36, " SP zu RS");
+		suffixe.put(37, "_ PP mit Service");
+		suffixe.put(38, "_ kein SP mehr!");
+		suffixe.put(39, "_PP m. Sup.");
+		suffixe.put(40, "_PP m. Sup._Prov. BestandsKD");
+		suffixe.put(41, "_PP o. Su");
+		suffixe.put(42, "_PP o. Support");
+		suffixe.put(43, "_PPm. Support");
+		suffixe.put(44, "_SP");
+		suffixe.put(45, "_UVP");
+		suffixe.put(46, "_UVP KOMSA");
+		suffixe.put(47, "_VP m. S.");
+		suffixe.put(48, "_VP o. Sup.");
+		suffixe.put(49, "_VP_ ab 01.06.2012");
+		suffixe.put(50, "_VPmitS");
+		suffixe.put(51, "_VPmitSu");
+		suffixe.put(52, "_VPmitSupp");
+		suffixe.put(53, "  PP mit Service");
+		suffixe.put(54, "  kein SP mehr!");
+		suffixe.put(55, " PP m. Sup.");
+		suffixe.put(56, " PP m. Sup. Prov. BestandsKD");
+		suffixe.put(57, " PP o. Su");
+		suffixe.put(58, " PP o. Support");
+		suffixe.put(59, " PPm. Support");
+		suffixe.put(60, " SP");
+		suffixe.put(61, " UVP");
+		suffixe.put(62, " UVP KOMSA");
+		suffixe.put(63, " VP m. S.");
+		suffixe.put(64, " VP o. Sup.");
+		suffixe.put(65, " VP  ab 01.06.2012");
+		suffixe.put(66, " VPmitS");
+		suffixe.put(67, " VPmitSu");
+		suffixe.put(68, " VPmitSupp");
+		suffixe.put(69, " SP_zu");
+		suffixe.put(70, "_SP_zu");
+		suffixe.put(71, " VP zu");
+		suffixe.put(72, "_VP zu");
+
+		if (stringToCheck != null) {
+			stringToCheck.trim();
+
+			for (Entry<Integer, String> suffix : suffixe.entrySet()) {
+				if (stringToCheck.matches(".*" + suffix.getValue() + "$")) {
+					return stringToCheck.replaceFirst(suffix.getValue() + "$",
+							"");
+				}
+			}
+		}
+		return stringToCheck;
+	}
+
+	/**
+	 * Input of imap String to check
+	 * 
+	 * Output the String without imap Chars
+	 */
+	public static String convertImapString(String stringToCheck) {
+
+		HashMap<String, String> imapchars = new HashMap<>();
+
+		imapchars.put("&ANA-", "?");
+		imapchars.put("&ANE-", "Ñ");
+		imapchars.put("&ANI-", "Ò");
+		imapchars.put("&ANM-", "Ó");
+		imapchars.put("&ANQ-", "Ô");
+		imapchars.put("&ANU-", "Õ");
+		imapchars.put("&ANY-", "Ö");
+		imapchars.put("&ANg-", "Ø");
+		imapchars.put("&ANk-", "Ù");
+		imapchars.put("&ANo-", "Ú");
+		imapchars.put("&ANs-", "Û");
+		imapchars.put("&ANw-", "Ü");
+		imapchars.put("&AN8-", "ß");
+		imapchars.put("&APYA3w-", "öß");
+		imapchars.put("&AOA-", "à");
+		imapchars.put("&AOE-", "á");
+		imapchars.put("&AOI-", "â");
+		imapchars.put("&AOM-", "ã");
+		imapchars.put("&AOQ-", "ä");
+		imapchars.put("&AOU-", "å");
+		imapchars.put("&AOY-", "");
+		imapchars.put("&AOc-", "ç");
+		imapchars.put("&AOg-", "è");
+		imapchars.put("&AOk-", "é");
+		imapchars.put("&AOo-", "ê");
+		imapchars.put("&AOs-", "ë");
+		imapchars.put("&AOw-", "ì");
+		imapchars.put("&AO0-", "í");
+		imapchars.put("&AO4-", "î");
+		imapchars.put("&AO8-", "ï");
+		imapchars.put("&APA-", "?");
+		imapchars.put("&APE-", "ñ");
+		imapchars.put("&API-", "ò");
+		imapchars.put("&APM-", "ó");
+		imapchars.put("&APQ-", "ô");
+		imapchars.put("&APU-", "õ");
+		imapchars.put("&APY-", "ö");
+		imapchars.put("&APc-", "");
+		imapchars.put("&APg-", "ø");
+		imapchars.put("&APk-", "ù");
+		imapchars.put("&APo-", "ú");
+		imapchars.put("&APs-", "û");
+		imapchars.put("&APw-", "ü");
+		imapchars.put("&AP8-", "ÿ");
+		imapchars.put("&AKE-", "");
+		imapchars.put("&AKI-", "");
+		imapchars.put("&AKM-", "");
+		imapchars.put("&AKU-", "");
+		imapchars.put("&AKc-", "");
+		imapchars.put("&AKg-", "");
+		imapchars.put("&AKk-", "");
+		imapchars.put("&AKo-", "ª");
+		imapchars.put("&AKs-", "");
+		imapchars.put("&AKw-", "");
+		imapchars.put("&AK0-", "-");
+		imapchars.put("&AK4-", "");
+		imapchars.put("&AK8-", "");
+		imapchars.put("&ALA-", "");
+		imapchars.put("&ALE-", "");
+		imapchars.put("&ALQ-", "");
+		imapchars.put("&ALU-", "");
+		imapchars.put("&ALY-", "");
+		imapchars.put("&ALc-", "");
+		imapchars.put("&ALg-", "");
+		imapchars.put("&ALo-", "º");
+		imapchars.put("&ALs-", "");
+		imapchars.put("&AL0-", "");
+		imapchars.put("&AL8-", "");
+		imapchars.put("&AFs-", "[");
+		imapchars.put("&AFw-", "\\");
+		imapchars.put("&AF0-", "]");
+		imapchars.put("&AF4-", "^");
+		imapchars.put("&AF8-", "_");
+		imapchars.put("&AGA-", " `");
+		imapchars.put("&ACE-", "!");
+		imapchars.put("&ACI-", "\"");
+		imapchars.put("&ACM-", "#");
+		imapchars.put("&ACQ-", "$");
+		imapchars.put("&ACU-", "%");
+		imapchars.put("&ACY-", "&");
+		imapchars.put("&ACo-", "*");
+		imapchars.put("&ADs-", ";");
+		imapchars.put("&ADw-", "<");
+		imapchars.put("&AD0-", "=");
+		imapchars.put("&AD4-", ">");
+		imapchars.put("&AHs-", "{");
+		imapchars.put("&AHw-", "|");
+		imapchars.put("&AH0-", "}");
+		imapchars.put("&AH4-", "");
+
+		for (Entry<String, String> imapchar : imapchars.entrySet()) {
+			if (stringToCheck.matches(".*&.*")) {
+				stringToCheck = stringToCheck.replace(imapchar.getKey(),
+						imapchar.getValue());
+			}
+		}
+		// System.out.print(stringToCheck + "\n");
+		return stringToCheck;
+
+	}
+
+	/**
+	 * getNameAndFolder extrahiert aus dem MSG Array den Firmen Namen und den
+	 * GMail Ordnernamen
+	 * 
+	 * @param msgarraystr
+	 *            input
+	 * @return Firmen Namen und den GMail Ordnernamen
+	 */
+
+	public static String getNameAndFolder(String msgarraystr) {
+		List<String> msgarray = Arrays.asList(msgarraystr.split(";"));
+		if (msgarray != null) {
+			return msgarray.get(0) + " Ordner : " + msgarray.get(6) + " -> ";
+		}
+		return "Empty";
+	}
+	
+	
+
+	/**
+	 * Generiere einen Hash Key Kundennummer SugarCRM ID
+	 * 
+	 * @param id SugarCRM ID
+	 * @param kundennummer   Kundennummer        
+	 * @return HashMap Key Kundennummer value SugarCRM ID
+	 */
+
+	public static HashMap<String, String> getHistorischeKNr(String id, String kundennummer) {			
+			HashMap<String, String> hmap = new HashMap<String, String>();
+			
+			if (id != null && kundennummer != null) {  
+	     		String[] arraykn = kundennummer.split(" ");
+			
+		    	for (String kn : arraykn) {
+			    	hmap.put(kn, id);
+			    //	System.out.println("Kundennummer = " + kn + " ID = " + id  );
+		    	} 
+			}
+			return hmap ;
+	}
+
+	/**
+	 * Input of File String to check
+	 * 
+	 * Output the String without special Chars
+	 */
+	public static String convertFileString(String stringToCheck) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("CustomStringOperation.convertImapFileString");
+		logger4j.debug(LOGLINEHEADERINIT + " -- Start  -- ");
+		logger4j.info(LOGLINEHEADERINIT + " -- stringToCheck  ---"+stringToCheck+"---");
+		
+		HashMap<String, String> imapchars = new HashMap<>();
+
+		imapchars.put("Ñ","N");
+		imapchars.put("Ò","O");
+		imapchars.put("Ó","O");
+		imapchars.put("Ô","O");
+		imapchars.put("Õ","O");
+		imapchars.put("Ö","Oe");
+		imapchars.put("Ø","0");
+		imapchars.put("Ù","U");
+		imapchars.put("Ú","U");
+		imapchars.put("Û","U");
+		imapchars.put("Ü","Ue");
+		imapchars.put("ß","ss");
+		imapchars.put("ö","oe");
+		imapchars.put("à","a");
+		imapchars.put("á","a");
+		imapchars.put("â","a");
+		imapchars.put("ã","a");
+		imapchars.put("ä","ae");
+		imapchars.put("å","a");
+		imapchars.put("ç","c");
+		imapchars.put("è","e");
+		imapchars.put("é","e");
+		imapchars.put("ê","e");
+		imapchars.put("ë","e");
+		imapchars.put("ì","i");
+		imapchars.put("í","i");
+		imapchars.put("î","i");
+		imapchars.put("ï","i");
+		imapchars.put("?","_");
+		imapchars.put("ñ","n");
+		imapchars.put("ò","o");
+		imapchars.put("ó","o");
+		imapchars.put("ô","o");
+		imapchars.put("õ","o");
+		imapchars.put("ö","oe");
+		imapchars.put("ø","_");
+		imapchars.put("ù","u");
+		imapchars.put("ú","u");
+		imapchars.put("û","u");
+		imapchars.put("ü","ue");
+		imapchars.put("ÿ","y");
+		imapchars.put("ª","_");
+		imapchars.put("º","_");
+		imapchars.put("[","_");
+		imapchars.put("]","_");
+		imapchars.put("^","_");
+		imapchars.put("`","_");
+		imapchars.put("!","_");
+		imapchars.put("#","_");
+		imapchars.put("$","_");
+		imapchars.put("%","_");
+		imapchars.put("&","_");
+		imapchars.put("*","_");
+		imapchars.put(";","_");
+		imapchars.put(":","_");
+		imapchars.put("<","_");
+		imapchars.put("=","_");
+		imapchars.put(">","_");
+		imapchars.put("{","_");
+		imapchars.put("|","_");
+		imapchars.put("}","_");
+		imapchars.put(" ","_");
+		imapchars.put("\"","_");
+		
+
+		for (Entry<String, String> imapchar : imapchars.entrySet()) {
+				stringToCheck = stringToCheck.replace(imapchar.getKey(),
+						imapchar.getValue());
+		}
+		logger4j.info(LOGLINEHEADERINIT + " -- stringToCheck  ---"+stringToCheck+"---");
+		logger4j.debug(LOGLINEHEADERINIT + " -- Ende  -- ");
+
+		return stringToCheck;
+
+	}
+}

@@ -1,0 +1,764 @@
+package routines;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+public class SugarAttachmentsHelper {
+
+	static String LOGLINEHEADER = "NOUNIQUEID NOHOST ";
+	
+	/**
+	 * This Method postSugarcrmAttaments will add Attachments to SugarCRM
+	 * Objects
+	 * 
+	 * @param capsuleResourceUrl
+	 *            the resourceUrl to get Attachments
+	 *
+	 * @param sugarResourceUrl
+	 *            the resourceUrl to post Attachments
+	 *
+	 * @param SugarToken
+	 *            to access SugarCRM
+	 *
+	 * @param capsuleToken
+	 *            to access capsuleToken
+	 *
+	 * @param jsonString
+	 *            with Attachments from CapsuleCRM
+	 *
+	 * @param fieldname
+	 *            in SugarCRM where the file is linked
+	 *
+	 * @since 1.00
+	 */
+	public static String getPostEmailAttachments(String rootpath, String emailID,
+			String capsuleResourceUrl, String sugarResourceUrl,
+			String capsuleToken, String sugarToken, String jsonString) {
+		String restMailSugar = "/rest/v11_1/Mail/attachment";
+		return getPostEmailAttachments( rootpath,  emailID,
+				 capsuleResourceUrl,  sugarResourceUrl,
+				 capsuleToken,  sugarToken,  jsonString , restMailSugar);
+	}
+
+	/**
+	 * This Method postSugarcrmAttaments will add Attachments to SugarCRM
+	 * Objects
+	 * 
+	 * @param capsuleResourceUrl
+	 *            the resourceUrl to get Attachments
+	 *
+	 * @param sugarResourceUrl
+	 *            the resourceUrl to post Attachments
+	 *
+	 * @param SugarToken
+	 *            to access SugarCRM
+	 *
+	 * @param capsuleToken
+	 *            to access capsuleToken
+	 *
+	 * @param jsonString
+	 *            with Attachments from CapsuleCRM
+	 *
+	 * @param fieldname
+	 *            in SugarCRM where the file is linked
+	 *
+	 * @since 1.00
+	 */
+	public static String getPostEmailAttachments(String rootpath, String emailID,
+			String capsuleResourceUrl, String sugarResourceUrl,
+			String capsuleToken, String sugarToken, String jsonString, String restMailSugar) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarAttachmentsHelper.postSugarcrmAttaments");
+
+		ArrayList<String> jsonStrArrayList = new ArrayList<String>();
+
+		String restCapsuleAtt = "/api/v2/attachments/";
+
+		String fieldname = "email_attachment";
+		String attachmentFilePathStart = rootpath + "/" + emailID + "/";
+		String attachmentFilePath = null;
+		String attachmentID = null;
+		String attachmentFile = null;
+		String resultCapsule = null;
+		String resultSugar = null;
+		String sugar_file_id = null;
+		String JsonStringTmp = null;
+
+		logger4j.debug(LOGLINEHEADER + " -- Start  -- ");
+		logger4j.debug(LOGLINEHEADER + " -- emailID  ---" + emailID + "---");
+		logger4j.debug(LOGLINEHEADER + " -- capsuleResourceUrl ---" + capsuleResourceUrl + "---");
+		logger4j.debug(LOGLINEHEADER + " -- sugarResourceUrl ---" + sugarResourceUrl + "---");
+		logger4j.debug(LOGLINEHEADER + " -- restMail ---" + restMailSugar + "---");
+		logger4j.debug(LOGLINEHEADER + " -- capsuleToken  ---" + capsuleToken + "---");
+		logger4j.debug(LOGLINEHEADER + " -- sugarToken  ---" + sugarToken + "---");
+		logger4j.debug(LOGLINEHEADER + " -- jsonString  ---" + jsonString + "---");
+		logger4j.debug(LOGLINEHEADER + " -- fieldname  ---" + fieldname + "---");
+		logger4j.debug(LOGLINEHEADER + " -- restMailSugar  ---" + restMailSugar + "---");
+
+		if (capsuleResourceUrl != null && jsonString != null) {
+			try {
+
+				JSONArray jsonArray = new JSONArray(jsonString);
+				for (Integer i = 0; i < jsonArray.length(); i++) {
+					logger4j.debug(LOGLINEHEADER + " -- jsonArray.length()  ---" + jsonArray.length() + "---");					
+					logger4j.debug(LOGLINEHEADER + " -- counter  ---" + i + "---");
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					if (jsonObject instanceof JSONObject
+							&& !jsonObject.isNull("id")
+							&& !jsonObject.isNull("filename")) {
+						attachmentID = Integer.toString( (Integer) jsonObject.get("id"));
+						logger4j.debug(LOGLINEHEADER + " -- attachmentID  ---" + attachmentID + "---");
+						attachmentFile =  CustomStringOperation.convertFileString((String) jsonObject.get("filename"));
+						attachmentFilePath = attachmentFilePathStart + attachmentID + "/" + attachmentFile;
+						logger4j.debug(LOGLINEHEADER + " -- attachmentFilePath  ---" + attachmentFilePath + "---");
+						resultCapsule = CapsuleCRMHelper.getAttachment( capsuleResourceUrl + restCapsuleAtt, capsuleToken, attachmentID, attachmentFilePath);
+						logger4j.debug(LOGLINEHEADER + " -- resultCapsule  ---" + resultCapsule + "---");
+						if ("Success".equalsIgnoreCase(resultCapsule)) {
+							try {
+								resultSugar = uploadFile(sugarResourceUrl + restMailSugar, new File(attachmentFilePath),sugarToken, fieldname);
+								logger4j.debug(LOGLINEHEADER + " -- resultSugar  ---" + resultSugar + "---");
+
+								sugar_file_id = JoblokalHelper.getElement(resultSugar, "guid");
+								if (sugar_file_id != null && !sugar_file_id.isEmpty() ) {
+									JsonStringTmp = "{\"upload_id\":\""
+											+ sugar_file_id + "\",\"name\":\""
+											+ attachmentFile + "\",\"filename\":\""
+											+ attachmentFile + "\"}";
+									logger4j.info(LOGLINEHEADER + " -- JsonStringTmp  ---" + JsonStringTmp + "---");
+									jsonStrArrayList.add(JsonStringTmp);	
+								}															
+							} catch (Exception e) {
+								// TODO: handle exception
+								logger4j.error(LOGLINEHEADER + " -- Exception  ---" + e.toString() + "---");
+							}
+						}
+					}
+				}
+			} catch (JSONException e) {
+				// TODO: handle exception
+				logger4j.error(LOGLINEHEADER + " -- JSONException  ---" + e.toString() + "---");
+			}
+
+		}
+		StringBuilder resultStrB = new StringBuilder("");
+		// iterate through ArrayList
+		for (String jsonStr : jsonStrArrayList) {
+			// append ArrayList element followed by comma
+			resultStrB.append(jsonStr).append(",");
+		}
+
+		Integer arraySize = 0;
+		if (jsonStrArrayList != null) {
+			arraySize = jsonStrArrayList.size();
+		}
+
+		// convert StringBuffer to String
+		String strList = resultStrB.toString();
+
+		// remove last comma from String if you want
+		if (strList.length() > 0)
+			strList = strList.substring(0, strList.length() - 1);
+		logger4j.debug(LOGLINEHEADER + " -- strList  ---" + strList+ "---");
+		String JsonStringResult = "{\"create\":[" + strList + "]}";
+		logger4j.debug(LOGLINEHEADER + " -- JsonStringResult  ---" + JsonStringResult + "---");
+		return JsonStringResult;
+	}
+	
+	   /**
+     * This Method createEmailAttamentString will create the Attachment String for SugarCRM
+     * Objects
+     *
+     * @param emailID
+     *                           the Emaild History ID 
+     * @param Object
+     *                           the Attachments HashMap
+     * @since 1.00
+     */
+    public static String createEmailAttachmentsString(String emailID, Object jsonStrHashMapOb)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarAttachmentsHelper.createEmailAttamentString");
+
+        HashMap<String, String> jsonStrHashMap = new HashMap<String, String>();
+        String jsonAttachments = null;
+
+        
+        try {
+            jsonStrHashMap = (HashMap<String, String>) jsonStrHashMapOb;
+            jsonAttachments = jsonStrHashMap.get(emailID);
+        }
+        catch (Exception e) {
+            logger4j.info(LOGLINEHEADER + " -- is not a ArrayList -- "
+                    + jsonStrHashMap);
+            return null;
+        }
+
+        String JsonStringResult = null;
+        
+        logger4j.debug(LOGLINEHEADER + " -- jsonAttachments  ---" + jsonAttachments + "---");
+        if (jsonAttachments != null && !jsonAttachments.isEmpty()) {
+            JsonStringResult = "{\"create\":[" + jsonAttachments + "]}";
+        }
+        logger4j.debug(LOGLINEHEADER + " -- JsonStringResult  ---" + JsonStringResult + "---");
+        return JsonStringResult;
+    }
+
+    /**
+     * This Method postlAttamentsID will add AttachmentID to SugarCRM
+     * Objects
+     *
+     * @param sugarResourceUrl
+     *                           the resourceUrl to post Attachments
+     *
+     * @param SugarToken
+     *                           to access SugarCRM
+     *
+     * @param rootpath
+     *                           root path for the Attachments 
+     *
+     * @param original_file_path_c
+     *                           in filname to attach
+     * 
+     * @param attachID
+     *                           the Attachment ID
+     *
+     * @since 1.00
+     */
+    public static HashMap<String, String> postAttachmentsID(String rootpath, String attachID,
+            String sugarResourceUrl, String original_file_path_c,
+            String sugarToken, Object idStrHashMapOb)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarAttachmentsHelper.postlAttamentsID");
+
+        HashMap<String, String> idStrHashMap = new HashMap<String, String>();
+
+        try {
+            idStrHashMap = (HashMap<String, String>) idStrHashMapOb;
+        }
+        catch (Exception e) {
+            logger4j.info(LOGLINEHEADER + " -- is not a ArrayList -- "
+                    + idStrHashMap);
+            return null;
+        }
+
+        String restMailSugar = "/rest/v10/Mail/attachment";
+        String fieldname = "email_attachment";
+        String attachmentFilePathStart = rootpath;
+        String idString = null;
+        String attachmentFile = null;
+        String resultSugar = null;
+        String sugar_file_id = null;
+        String JsonStringTmp = null;
+        String attachmentDir = null;
+        String regEx = null;
+
+        logger4j.debug(LOGLINEHEADER + " -- Start  -- ");
+        logger4j.debug(LOGLINEHEADER + " -- emailID  ---" + attachID + "---");
+        logger4j.debug(LOGLINEHEADER + " -- sugarResourceUrl ---" + sugarResourceUrl + "---");
+        logger4j.debug(LOGLINEHEADER + " -- restMail ---" + restMailSugar + "---");
+        logger4j.debug(LOGLINEHEADER + " -- sugarToken  ---" + sugarToken + "---");
+        logger4j.debug(LOGLINEHEADER + " -- jsonString  ---" + idString + "---");
+        logger4j.debug(LOGLINEHEADER + " -- fieldname  ---" + original_file_path_c + "---");
+        logger4j.debug(LOGLINEHEADER + " -- restMailSugar  ---" + restMailSugar + "---");
+
+        if (original_file_path_c != null) {
+
+            if (original_file_path_c.contains("\\")) {
+                regEx = "\\\\(?=[^\\\\]+$)";
+            }
+            else {
+                regEx = "/(?=[^/]+$)";
+            }
+
+            if (original_file_path_c.contains("\\") || original_file_path_c.contains("/")) {
+                String[] tokens = original_file_path_c.split(regEx);
+                attachmentDir = tokens[0];
+                attachmentFile = tokens[1];
+                logger4j.debug(LOGLINEHEADER + "attachmentDir : " + attachmentDir);
+                logger4j.debug(LOGLINEHEADER + "attachmentFile : " + attachmentFile);
+            }
+            else {
+                attachmentFile = original_file_path_c;
+            }
+
+            String filePath = attachmentFilePathStart + "/" + original_file_path_c;
+            if (!new File(filePath).isFile()) {
+            	logger4j.warn(LOGLINEHEADER + " -- search for file ---" + filePath + "---");
+                filePath = SugarCRMHelper.findFile(attachmentFilePathStart + "/", attachmentFile);
+            	logger4j.warn(LOGLINEHEADER + " -- found file ---" + filePath + "---");                
+            }
+            logger4j.debug(LOGLINEHEADER + "filePath --" + filePath + "--");
+
+            try {
+            	if( filePath != null && !filePath.isEmpty()){
+                  resultSugar = uploadFile(sugarResourceUrl + restMailSugar, new File(filePath), sugarToken, fieldname);
+                  logger4j.debug(LOGLINEHEADER + " -- resultSugar  ---" + resultSugar + "---");
+                  sugar_file_id = JoblokalHelper.getElement(resultSugar, "guid");
+            	} else {
+            		sugar_file_id = null;
+            	}
+            		
+                if (sugar_file_id != null && !sugar_file_id.isEmpty()) {
+                    logger4j.info(LOGLINEHEADER + " -- sugar_file_id  ---" + sugar_file_id + "---");
+                    idString = idStrHashMap.get(attachID);
+                    if (idString == null || idString.isEmpty()) {
+                        idStrHashMap.put(attachID, sugar_file_id);
+                    }
+                }
+            }
+            catch (Exception e) {
+                // TODO: handle exception
+                logger4j.error(LOGLINEHEADER + " -- Exception  ---" + e.toString() + "---");
+            }
+        }
+        else {
+            logger4j.error(LOGLINEHEADER + " File not defined for slx_document_id_c : --" + original_file_path_c + "--");
+        }
+
+        return idStrHashMap;
+    }
+
+    /**
+     * This Method createAttamentIDString will create the Attachment String for SugarCRM
+     * Objects
+     *
+     * @param attachID
+     *                the Emaild History ID
+     * @param Object
+     *                the Attachments HashMap
+     * @since 1.00
+     */
+    public static String createAttachmentsIDString(String attachID, Object idStrHashMapOb)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarAttachmentsHelper.createAttamentIDString");
+
+        HashMap<String, String> idStrHashMap = new HashMap<String, String>();
+        String idAttachments = null;
+
+        try {
+            idStrHashMap = (HashMap<String, String>) idStrHashMapOb;
+            idAttachments = idStrHashMap.get(attachID);
+        }
+        catch (Exception e) {
+            logger4j.info(LOGLINEHEADER + " -- is not a ArrayList -- "
+                    + idStrHashMap);
+            return null;
+        }
+        
+        logger4j.debug(LOGLINEHEADER + " -- idAttachments  ---" + idAttachments + "---");
+        return idAttachments;
+    }
+    
+    /**
+     * This Method postEmailAttaments will add Email Attachments to SugarCRM
+     * Objects
+     *
+     * @param capsuleResourceUrl
+     *                           the resourceUrl to get Attachments
+     *
+     * @param sugarResourceUrl
+     *                           the resourceUrl to post Attachments
+     *
+     * @param SugarToken
+     *                           to access SugarCRM
+     *
+     * @param capsuleToken
+     *                           to access capsuleToken
+     *
+     * @param jsonString
+     *                           with Attachments from CapsuleCRM
+     *
+     * @param fieldname
+     *                           in SugarCRM where the file is linked
+     *
+     * @since 1.00
+     */
+    public static HashMap<String, String> postEmailAttachments(String rootpath, 
+    		String emailID,
+            String sugarResourceUrl, String original_file_path_c,
+            String sugarToken, Object jsonStrHashMapOb)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarAttachmentsHelper.postEmailAttaments");
+
+        HashMap<String, String> jsonStrHashMap = new HashMap<String, String>();
+
+        try {
+            jsonStrHashMap = (HashMap<String, String>) jsonStrHashMapOb;
+        }
+        catch (Exception e) {
+            logger4j.info(LOGLINEHEADER + " -- is not a ArrayList -- "
+                    + jsonStrHashMap);
+            return null;
+        }
+
+        String restMailSugar = "/rest/v10/Mail/attachment";
+        String fieldname = "email_attachment";
+        String attachmentFilePathStart = rootpath;
+        String jsonString = null;
+        String attachmentFile = null;
+        String resultSugar = null;
+        String sugar_file_id = null;
+        String JsonStringTmp = null;
+        String attachmentDir = null;
+        String regEx = null;
+
+        logger4j.debug(LOGLINEHEADER + " -- Start  -- ");
+        logger4j.debug(LOGLINEHEADER + " -- emailID  ---" + emailID + "---");
+        logger4j.debug(LOGLINEHEADER + " -- sugarResourceUrl ---" + sugarResourceUrl + "---");
+        logger4j.debug(LOGLINEHEADER + " -- restMail ---" + restMailSugar + "---");
+        logger4j.debug(LOGLINEHEADER + " -- sugarToken  ---" + sugarToken + "---");
+        logger4j.debug(LOGLINEHEADER + " -- jsonString  ---" + jsonString + "---");
+        logger4j.debug(LOGLINEHEADER + " -- fieldname  ---" + original_file_path_c + "---");
+        logger4j.debug(LOGLINEHEADER + " -- restMailSugar  ---" + restMailSugar + "---");
+
+        if (original_file_path_c != null) {
+
+            if (original_file_path_c.contains("\\")) {
+                regEx = "\\\\(?=[^\\\\]+$)";
+            }
+            else {
+                regEx = "/(?=[^/]+$)";
+            }
+
+            if (original_file_path_c.contains("\\") || original_file_path_c.contains("/")) {
+                String[] tokens = original_file_path_c.split(regEx);
+                attachmentDir = tokens[0];
+                attachmentFile = tokens[1];
+                logger4j.debug(LOGLINEHEADER + "attachmentDir : " + attachmentDir);
+                logger4j.debug(LOGLINEHEADER + "attachmentFile : " + attachmentFile);
+            }
+            else {
+                attachmentFile = original_file_path_c;
+            }
+
+            String filePath = attachmentFilePathStart + "/" + original_file_path_c;
+            if (!new File(filePath).isFile()) {
+                logger4j.info(LOGLINEHEADER + "filePath not found --" + filePath + "--");
+                filePath = SugarCRMHelper.findFile(attachmentFilePathStart + "/", attachmentFile);
+            }
+            logger4j.debug(LOGLINEHEADER + "filePath --" + filePath + "--");
+
+            try {
+                resultSugar = uploadFile(sugarResourceUrl + restMailSugar, new File(filePath), sugarToken, fieldname);
+                logger4j.info(LOGLINEHEADER + " -- resultSugar  ---" + resultSugar + "---");
+
+                sugar_file_id = JoblokalHelper.getElement(resultSugar, "guid");
+                if (sugar_file_id != null && !sugar_file_id.isEmpty()) {
+                    JsonStringTmp = "{\"upload_id\":\""
+                            + sugar_file_id + "\",\"name\":\""
+                            + attachmentFile + "\",\"filename\":\""
+                            + attachmentFile + "\"}";
+                    logger4j.debug(LOGLINEHEADER + " -- JsonStringTmp  ---" + JsonStringTmp + "---");
+                    jsonString = jsonStrHashMap.get(emailID);
+                    if( jsonString == null || jsonString.isEmpty() ){
+                        jsonStrHashMap.put(emailID, JsonStringTmp);
+                     } else {
+                        jsonStrHashMap.put(emailID, jsonString + " , " + JsonStringTmp);
+                     }
+                    logger4j.debug(LOGLINEHEADER + "-- emailID ---" + emailID + "--- jsonString ---" + jsonString + " , " + JsonStringTmp + "---");
+                }
+            }
+            catch (Exception e) {
+                // TODO: handle exception
+                logger4j.error(LOGLINEHEADER + " -- Exception  ---" + e.toString() + "---");
+            }
+        }
+        else {
+            logger4j.error(LOGLINEHEADER + " File not defined for slx_document_id_c : --" + original_file_path_c + "--");
+        }
+
+        return jsonStrHashMap;
+    }
+
+	/**
+	 * This Method postAttaments will add Attachments to SugarCRM
+	 * Objects
+	 * 
+	 * @param resourceUrlTmp
+	 *            the resourceUrl without the Fieldname
+	 *
+	 * @param token
+	 *            to access SugarCRM
+	 *
+	 * @param fileName
+	 *            to upload
+	 *
+	 * @param fieldname
+	 *            in SugarCRM where the file is linked
+	 *
+	 * @since 1.00
+	 */
+	public static void postAttachments(String resourceUrlTmp, String token,
+			String fileName, String fieldname) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarAttachmentsHelper.postSugarcrmAttaments");
+		SugarAttachmentsHelper pna = new SugarAttachmentsHelper();
+		String resourceUrl = resourceUrlTmp + fieldname;
+
+		logger4j.debug(LOGLINEHEADER + " -- Start  -- ");
+		logger4j.debug(LOGLINEHEADER + " -- resourceUrlTmp  ---"
+				+ resourceUrlTmp + "---");
+		logger4j.debug(LOGLINEHEADER + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(LOGLINEHEADER + " -- token  ---" + token + "---");
+		logger4j.debug(LOGLINEHEADER + " -- fileName  ---" + fileName + "---");
+		logger4j.debug(LOGLINEHEADER + " -- fieldname  ---" + fieldname + "---");
+
+		pna.doit(resourceUrl, token, fileName, fieldname);
+	}
+
+	private void doit(String resourceUrl, String token, String fileName,
+			String fieldname) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarAttachmentsHelper.doit");
+		if (resourceUrl != null && !resourceUrl.isEmpty() && token != null
+				&& !token.isEmpty() && fileName != null && !fileName.isEmpty()
+				&& fieldname != null && !fieldname.isEmpty()) {
+			logger4j.debug(LOGLINEHEADER + " -- start uploading File  ---"
+					+ fileName + "---");
+			try {
+				uploadFile(resourceUrl, new File(fileName), token, fieldname);
+				logger4j.debug(LOGLINEHEADER
+						+ " -- success uploading File  ---" + fileName + "---");
+			} catch (Exception e) {
+				logger4j.error(LOGLINEHEADER + " -- Error  ---" + e.toString()
+						+ "---");
+				// TODO: handle exception
+			}
+		}
+
+	}
+
+	private static HttpClient getClient() throws IOException,
+			MalformedURLException {
+		return new DefaultHttpClient();
+	}
+
+	private static String uploadFile(String url, File file, String token,
+			String fieldname) throws IOException {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SpansetHelper.uploadFile");
+		logger4j.debug(LOGLINEHEADER + " -- create Header  ---");
+		// HttpClient client = getClient();
+		HttpPost post = new HttpPost(url);
+		post.setHeader("Accept", "application/json");
+		post.addHeader("OAuth-Token", token);
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+		// fileParamName should be replaced with parameter name your REST API
+		// expect.
+		logger4j.debug(LOGLINEHEADER + " -- add File  ---");
+		builder.addPart(fieldname, new FileBody(file));
+		// builder.addPart("optionalParam", new StringBody("true",
+		// ContentType.create("text/plain", Consts.ASCII)));
+		logger4j.debug(LOGLINEHEADER + " -- post File  ---");
+		post.setEntity(builder.build());
+		HttpResponse response = getClient().execute(post);
+		int httpStatus = response.getStatusLine().getStatusCode();
+		String responseMsg = EntityUtils
+				.toString(response.getEntity(), "UTF-8");
+
+		// If the returned HTTP response code is not in 200 series then
+		// throw the error
+		if (httpStatus < 200 || httpStatus > 300) {
+			logger4j.error("HTTP " + httpStatus
+					+ " - Error during upload of file: " + responseMsg);
+			throw new IOException("HTTP " + httpStatus
+					+ " - Error during upload of file: " + responseMsg);
+		}
+		logger4j.debug(LOGLINEHEADER + " -- done post File  ---");
+		return responseMsg;
+	}
+	
+	
+	 /**
+     * This Method getEmailAddresses will create Email Adresses to SugarCRM
+     * Objects
+     *
+     * @param jsonString
+     *                   with Emailadresses from CapsuleCRM
+     *
+     * @since 1.00
+     */
+    public static String getEmailAddresses(String jsonString)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarAttachmentsHelper.getEmailAddresses");
+
+        ArrayList<String> jsonStrArrayList = new ArrayList<String>();
+        JSONArray jsonArrayNew = new JSONArray();
+
+        String emailID = null;
+        String emailAddress = "";
+        String JsonStringTmp = "";
+        logger4j.debug(LOGLINEHEADER + " -- jsonString  ---" + jsonString + "---");
+
+        if (jsonString != null) {
+            try {
+
+                JSONArray jsonArray = new JSONArray(jsonString);
+
+                for (Integer i = 0; i < jsonArray.length(); i++) {
+                    logger4j.debug(LOGLINEHEADER + " -- jsonArray.length()  ---" + jsonArray.length() + "---");
+                    logger4j.debug(LOGLINEHEADER + " -- counter  ---" + i + "---");
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    if (jsonObject instanceof JSONObject
+                            && !jsonObject.isNull("id")
+                            && !jsonObject.isNull("address")) {
+                        emailID = Integer.toString((Integer) jsonObject.get("id"));
+                        logger4j.debug(LOGLINEHEADER + " -- emailID  ---" + emailID + "---");
+                        emailAddress = (String) jsonObject.get("address");
+                        logger4j.info(LOGLINEHEADER + " -- emailAddress  ---" + emailAddress + "---");
+                        JSONObject jsonObjectNew = new JSONObject();
+                        if (emailAddress != null && !emailAddress.isEmpty()) {
+                            jsonObjectNew.put("email_address", emailAddress);
+                            jsonObjectNew.put("invalid_email", false);
+                            jsonObjectNew.put("primary_address", (i.equals(0)) ? true : false);
+                            jsonObjectNew.put("opt_out", false);
+                            jsonObjectNew.put("reply_to_address", false);
+                            jsonArrayNew.put(i, jsonObjectNew);
+                        }
+                    }
+                }
+            }
+            catch (JSONException e) {
+                // TODO: handle exception
+                logger4j.error(LOGLINEHEADER + " -- JSONException  ---" + e.toString() + "---");
+            }
+        }
+        logger4j.info(LOGLINEHEADER + " -- JsonStringResult  ---" + jsonArrayNew.toString() + "---");
+        return jsonArrayNew.toString();
+    }
+    
+    
+    /**
+     * This Method getEmailAddresses will create Email Adresses to SugarCRM
+     * Objects
+     *
+     * @param jsonString
+     *                   with Emailadresses from CapsuleCRM
+     *
+     * @since 1.00
+     */
+    public static String truncateJsonString3(String jsonString)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarAttachmentsHelper.truncateJsonString3");
+
+        JSONObject jsonObject = new JSONObject();
+
+        //    logger4j.debug(LOGLINEHEADER + " -- idString  ---" + idString + "---");
+        if (jsonString != null) {
+            try {
+                String NewJsonString = jsonString.replace("^.", "");
+                NewJsonString = NewJsonString.replace(".$", "");
+                NewJsonString = "{" + NewJsonString;
+                NewJsonString = NewJsonString.replaceAll(",$", "");
+                NewJsonString = NewJsonString + "}";
+                NewJsonString = NewJsonString.replaceAll("}}$", "}");
+                NewJsonString = NewJsonString.replaceFirst("\\{\\{", "\\{");
+                NewJsonString = NewJsonString.replaceAll("\"false\"", "false");
+                NewJsonString = NewJsonString.replaceFirst("\"\\[", "\\[");
+                NewJsonString = NewJsonString.replaceFirst("\\]\"", "\\]");
+                NewJsonString = NewJsonString.replaceAll("\"true\"", "true");
+                logger4j.info(LOGLINEHEADER + " -- NewJsonString  ---" + NewJsonString + "---");
+                jsonObject = new JSONObject(NewJsonString);
+                for (Integer i = 0; i < jsonObject.length(); i++) {
+                    logger4j.debug(LOGLINEHEADER + " -- jsonArray.length()  ---" + jsonObject.length() + "---");
+                    logger4j.debug(LOGLINEHEADER + " -- counter  ---" + i + "---");
+                    if (jsonObject instanceof JSONObject) {
+                        if (jsonObject.has("email")) {
+                            System.out.println("jsonObject --" + jsonObject.toString() + "--");
+                        }
+                    }
+                }
+            }
+            catch (JSONException e) {
+                // TODO: handle exception
+                logger4j.error(LOGLINEHEADER + " -- JSONException  ---" + e.toString() + "---");
+            }
+        }
+        logger4j.info(LOGLINEHEADER + " -- JsonStringResult  ---" + jsonObject.toString() + "---");
+        return jsonObject.toString();
+    }
+
+    
+        /**
+     * This Method getEmailAddresses will create Email Adresses to SugarCRM
+     * Objects
+     *
+     * @param jsonString
+     *                   with Emailadresses from CapsuleCRM
+     *
+     * @since 1.00
+     */
+    public static JSONArray getEmailAddresses2(String jsonString)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarAttachmentsHelper.getEmailAddresses");
+
+																	 
+        JSONArray jsonArrayNew = new JSONArray();
+
+        String emailID = null;
+        String emailAddress = "";
+								  
+        logger4j.debug(LOGLINEHEADER + " -- jsonString  ---" + jsonString + "---");
+
+        if (jsonString != null) {
+            try {
+
+                JSONArray jsonArray = new JSONArray(jsonString);
+
+                for (Integer i = 0; i < jsonArray.length(); i++) {
+                    logger4j.debug(LOGLINEHEADER + " -- jsonArray.length()  ---" + jsonArray.length() + "---");
+                    logger4j.debug(LOGLINEHEADER + " -- counter  ---" + i + "---");
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    if (jsonObject instanceof JSONObject
+                            && !jsonObject.isNull("id")
+                            && !jsonObject.isNull("address")) {
+                        emailID = Integer.toString((Integer) jsonObject.get("id"));
+                        logger4j.debug(LOGLINEHEADER + " -- emailID  ---" + emailID + "---");
+                        emailAddress = (String) jsonObject.get("address");
+                        logger4j.info(LOGLINEHEADER + " -- emailAddress  ---" + emailAddress + "---");
+                        JSONObject jsonObjectNew = new JSONObject();
+                        if (emailAddress != null && !emailAddress.isEmpty()) {
+                            jsonObjectNew.put("email_address", emailAddress);
+                            jsonObjectNew.put("invalid_email", false);
+                            jsonObjectNew.put("primary_address", (i.equals(0)) ? true : false);
+                            jsonObjectNew.put("opt_out", false);
+                            jsonObjectNew.put("reply_to_address", false);
+                            jsonArrayNew.put(i, jsonObjectNew);
+                        }
+                    }
+                }
+            }
+            catch (JSONException e) {
+                // TODO: handle exception
+                logger4j.error(LOGLINEHEADER + " -- JSONException  ---" + e.toString() + "---");
+            }
+        }
+        System.out.println(LOGLINEHEADER + " -- JsonStringResult  ---" + jsonArrayNew.toString() + "---");
+        logger4j.info(LOGLINEHEADER + " -- JsonStringResult  ---" + jsonArrayNew.toString() + "---");
+        return jsonArrayNew;
+    }
+
+    
+}

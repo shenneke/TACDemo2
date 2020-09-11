@@ -1,0 +1,1295 @@
+package routines;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Iterator;
+
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Map;
+import java.util.List;
+import java.util.Arrays;
+
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
+
+/*
+ * user specification: the function's comment should contain keys as follows: 1. write about the function's comment.but
+ * it must be before the "{talendTypes}" key.
+ * 
+ * 2. {talendTypes} 's value must be talend Type, it is required . its value should be one of: String, char | Character,
+ * long | Long, int | Integer, boolean | Boolean, byte | Byte, Date, double | Double, float | Float, Object, short |
+ * Short
+ * 
+ * 3. {Category} define a category for the Function. it is required. its value is user-defined .
+ * 
+ * 4. {param} 's format is: {param} <type>[(<default value or closed list values>)] <name>[ : <comment>]
+ * 
+ * <type> 's value should be one of: string, int, list, double, object, boolean, long, char, date. <name>'s value is the
+ * Function's parameter name. the {param} is optional. so if you the Function without the parameters. the {param} don't
+ * added. you can have many parameters for the Function.
+ * 
+ * 5. {example} gives a example for the Function. it is optional.
+ */
+public class JsonHelper {
+
+	public static final String LOGLINEHEADERINIT = "NOUNIQUEID NOHOST";
+
+	/**
+	 * This Method converts a String of an JSONArray in an Array of Addresses
+	 * 
+	 * @param jsonString
+	 *            a String of an JSONArray
+	 * @param index
+	 *            the Address index
+	 * @param key
+	 *            the Key to return
+	 * 
+	 * @return Array of Addresses
+	 *
+	 * @since 1.00
+	 */
+	public static String getElement(String jsonString, int index, String key)
+			throws IOException, ParseException, JSONException {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getAccessToken");
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- index  ---" + index + "---");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+
+		String result = null;
+
+		if (jsonString != null && key != null) {
+			JSONArray jsonArray = new JSONArray(jsonString);
+			for (Integer i = 0; i < jsonArray.length(); i++) {
+				if (i.equals(index)) {
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					if (jsonObject instanceof JSONObject
+							&& !jsonObject.isNull(key)) {
+						result = (String) jsonObject.get(key);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * This Method looks for an Object in JSONArray of a spezific Type
+	 * 
+	 * @param jsonString
+	 *            a String of an JSONArray
+	 * @param type
+	 *            the Object type
+	 * @param key
+	 *            the Key to return
+	 * 
+	 * @return Array of Addresses
+	 *
+	 * @since 1.00
+	 */
+	public static String getElementByType(String jsonString, String type,
+			String key) throws IOException, ParseException, JSONException {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getElementByType");
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- type  ---" + type + "---");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+
+		String result = null;
+
+		if (jsonString != null && key != null && type != null) {
+			JSONArray jsonArray = new JSONArray(jsonString);
+			for (Integer i = 0; i < jsonArray.length(); i++) {
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				if (jsonObject instanceof JSONObject && !jsonObject.isNull(key)) {
+					String typeRes = null;
+					if (jsonObject.isNull("type")) {
+						typeRes = "null";
+						logger4j.debug(loglineheader + " -- typeRes (null) ---"
+								+ typeRes + "---");
+					} else {
+						typeRes = (String) jsonObject.get("type");
+						logger4j.debug(loglineheader
+								+ " -- typeRes (!null) ---" + typeRes + "---");
+					}
+					logger4j.debug(loglineheader + " -- typeRes ---" + typeRes
+							+ "---");
+					if (type.equalsIgnoreCase(typeRes)) {
+						result = (String) jsonObject.get(key);
+						logger4j.debug(loglineheader + " -- result ---"
+								+ result + "---");
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * This Method gets the the Element from a json String Interface.
+	 * 
+	 * @param jsonString
+	 * 
+	 * @param jsonElement
+	 * 
+	 * @return content of the jsonElement
+	 *
+	 * @since 1.00
+	 */
+	public static String getJsonElement(String jsonString, String jsonElement) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getJsonElement");
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonElement  ---" + jsonElement
+				+ "---");
+		String elementValue = null;
+		if (jsonString != null && !jsonString.isEmpty() && jsonElement != null
+				&& !jsonElement.isEmpty()) {
+			try {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject = (JSONObject) jsonParser
+						.parse(jsonString);
+				logger4j.debug(loglineheader + " jsonElement Value "
+						+ jsonObject.get(jsonElement));
+				elementValue = jsonObject.get(jsonElement).toString();
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.debug(loglineheader + " -- ERROR  -- " + e.toString());
+			}
+		}
+		logger4j.debug(loglineheader + "jsonElement ---" + jsonElement + "---"
+				+ " elementValue ---" + elementValue + "---");
+		logger4j.debug(loglineheader + " -- End  -- ");
+		return elementValue;
+	}
+
+	/**
+	 * This Method converts a String of an JSONArray in an Array of Addresses
+	 * 
+	 * @param jsonString
+	 *            a String of an JSONArray
+	 * 
+	 * @return Array of Addresses
+	 *
+	 * @since 1.00
+	 */
+	public static Object[][] addressArrayGenerator(String jsonString)
+			throws IOException, ParseException, JSONException {
+		Object[][] arrayOfAddress = new Object[3][7];
+
+		JSONArray jsonArray = new JSONArray(jsonString);
+
+		// Print key and value
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			// list.add(jsonArray.get(i).toString());
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			Iterator<?> keys = jsonObject.keys();
+			int j = 0;
+			while (keys.hasNext()) {
+
+				String key = (String) keys.next();
+				Object keyvalue = (Object) jsonObject.get(key);
+				arrayOfAddress[i][j] = keyvalue;
+				j++;
+			}
+		}
+		return arrayOfAddress;
+		// printArray(arrayOfAddress);
+	}
+
+	/**
+	 * This Method converts a String of an JSONArray in an Array of emails
+	 * 
+	 * @param jsonString
+	 *            a String of an JSONArray
+	 * 
+	 * @return Array of emails
+	 *
+	 * @since 1.00
+	 */
+	public static Object[][] emailArrayGenerator(String jsonString)
+			throws IOException, ParseException, JSONException {
+		Object[][] arrayOfEmails = new Object[3][2];
+
+		JSONArray jsonArray = new JSONArray(jsonString);
+
+		// Print key and value
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			// list.add(jsonArray.get(i).toString());
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			Iterator<?> keys = jsonObject.keys();
+			int j = 0;
+			while (keys.hasNext()) {
+
+				String key = (String) keys.next();
+				Object keyvalue = (Object) jsonObject.get(key);
+				arrayOfEmails[i][j] = keyvalue;
+				j++;
+			}
+		}
+		return arrayOfEmails;
+		// printArray(arrayOfAddress);
+	}
+
+	/**
+	 * This Method converts a String of an JSONArray in an Array of websites
+	 * 
+	 * @param jsonString
+	 *            a String of an JSONArray
+	 * 
+	 * @return Array of websites
+	 *
+	 * @since 1.00
+	 */
+	public static Object[][] websitesArrayGenerator(String jsonString)
+			throws IOException, ParseException, JSONException {
+		Object[][] arrayOfWebsites = new Object[3][4];
+
+		JSONArray jsonArray = new JSONArray(jsonString);
+
+		// Print key and value
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			// list.add(jsonArray.get(i).toString());
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			Iterator<?> keys = jsonObject.keys();
+			int j = 0;
+			while (keys.hasNext()) {
+
+				String key = (String) keys.next();
+				Object keyvalue = (Object) jsonObject.get(key);
+				arrayOfWebsites[i][j] = keyvalue;
+				j++;
+			}
+		}
+		return arrayOfWebsites;
+		// printArray(arrayOfAddress);
+	}
+
+	/**
+	 * This Method converts a String of an JSONArray in an Array of phonenumber
+	 * 
+	 * @param jsonString
+	 *            a String of an JSONArray
+	 * 
+	 * @return Array of phonenumber
+	 *
+	 * @since 1.00
+	 */
+	public static Object[][] phoneNumberArrayGenerator(String jsonString)
+			throws IOException, ParseException, JSONException {
+		Object[][] arrayOfPhoneNumbers = new Object[3][2];
+
+		JSONArray jsonArray = new JSONArray(jsonString);
+
+		// Print key and value
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			// list.add(jsonArray.get(i).toString());
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			Iterator<?> keys = jsonObject.keys();
+			int j = 0;
+			while (keys.hasNext()) {
+
+				String key = (String) keys.next();
+				Object keyvalue = (Object) jsonObject.get(key);
+				arrayOfPhoneNumbers[i][j] = keyvalue;
+				j++;
+			}
+		}
+		return arrayOfPhoneNumbers;
+		// printArray(arrayOfAddress);
+	}
+
+	/**
+	 * This Method reads a File
+	 * 
+	 * @param path
+	 *            path to the File
+	 * 
+	 * @param encoding
+	 *            Charset of the File
+	 * 
+	 * @return a String of the File Content
+	 * 
+	 * @since 1.00
+	 */
+
+	public static String readFile(String path, Charset encoding)
+			throws IOException {
+		byte[] encoded = Files.readAllBytes(Paths.get(path));
+		return new String(encoded, encoding);
+	}
+
+	/**
+	 * This Method prints an Array
+	 * 
+	 * @param arrayCa
+	 *            an Array of Addresses
+	 *
+	 * @since 1.00
+	 */
+
+	public static void printArray(Object[] arrayCa) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.printArray");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (arrayCa != null) {
+			for (Object keyvalue : arrayCa) {
+				// Print key and value
+				logger4j.debug(loglineheader + " -- value ---- " + keyvalue);
+			}
+		}
+	}
+
+	/**
+	 * This Method prints an Array
+	 * 
+	 * @param arrayCa
+	 *            an Array of Addresses
+	 *
+	 * @since 1.00
+	 */
+
+	public static void print2DimArray(Object[][] arrayCa) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.print2DimArray");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (arrayCa != null) {
+			for (Object[] arrayst : arrayCa) {
+				printArray(arrayst);
+			}
+		}
+	}
+
+	/**
+	 * This Method getTags
+	 * 
+	 * @param tags
+	 *
+	 * @return the Array of Tag
+	 *
+	 * @since 1.00
+	 */
+
+	public static Object getTags(String jsonString) throws IOException,
+			ParseException, JSONException {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getTags");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  --" + jsonString + "--");
+
+		Integer[] thisIsANewTagArray = null;
+
+		if (jsonString != null) {
+
+			String key = "id";
+			Integer[] thisIsATagArray = new Integer[100];
+
+			Integer newsize = 0;
+			if (jsonString != null && key != null) {
+				JSONArray jsonArray = new JSONArray(jsonString);
+				for (Integer i = 0; i < jsonArray.length(); i++) {
+					newsize++;
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					thisIsATagArray[i] = (Integer) jsonObject.get(key);
+					logger4j.debug(loglineheader + " -- id  --"
+							+ thisIsATagArray[i] + "--");
+				}
+			}
+			thisIsANewTagArray = resizeArray(thisIsATagArray,
+					newsize.intValue());
+			logger4j.debug(loglineheader + " -- thisIsANewTagArray  --"
+					+ thisIsANewTagArray + "--");
+		}
+		return thisIsANewTagArray;
+	}
+
+	/**
+	 * Reallocates an array with a new size, and copies the contents of the old
+	 * array to the new array.
+	 * 
+	 * @param oldArray
+	 *            the old array, to be reallocated.
+	 * @param newSize
+	 *            the new array size.
+	 * @return A new array with the same contents.
+	 */
+	private static Integer[] resizeArray(Integer[] oldArray, int newSize) {
+		int oldSize = java.lang.reflect.Array.getLength(oldArray);
+		Class elementType = oldArray.getClass().getComponentType();
+		Integer[] newArray = (Integer[]) java.lang.reflect.Array.newInstance(
+				elementType, newSize);
+		int preserveLength = Math.min(oldSize, newSize);
+		if (preserveLength > 0)
+			System.arraycopy(oldArray, 0, newArray, 0, preserveLength);
+		return newArray;
+	}
+
+	/**
+	 * This Method getTagArray returns Array of Tags
+	 *
+	 * @param hashMapArrayOfTags
+	 *            User Hash Map Array of Tags
+	 *
+	 * @param capsuleCRMId
+	 *            capsuleCRMId from Capsule
+	 *
+	 * @return tagsArray from Capsule
+	 *
+	 * @since 1.00
+	 */
+	public static Integer[] getTagArray(Object hashMapArrayOfTags,
+			String capsuleCRMId) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getTagArray");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, Integer[]> hashMapArrayOfTagsTarget = new HashMap<String, Integer[]>();
+
+		if (capsuleCRMId == null) {
+			return null;
+		}
+
+		try {
+			hashMapArrayOfTagsTarget = (HashMap<String, Integer[]>) hashMapArrayOfTags;
+		} catch (Exception e) {
+			logger4j.debug(loglineheader + " -- is not a hashmap -- "
+					+ hashMapArrayOfTags);
+			return null;
+		}
+
+		Integer[] tagsArray = hashMapArrayOfTagsTarget.get(capsuleCRMId);
+
+		logger4j.debug(loglineheader + " -- hashMapArrayOfTags  -- "
+				+ hashMapArrayOfTags);
+		logger4j.debug(loglineheader + " -- capsuleCRMId ---- " + capsuleCRMId);
+		logger4j.debug(loglineheader + " -- tagsArray ---- " + tagsArray);
+
+		printArray((Object[]) tagsArray);
+		return tagsArray;
+	}
+
+	/**
+	 * This Method getEmailAdr returns Array of Tags
+	 *
+	 * @param jsonString
+	 *            the jsonString
+	 *
+	 * @param key
+	 *            the key to search for the search String
+	 *
+	 * @param search
+	 *            the value for the key to Match
+	 *
+	 * @param value
+	 *            the key for the value to return
+	 *
+	 * @return tagsArray from Capsule
+	 *
+	 * @since 1.00
+	 */
+	public static String getEmailAdr(String jsonString, String key,
+			String search, String value) throws IOException, ParseException,
+			JSONException {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getEmailAdr");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+		logger4j.debug(loglineheader + " -- search  ---" + search + "---");
+		logger4j.debug(loglineheader + " -- value  ---" + value + "---");
+
+		String result = null;
+		try {
+			if (jsonString != null && key != null && key != null
+					&& search != null && value != null) {
+				JSONArray jsonArray = new JSONArray(jsonString);
+				for (Integer i = 0; i < jsonArray.length(); i++) {
+
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					String resultTmp = (String) jsonObject.get(key);
+					if (search.equalsIgnoreCase(resultTmp)) {
+						result = (String) jsonObject.get(value);
+					}
+				}
+				logger4j.debug(loglineheader + " -- result  ---" + result);
+			}
+
+		} catch (Exception e) {
+			logger4j.debug(loglineheader + " -- Error JsonHelper.getType  ---"
+					+ e.toString());
+		}
+		return result;
+	}
+
+	/**
+	 * This Method getType returns the Type
+	 *
+	 * @param jsonString
+	 *            the jsonString
+	 *
+	 * @param type
+	 *            the type to search for
+	 *
+	 * @return SugarCRM Type
+	 *
+	 * @since 1.00
+	 */
+	public static String getType(String jsonString, String type) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getType");
+
+		HashMap<String, String> typeMap = new HashMap<String, String>();
+		typeMap.put("organisation", "Accounts");
+		typeMap.put("person", "Contacts");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- type  ---" + type + "---");
+
+		String result = null;
+
+		try {
+			if (jsonString != null && type != null) {
+				JSONArray jsonArray = new JSONArray(jsonString);
+
+				JSONObject jsonObject = jsonArray.getJSONObject(0);
+				result = typeMap.get((String) jsonObject.get(type));
+
+				logger4j.debug(loglineheader + " -- result  ---" + result);
+			}
+
+		} catch (Exception e) {
+			logger4j.debug(loglineheader + " -- Error JsonHelper.getType  ---"
+					+ e.toString());
+		}
+
+		return result;
+	}
+
+	/**
+	 * This Method getId returns Array of Tags
+	 *
+	 * @param jsonString
+	 *            the jsonString
+	 *
+	 * @param key
+	 *            the key to search for the search String
+	 *
+	 * @return tagsArray from Capsule
+	 *
+	 * @since 1.00
+	 */
+	public static String getId(String jsonString, String key) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getId");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+		String result = null;
+		try {
+			if (jsonString != null && key != null) {
+				JSONArray jsonArray = new JSONArray(jsonString);
+
+				JSONObject jsonObject = jsonArray.getJSONObject(0);
+				if ("id".equalsIgnoreCase(key)) {
+					result = Integer.toString((Integer) jsonObject.get(key));
+				} else {
+					result = (String) jsonObject.get(key);
+				}
+				logger4j.debug(loglineheader + " -- result  ---" + result);
+			}
+
+		} catch (Exception e) {
+			logger4j.debug(loglineheader + " -- Error JsonHelper.getId  ---"
+					+ e.toString());
+		}
+		return result;
+	}
+
+	/**
+	 * This Method getElement returns Array of Tags
+	 *
+	 * @param jsonString
+	 *            the jsonString
+	 *
+	 * @param key
+	 *            the key to search for the search String
+	 *
+	 * @return tagsArray from Capsule
+	 *
+	 * @since 1.00
+	 */
+	public static String getElement(String jsonString, String key) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getElement");
+
+		HashMap<String, String> typeMap = new HashMap<String, String>();
+		typeMap.put("organisation", "Accounts");
+		typeMap.put("person", "Contacts");
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+		String result = null;
+		try {
+			logger4j.debug(loglineheader + " -- try  ---");
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject;
+			logger4j.debug(loglineheader + " -- object  ---");
+
+			jsonObject = (JSONObject) jsonParser.parse(jsonString);
+			logger4j.debug(loglineheader + " -- jsonParser  ---");
+
+			if ("type".equalsIgnoreCase(key)) {
+				logger4j.debug(loglineheader + " -- get type  ---");
+				result = typeMap.get((String) jsonObject.get(key));
+			} else {
+				logger4j.debug(loglineheader + " -- get id  ---");
+				result = (((Object) jsonObject.get(key))).toString();
+			}
+
+			logger4j.debug(loglineheader + " --- result  ---" + result + "---");
+		} catch (Exception e) {
+			logger4j.error(loglineheader
+					+ " -- Error JsonHelper.getElement  ---" + e.toString());
+		}
+		return result;
+
+	}
+
+	/**
+	 * This Method getFieldDefinitionType returns Array of fields depending on
+	 * the quelle
+	 *
+	 * @param quelle
+	 *            the key to search for the fields definition
+	 *
+	 * @return result Array of fields Definition
+	 *
+	 * @since 1.00
+	 */
+
+	public static HashMap<Integer, String> getFieldDefinitionLink(String quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getFieldDefinitionType");
+		HashMap<Integer, String> capsule_link_hash = new HashMap<Integer, String>();
+
+		if (quelle != null && !quelle.isEmpty()) {
+			if ("Joblokal".equalsIgnoreCase(quelle)) {
+				capsule_link_hash.put(60952, "kundenkonto1_link_c");
+				capsule_link_hash.put(172484, "kundenkonto2_link_c");
+				capsule_link_hash.put(174355, "kundenkonto3_link_c");
+			}
+			if ("Unterfranken".equalsIgnoreCase(quelle)) {
+				capsule_link_hash.put(88408, "kundenkonto1_link_c");
+				capsule_link_hash.put(225790, "kundenkonto2_link_c");
+				capsule_link_hash.put(228486, "kundenkonto3_link_c");
+				capsule_link_hash.put(257784, "kundenkonto4_link_c");
+			}
+			if ("Nordbayern".equalsIgnoreCase(quelle)) {
+				capsule_link_hash.put(162165, "kundenkonto1_link_c");
+				capsule_link_hash.put(188129, "kundenkonto2_link_c");
+				capsule_link_hash.put(229059, "kundenkonto3_link_c");
+				capsule_link_hash.put(300642, "kundenkonto4_link_c");
+			}
+			if ("MGO".equalsIgnoreCase(quelle)) {
+				capsule_link_hash.put(60952, "kundenkonto1_link_c");
+				capsule_link_hash.put(172484, "kundenkonto2_link_c");
+				capsule_link_hash.put(174355, "kundenkonto3_link_c");
+			}
+		}
+		logger4j.debug(LOGLINEHEADERINIT + " -- capsule_link_hash  ---"
+				+ capsule_link_hash + "---");
+		return capsule_link_hash;
+	}
+
+	/**
+	 * This Method getFieldDefinitionType returns Array of fields depending on
+	 * the quelle
+	 *
+	 * @param quelle
+	 *            the key to search for the fields definition
+	 *
+	 * @return result Array of fields Definition
+	 *
+	 * @since 1.00
+	 */
+
+	public static HashMap<Integer, String> getFieldDefinitionType(String quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getFieldDefinitionType");
+		HashMap<Integer, String> capsule_type_hash = new HashMap<Integer, String>();
+
+		if (quelle != null && !quelle.isEmpty()) {
+			if ("Joblokal".equalsIgnoreCase(quelle)) {
+				capsule_type_hash.put(60952, "kundenkonto1_type_c");
+				capsule_type_hash.put(172484, "kundenkonto2_type_c");
+				capsule_type_hash.put(174355, "kundenkonto3_type_c");
+			}
+			if ("Unterfranken".equalsIgnoreCase(quelle)) {
+				capsule_type_hash.put(88408, "kundenkonto1_type_c");
+				capsule_type_hash.put(225790, "kundenkonto2_type_c");
+				capsule_type_hash.put(228486, "kundenkonto3_type_c");
+				capsule_type_hash.put(257784, "kundenkonto4_type_c");
+			}
+			if ("Nordbayern".equalsIgnoreCase(quelle)) {
+				capsule_type_hash.put(162165, "kundenkonto1_type_c");
+				capsule_type_hash.put(188129, "kundenkonto2_type_c");
+				capsule_type_hash.put(229059, "kundenkonto3_type_c");
+				capsule_type_hash.put(300642, "kundenkonto4_type_c");
+			}
+			if ("MGO".equalsIgnoreCase(quelle)) {
+				capsule_type_hash.put(60952, "kundenkonto1_type_c");
+				capsule_type_hash.put(172484, "kundenkonto2_type_c");
+				capsule_type_hash.put(174355, "kundenkonto3_type_c");
+			}
+		}
+		logger4j.debug(LOGLINEHEADERINIT + " -- capsule_type_hash  ---"
+				+ capsule_type_hash + "---");
+
+		return capsule_type_hash;
+	}
+
+	/**
+	 * This Method getFieldDefinition returns Array of fields depending on the
+	 * quelle
+	 *
+	 * @param quelle
+	 *            the key to search for the fields definition
+	 *
+	 * @return result Array of fields Definition
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<Integer, String> getFieldDefinition(String quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getFieldDefinition");
+		HashMap<Integer, String> capsule_field_dev_hash = new HashMap<Integer, String>();
+
+		if (quelle != null && !quelle.isEmpty()) {
+			if ("Joblokal".equalsIgnoreCase(quelle)) {
+				capsule_field_dev_hash.put(60952, "kundenkonto_c");
+				capsule_field_dev_hash.put(172484, "kundenkonto_2_c");
+				capsule_field_dev_hash.put(174355, "kundenkonto_3_c");
+				capsule_field_dev_hash.put(88545, "employees");
+				capsule_field_dev_hash.put(60980, "stellenumsatz_gesamt_c");
+				capsule_field_dev_hash.put(200023,
+						"anzahl_positionenanzeigen_c");
+				capsule_field_dev_hash.put(469121, "kanaele_ma_suche_c");
+				capsule_field_dev_hash.put(469122, "arbeitsamt_c");
+				capsule_field_dev_hash.put(469123, "andere_portale_c");
+				capsule_field_dev_hash.put(469124, "tageszeitung_c");
+				capsule_field_dev_hash.put(469125, "eigene_firmenwebseite_c");
+				capsule_field_dev_hash.put(469126, "aktuelle_ma_suche_c");
+				capsule_field_dev_hash
+						.put(469127, "neueinstellungen_geplant_c");
+				capsule_field_dev_hash.put(469128, "welcher_zeitraum_c");
+				capsule_field_dev_hash.put(469129, "wird_ausgebildet_c");
+			}
+			if ("Unterfranken".equalsIgnoreCase(quelle)) {
+				capsule_field_dev_hash.put(88408, "kundenkonto_c");
+				capsule_field_dev_hash.put(225790, "kundenkonto_2_c");
+				capsule_field_dev_hash.put(228486, "kundenkonto_3_c");
+				capsule_field_dev_hash.put(257784, "kundenkonto_4_c");
+				capsule_field_dev_hash.put(73383, "employees");
+				capsule_field_dev_hash.put(88407, "stellenumsatz_gesamt_c");
+				capsule_field_dev_hash.put(200022,
+						"anzahl_positionenanzeigen_c");
+				capsule_field_dev_hash.put(468976, "kanaele_ma_suche_c");
+				capsule_field_dev_hash.put(469101, "arbeitsamt_c");
+				capsule_field_dev_hash.put(469102, "andere_portale_c");
+				capsule_field_dev_hash.put(469103, "tageszeitung_c");
+				capsule_field_dev_hash.put(469104, "eigene_firmenwebseite_c");
+				capsule_field_dev_hash.put(469105, "aktuelle_ma_suche_c");
+				capsule_field_dev_hash
+						.put(469107, "neueinstellungen_geplant_c");
+				capsule_field_dev_hash.put(469108, "welcher_zeitraum_c");
+				capsule_field_dev_hash.put(469106, "wird_ausgebildet_c");
+			}
+			if ("Nordbayern".equalsIgnoreCase(quelle)) {
+				capsule_field_dev_hash.put(162165, "kundenkonto_c");
+				capsule_field_dev_hash.put(188129, "kundenkonto_2_c");
+				capsule_field_dev_hash.put(229059, "kundenkonto_3_c");
+				capsule_field_dev_hash.put(300642, "kundenkonto_4_c");
+				capsule_field_dev_hash.put(161812, "employees");
+				capsule_field_dev_hash.put(161815, "stellenumsatz_gesamt_c");
+				capsule_field_dev_hash.put(161819,
+						"anzahl_positionenanzeigen_c");
+				capsule_field_dev_hash.put(469130, "kanaele_ma_suche_c");
+				capsule_field_dev_hash.put(469131, "arbeitsamt_c");
+				capsule_field_dev_hash.put(469132, "andere_portale_c");
+				capsule_field_dev_hash.put(469133, "tageszeitung_c");
+				capsule_field_dev_hash.put(469134, "eigene_firmenwebseite_c");
+				capsule_field_dev_hash.put(469135, "aktuelle_ma_suche_c");
+				capsule_field_dev_hash
+						.put(469136, "neueinstellungen_geplant_c");
+				capsule_field_dev_hash.put(469137, "welcher_zeitraum_c");
+				capsule_field_dev_hash.put(469138, "wird_ausgebildet_c");
+			}
+			if ("MGO".equalsIgnoreCase(quelle)) {
+				capsule_field_dev_hash.put(60952, "kundenkonto_c");
+				capsule_field_dev_hash.put(172484, "kundenkonto_2_c");
+				capsule_field_dev_hash.put(174355, "kundenkonto_3_c");
+				capsule_field_dev_hash.put(88545, "employees");
+				capsule_field_dev_hash.put(60980, "stellenumsatz_gesamt_c");
+				capsule_field_dev_hash.put(200023,
+						"anzahl_positionenanzeigen_c");
+				capsule_field_dev_hash.put(469121, "kanaele_ma_suche_c");
+				capsule_field_dev_hash.put(469122, "arbeitsamt_c");
+				capsule_field_dev_hash.put(469123, "andere_portale_c");
+				capsule_field_dev_hash.put(469124, "tageszeitung_c");
+				capsule_field_dev_hash.put(469125, "eigene_firmenwebseite_c");
+				capsule_field_dev_hash.put(469126, "aktuelle_ma_suche_c");
+				capsule_field_dev_hash
+						.put(469127, "neueinstellungen_geplant_c");
+				capsule_field_dev_hash.put(469128, "welcher_zeitraum_c");
+				capsule_field_dev_hash.put(469129, "wird_ausgebildet_c");
+			}
+
+		}
+		logger4j.debug(LOGLINEHEADERINIT + " -- capsule_field_dev_hash  ---"
+				+ capsule_field_dev_hash + "---");
+
+		return capsule_field_dev_hash;
+	}
+
+	/**
+	 * This Method getFieldValue returns Array of Tags
+	 *
+	 * @param jsonString
+	 *            the jsonString
+	 *
+	 * @param key
+	 *            the key to search for the search String
+	 *
+	 * @return result from Capsule CRM
+	 *
+	 * @since 1.00
+	 */
+	public static String getFieldValue(String jsonString, String key,
+			String quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getElement");
+
+		HashMap<Integer, String> capsule_field_dev_hash = getFieldDefinition(quelle);
+
+		HashMap<Integer, String> capsule_type_hash = getFieldDefinitionType(quelle);
+		HashMap<Integer, String> capsule_link_hash = getFieldDefinitionLink(quelle);
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start getFieldValue -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+
+		String result = null;
+		String value = null;
+
+		try {
+			if (jsonString != null && key != null) {
+				JSONArray jsonArray = new JSONArray(jsonString);
+				for (Integer i = 0; i < jsonArray.length(); i++) {
+
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+					JSONObject definition = (JSONObject) jsonObject
+							.get("definition");
+
+					String resultTmp = capsule_field_dev_hash
+							.get((Integer) definition.get("id"));
+
+					if (resultTmp != null && resultTmp.contains("kundenkonto")) {
+						value = (String) jsonObject.get("value");
+						String resultTmpType = capsule_type_hash
+								.get((Integer) definition.get("id"));
+						logger4j.debug(loglineheader + " -- resultTmpType  ---"
+								+ resultTmpType + "---");
+						String resultTmpLink = capsule_link_hash
+								.get((Integer) definition.get("id"));
+						logger4j.debug(loglineheader + " -- resultTmpLink  ---"
+								+ resultTmpLink + "---");
+
+						if (value != null && value.contains(": ")) {
+							String[] splitResult = value.split(": ");
+							String type = splitResult[0];
+							logger4j.debug(loglineheader + " -- type  ---"
+									+ type + "---");
+
+							String link = splitResult[1];
+							logger4j.debug(loglineheader + " -- link  ---"
+									+ link + "---");
+
+							if (key.equalsIgnoreCase(resultTmpType)) {
+								result = type;
+							}
+							if (key.equalsIgnoreCase(resultTmpLink)
+									&& link != null) {
+								logger4j.debug(loglineheader
+										+ " -- link truncated ---"
+										+ link.replaceAll(" ", "") + "---");
+								result = link.replaceAll(" ", "");
+							}
+						} else {
+							if (key.equalsIgnoreCase(resultTmpLink)) {
+								value = (String) jsonObject.get("value");
+								result = value;
+							}
+						}
+					} else {
+
+						if (key.equalsIgnoreCase(resultTmp)) {
+							value = (String) jsonObject.get("value");
+							result = value;
+						}
+					}
+
+				}
+				logger4j.debug(loglineheader + " -- result  ---" + result);
+			}
+
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- Error JsonHelper.getType  ---"
+					+ e.toString());
+		}
+		return result;
+	}
+
+	/**
+	 * This Method getFieldValue returns Array of Tags
+	 *
+	 * @param jsonString
+	 *            the jsonString
+	 *
+	 * @param key
+	 *            the key to search for the search String
+	 *
+	 * @return result from Capsule CRM
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean getFieldValue2(String jsonString, String key,
+			String quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getFieldValue2");
+
+		HashMap<Integer, String> capsule_field_dev_hash = getFieldDefinition(quelle);
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start getFieldValue -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- key  ---" + key + "---");
+
+		Boolean result = null;
+		try {
+			if (jsonString != null && key != null) {
+				JSONArray jsonArray = new JSONArray(jsonString);
+				for (Integer i = 0; i < jsonArray.length(); i++) {
+
+					JSONObject jsonObject = jsonArray.getJSONObject(i);
+					JSONObject definition = (JSONObject) jsonObject
+							.get("definition");
+
+					String resultTmp = capsule_field_dev_hash
+							.get((Integer) definition.get("id"));
+
+					if (key.equalsIgnoreCase(resultTmp)) {
+						Boolean value = (Boolean) jsonObject.get("value");
+						result = value;
+					}
+
+				}
+				logger4j.debug(loglineheader + " -- result  ---" + result);
+			}
+
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- Error JsonHelper.getType  ---"
+					+ e.toString());
+		}
+		return result;
+	}
+
+	/**
+	 * This Method getFieldDefinitionCheckType returns Array of fields depending
+	 * on the quelle
+	 *
+	 * @param quelle
+	 *            the key to search for the fields definition
+	 *
+	 * @return result Array of fields Definition
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<Integer, String> getFieldDefinitionCheckType(
+			String quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getFieldDefinitionCheckType");
+		HashMap<Integer, String> capsule_field_dev_hash = new HashMap<Integer, String>();
+
+		if (quelle != null && !quelle.isEmpty()) {
+			if ("Joblokal".equalsIgnoreCase(quelle)) {
+				capsule_field_dev_hash.put(60952, "kundenkonto_c");
+				capsule_field_dev_hash.put(172484, "kundenkonto_2_c");
+				capsule_field_dev_hash.put(174355, "kundenkonto_3_c");
+				capsule_field_dev_hash.put(88545, "employees");
+			}
+			if ("Unterfranken".equalsIgnoreCase(quelle)) {
+				capsule_field_dev_hash.put(88408, "kundenkonto_c");
+				capsule_field_dev_hash.put(225790, "kundenkonto_2_c");
+				capsule_field_dev_hash.put(228486, "kundenkonto_3_c");
+				capsule_field_dev_hash.put(257784, "kundenkonto_4_c");
+				capsule_field_dev_hash.put(73383, "employees");
+			}
+			if ("Nordbayern".equalsIgnoreCase(quelle)) {
+				capsule_field_dev_hash.put(162165, "kundenkonto_c");
+				capsule_field_dev_hash.put(188129, "kundenkonto_2_c");
+				capsule_field_dev_hash.put(229059, "kundenkonto_3_c");
+				capsule_field_dev_hash.put(300642, "kundenkonto_4_c");
+				capsule_field_dev_hash.put(161812, "employees");
+			}
+			if ("MGO".equalsIgnoreCase(quelle)) {
+				capsule_field_dev_hash.put(60952, "kundenkonto_c");
+				capsule_field_dev_hash.put(172484, "kundenkonto_2_c");
+				capsule_field_dev_hash.put(174355, "kundenkonto_3_c");
+				capsule_field_dev_hash.put(88545, "employees");
+			}
+
+		}
+		logger4j.debug(LOGLINEHEADERINIT + " -- capsule_field_dev_hash  ---"
+				+ capsule_field_dev_hash + "---");
+
+		return capsule_field_dev_hash;
+	}
+
+	/**
+	 * This Method checkType returns result of check
+	 *
+	 * @param jsonFieldListString
+	 *            rechtsForm
+	 * @param nameToCheck
+	 * 
+	 * @param type
+	 *
+	 * @return result from Capsule CRM
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkType(String jsonFieldListString,
+			String lastName, String firstName, String type, String capsuleID,
+			String quelle) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.getElement");
+
+		HashMap<Integer, String> rechtsForm = new HashMap<>();
+		rechtsForm.put(1, "GbR");
+		rechtsForm.put(2, "KG");
+		rechtsForm.put(3, "AG & Co. KG");
+		rechtsForm.put(4, "GmbH & Co. KG");
+		rechtsForm.put(5, "Limited & Co. KG");
+		rechtsForm.put(6, "Stiftung & Co. KG");
+		rechtsForm.put(7, "Stiftung GmbH & Co. KG");
+		rechtsForm.put(8, "UG (haftungsbeschränkt) & Co. KG");
+		rechtsForm.put(9, "OHG");
+		rechtsForm.put(10, "GmbH & Co. OHG");
+		rechtsForm.put(11, "AG & Co. OHG");
+		rechtsForm.put(12, "Partenreederei");
+		rechtsForm.put(13, "PartG");
+		rechtsForm.put(14, "PartG mbB");
+		rechtsForm.put(15, "Stille Gesellschaft");
+		rechtsForm.put(16, "AG");
+		rechtsForm.put(17, "gAG");
+		rechtsForm.put(18, "GmbH");
+		rechtsForm.put(19, "gGmbH");
+		rechtsForm.put(20, "InvAG");
+		rechtsForm.put(21, "KGaA");
+		rechtsForm.put(22, "AG & Co. KGaA");
+		rechtsForm.put(23, "SE & Co. KGaA");
+		rechtsForm.put(24, "GmbH & Co. KGaA");
+		rechtsForm.put(25, "Stiftung & Co. KGaA");
+		rechtsForm.put(26, "REIT-AG");
+		rechtsForm.put(27, "UG (haftungsbeschränkt)");
+		rechtsForm.put(28, "AöR");
+		rechtsForm.put(29, "eG");
+		rechtsForm.put(30, "Eigenbetrieb");
+		rechtsForm.put(31, "Einzelunternehmen");
+		rechtsForm.put(32, " e. V.");
+		rechtsForm.put(33, "KöR");
+		rechtsForm.put(34, "Regiebetrieb");
+		rechtsForm.put(35, "Stiftung");
+		rechtsForm.put(36, "VVaG");
+		rechtsForm.put(37, "EWIV");
+		rechtsForm.put(38, "SUP");
+		rechtsForm.put(39, "SE");
+		rechtsForm.put(40, "SCE");
+
+		HashMap<Integer, String> capsule_field_dev_hash = getFieldDefinitionCheckType(quelle);
+
+		String loglineheader = LOGLINEHEADERINIT;
+		logger4j.debug(loglineheader + " -- Start getFieldValue -- ");
+		logger4j.debug(loglineheader + " -- jsonFieldListString  ---"
+				+ jsonFieldListString + "---");
+		logger4j.debug(loglineheader + " -- lastName  ---" + lastName + "---");
+		logger4j.debug(loglineheader + " -- firstName  ---" + firstName + "---");
+		logger4j.debug(loglineheader + " -- type  ---" + type + "---");
+
+		boolean fieldIsCompany = false;
+		boolean rechtsFormIsCompany = false;
+		boolean checkLastname = true;
+		String sufficxMatcher = "";
+		String nameToCheck = "";
+		if ("person".equalsIgnoreCase(type)) {
+			try {
+				if (jsonFieldListString != null) {
+					JSONArray jsonArray = new JSONArray(jsonFieldListString);
+					for (Integer i = 0; i < jsonArray.length(); i++) {
+
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+						JSONObject definition = (JSONObject) jsonObject
+								.get("definition");
+
+						if (capsule_field_dev_hash != null
+								&& capsule_field_dev_hash
+										.containsKey((Integer) definition
+												.get("id"))) {
+							fieldIsCompany = true;
+						}
+
+					}
+					logger4j.debug(loglineheader + " -- fieldIsCompany  ---"
+							+ fieldIsCompany);
+				}
+				if (lastName != null && !lastName.isEmpty()) {
+					nameToCheck = lastName;
+				} else {
+					nameToCheck = firstName;
+					checkLastname = false;
+				}
+				if (nameToCheck != null && !nameToCheck.isEmpty()) {
+					nameToCheck = nameToCheck.trim();
+
+					for (Map.Entry<Integer, String> suffix : rechtsForm
+							.entrySet()) {
+						if (nameToCheck.matches(".*" + suffix.getValue() + "$")) {
+							if (!nameToCheck.toLowerCase().contains("gmbh")
+									|| suffix.getValue().toLowerCase()
+											.contains("gmbh")) {
+								if (!nameToCheck.toLowerCase()
+										.contains("& co.")
+										|| suffix.getValue().toLowerCase()
+												.contains("& co.")) {
+									sufficxMatcher = suffix.getValue();
+									rechtsFormIsCompany = true;
+								}
+							}
+						}
+					}
+					logger4j.debug(loglineheader
+							+ " -- rechtsFormIsCompany  ---"
+							+ rechtsFormIsCompany);
+				}
+
+			} catch (Exception e) {
+				logger4j.error(loglineheader
+						+ " -- Error JsonHelper.getType  ---" + e.toString());
+			}
+		}
+
+		if (fieldIsCompany) {
+			logger4j.warn(loglineheader + " -- fieldIsCompany  ---"
+					+ fieldIsCompany + "---");
+			logger4j.warn(loglineheader + " -- capsuleID  ---" + capsuleID
+					+ "---");
+			logger4j.warn(loglineheader
+					+ " -- jsonFieldListString  ---"
+					+ jsonFieldListString.replaceAll("  ", "").replaceAll(
+							"\\r\\n|\\r|\\n", "") + "---");
+			logger4j.warn(loglineheader + " -- firstName  ---" + firstName
+					+ "---" + " -- lastName  ---" + lastName + "---");
+		}
+
+		if (rechtsFormIsCompany) {
+			logger4j.warn(loglineheader + " -- rechtsFormIsCompany  ---"
+					+ rechtsFormIsCompany + "---");
+			logger4j.warn(loglineheader + " -- capsuleID  ---" + capsuleID
+					+ "---");
+			logger4j.warn(loglineheader + " -- sufficxMatcher  ---"
+					+ sufficxMatcher + "---");
+			if (checkLastname) {
+				logger4j.warn(loglineheader + " -- lastName  ---" + nameToCheck
+						+ "---");
+			} else {
+				logger4j.warn(loglineheader + " -- firstName  ---"
+						+ nameToCheck + "---");
+			}
+		}
+		return fieldIsCompany || rechtsFormIsCompany;
+	}
+
+	/**
+	 * This Method truncates the Json String so that only Elements
+	 *
+	 * @param jsonObject
+	 *
+	 * @return NewJsonString
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateJsonString4(Object jsonObject) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("JsonHelper.truncateJsonString4");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonObject
+				+ "---");
+		JSONObject newJsonObject = new JSONObject();
+
+		try {
+			newJsonObject = (JSONObject) jsonObject;
+		} catch (Exception e) {
+			logger4j.debug(loglineheader + " -- newJsonObject  ---"
+					+ newJsonObject + "---");
+		}
+
+		return newJsonObject.toString();
+	}
+}

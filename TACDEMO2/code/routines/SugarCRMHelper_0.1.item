@@ -1,0 +1,3167 @@
+package routines;
+
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.regex.Pattern;
+
+import org.apache.oltu.oauth2.client.OAuthClient;
+import org.apache.oltu.oauth2.client.HttpClient;
+import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
+import org.codehaus.jettison.json.JSONException;
+import org.apache.oltu.oauth2.common.message.types.GrantType;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.joda.time.LocalDateTime;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.File;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.apache.commons.io.FileUtils;
+
+public class SugarCRMHelper {
+	private static final Pattern EMAIL = Pattern
+			.compile("^[a-zA-Z0-9][\\w\\.-_\\-]*[a-zA-Z0-9_\\-]@"
+					+ "[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$");
+
+	static final int CONNECTION_TIMEOUT = 600000;
+	static final int READ_TIMEOUT = 600000;
+
+	/**
+	 * This Method checks if the E-Mail Address is valid.
+	 * 
+	 * {talendTypes} Boolean
+	 *
+	 * {Category} SugarCRMHelper
+	 *
+	 * {param} string("E-Mail Address") input: The emailAddress as String.
+	 *
+	 * {example} isValidEmail("stefan.henneke@provalida.de") # true.
+	 */
+	public static Boolean isValidEmail(String emailAddress) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.isValidEmail");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		emailAddress = emailAddress.replaceAll("^\\s*", "");
+		emailAddress = emailAddress.replaceAll("\\s*$", "");
+		logger4j.trace(loglineheader
+				+ " EMAIL.matcher(emailAdresse).matches(); "
+				+ EMAIL.matcher(emailAddress).matches());
+		return EMAIL.matcher(emailAddress).matches();
+	}
+
+	/**
+	 * This Method converts the Webservice Error Message back to normal and
+	 * truncates Message.
+	 * 
+	 * @param errorMsg
+	 *            error message from Webservice
+	 * 
+	 * @return errorMsg error message for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String convertWSError(String errorMsg, int anzahl) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.convertWSError");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (errorMsg != null) {
+			errorMsg = errorMsg.replaceAll("###", ";");
+			errorMsg = errorMsg.replaceAll("\\|\\|\\|", "\n");
+		}
+		return truncateMSG(errorMsg, anzahl);
+	}
+
+	/**
+	 * This Method converts the Webservice Error Message back to normal and
+	 * truncates Message.
+	 * 
+	 * @param errorMsg
+	 *            error message from Webservice
+	 * 
+	 * @return errorMsg error message for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkSelection(String input) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.checkSelection");
+		String loglineheader = "EPS_Test_Run";
+		Boolean returnval = false;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (input != null) {
+			input = input.replaceAll(" ", "");
+			if (input.equalsIgnoreCase("x")) {
+				returnval = true;
+			}
+		}
+		return returnval;
+	}
+
+	/**
+	 * This Method truncates Message .
+	 * 
+	 * @param message
+	 *            message talend
+	 * 
+	 * @return message truncated message
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateMSG(String message, int anzahl) {
+		if (message != null && message.length() > anzahl) {
+			return message.substring(0, anzahl - 1);
+		}
+		return message;
+	}
+
+	public static String cleanEmail(String emailAddress) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.cleanEmail");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.trace(loglineheader + " emailAddress ---" + emailAddress
+				+ "---");
+		emailAddress = emailAddress.replaceAll("^\\s*", "");
+		emailAddress = emailAddress.replaceAll("\\s*$", "");
+		logger4j.trace(loglineheader + " emailAddress ---" + emailAddress
+				+ "---");
+		return emailAddress;
+	}
+
+	/**
+	 * This Method checks if it is a Valid (single) Resource Code from Planview
+	 *
+	 * @param lastWorkPlanid
+	 *            last workplanid
+	 *
+	 * @param currentWorkPlanid
+	 *            currentWorkplanId
+	 * 
+	 * @param sequence
+	 *            currentSequnce
+	 * 
+	 * @return sequence next sequence
+	 *
+	 * @since 1.00
+	 */
+	public static BigDecimal addSequence(BigDecimal lastWorkPlanid,
+			BigDecimal currentWorkPlanid, BigDecimal sequence) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.addSequence");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.trace(loglineheader + " sequence ---" + sequence + "---");
+		if (lastWorkPlanid != currentWorkPlanid) {
+			sequence = new BigDecimal("0");
+		} else {
+			sequence = sequence.add(new BigDecimal("1"));
+		}
+		logger4j.trace(loglineheader + " sequence ---" + sequence + "---");
+		return sequence;
+	}
+
+	/**
+	 * This Method Resets the CHILD_TASK_SEQ Hash.
+	 * 
+	 * @param hashMapUsers
+	 *            CHILD_TASK_SEQ
+	 * @return hashMapUsers CHILD_TASK_SEQ
+	 */
+	public static HashMap resetChildTaskSeq2(Object chidlTaskSeq_ob,
+			String depth, String lastdepth) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.resetChildTaskSeq");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> chidlTaskSeq = new HashMap<String, BigDecimal>();
+		try {
+			chidlTaskSeq = (HashMap<String, BigDecimal>) chidlTaskSeq_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ chidlTaskSeq_ob);
+			return null;
+		}
+
+		Integer depthInt = Integer.parseInt(depth);
+		Integer lastdepthInt = Integer.parseInt(lastdepth);
+
+		if (lastdepthInt.compareTo(depthInt) > 0
+				&& !"6".equalsIgnoreCase(depth)) {
+			switch (depth) {
+			case "7":
+				chidlTaskSeq.put("8", new BigDecimal("0"));
+			case "8":
+				chidlTaskSeq.put("9", new BigDecimal("0"));
+			case "9":
+				chidlTaskSeq.put("10", new BigDecimal("0"));
+				break;
+			default:
+				break;
+			}
+		} else if ("6".equalsIgnoreCase(depth)) {
+			chidlTaskSeq.put("6", null);
+			chidlTaskSeq.put("7", new BigDecimal("0"));
+			chidlTaskSeq.put("8", new BigDecimal("0"));
+			chidlTaskSeq.put("9", new BigDecimal("0"));
+			chidlTaskSeq.put("10", new BigDecimal("0"));
+		}
+
+		return chidlTaskSeq;
+	}
+
+	/**
+	 * This Method Resets the CHILD_TASK_SEQ Hash.
+	 * 
+	 * @param hashMapUsers
+	 *            CHILD_TASK_SEQ
+	 * @return hashMapUsers CHILD_TASK_SEQ
+	 */
+	public static HashMap resetChildTaskSeq(Object chidlTaskSeq_ob) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.resetChildTaskSeq");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> chidlTaskSeq = new HashMap<String, BigDecimal>();
+		try {
+			chidlTaskSeq = (HashMap<String, BigDecimal>) chidlTaskSeq_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ chidlTaskSeq_ob);
+			return null;
+		}
+
+		chidlTaskSeq.put("6", null);
+		chidlTaskSeq.put("7", new BigDecimal("0"));
+		chidlTaskSeq.put("8", new BigDecimal("0"));
+		chidlTaskSeq.put("9", new BigDecimal("0"));
+		chidlTaskSeq.put("10", new BigDecimal("0"));
+
+		return chidlTaskSeq;
+	}
+
+	/**
+	 * This Method Resets the CHILD_TASK_SEQ Hash.
+	 * 
+	 * @param hashMapUsers
+	 *            CHILD_TASK_SEQ
+	 * @return hashMapUsers CHILD_TASK_SEQ
+	 */
+	public static HashMap setChildTaskSeq(Object chidlTaskSeq_ob, String Depth) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.setChildTaskSeq");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> chidlTaskSeq = new HashMap<String, BigDecimal>();
+		try {
+			chidlTaskSeq = (HashMap<String, BigDecimal>) chidlTaskSeq_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ chidlTaskSeq_ob);
+			return null;
+		}
+		logger4j.info(loglineheader + " -- chidlTaskSeq  -- " + chidlTaskSeq);
+		logger4j.info(loglineheader + " -- Depth  -- " + Depth);
+		if (!("6").equalsIgnoreCase(Depth)) {
+			chidlTaskSeq.put(Depth,
+					chidlTaskSeq.get(Depth).add(new BigDecimal("1")));
+		}
+		;
+
+		return chidlTaskSeq;
+	}
+
+	/**
+	 * This Method checks if it is a Valid (single) Resource Code from Planview
+	 *
+	 * @param hashMapUsers
+	 *            User Hash Map Users from PPM (already set before)
+	 *
+	 * @param ressourceCode
+	 *            ressourceCode from Planview
+	 *
+	 * @return Boolean true if the Resource is found in the Hash, else false
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean isValidUserID(Object hashMapUsers,
+			String ressourceCode, Boolean required) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.isValidUserID");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		if (ressourceCode == null) {
+			return !required;
+		}
+
+		if (getUserID(hashMapUsers, ressourceCode) == null) {
+			return !required;
+		}
+		return true;
+	}
+
+	/**
+	 * This Method returns single user_id, for the PPM DB as string over
+	 * Resource Code from Planview
+	 *
+	 * @param hashMapUsers
+	 *            User Hash Map Users from PPM/Planview Join (already set
+	 *            before)
+	 *
+	 * @param ressourceCode
+	 *            ressourceCode from Planview
+	 *
+	 * @return User_id as String,
+	 *
+	 * @since 1.00
+	 */
+	public static String getUserIDString(Object hashMapUsers,
+			String ressourceCode) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getUserIDString");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		if (ressourceCode == null) {
+			return null;
+		}
+
+		if (getUserID(hashMapUsers, ressourceCode) == null) {
+			return null;
+		}
+		return getUserID(hashMapUsers, ressourceCode).toString();
+	}
+
+	/**
+	 * This Method returns single user_id, for the PPM DB over Resource Code
+	 * from Planview
+	 *
+	 * @param hashMapUsers
+	 *            User Hash Map Users from PPM/Planview Join (already set
+	 *            before)
+	 *
+	 * @param ressourceCode
+	 *            ressourceCode from Planview
+	 *
+	 * @return BigDecimal user_id, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static BigDecimal getUserID(Object hashMapUsers, String ressourceCode) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getUserID");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> userIdHash = new HashMap<String, BigDecimal>();
+
+		if (ressourceCode == null) {
+			return null;
+		}
+
+		try {
+			userIdHash = (HashMap<String, BigDecimal>) hashMapUsers;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ hashMapUsers);
+			return null;
+		}
+
+		BigDecimal ressourceCodeID = userIdHash.get(ressourceCode);
+
+		logger4j.trace(loglineheader + " -- hashMapUsers  -- " + hashMapUsers);
+		logger4j.trace(loglineheader + " -- ressourceCode ---- "
+				+ ressourceCode);
+		logger4j.trace(loglineheader + " -- ressourceCodeID ---- "
+				+ ressourceCodeID);
+
+		return ressourceCodeID;
+	}
+
+	/**
+	 * TThis Method returns single user_name, for the PPM DB over Resource Code
+	 * from Planview
+	 *
+	 * @param hashMapUsers
+	 *            User Hash Map Users from PPM (already set before)
+	 *
+	 * @param ressourceCode
+	 *            ressourceCode from Planview
+	 *
+	 * @return user_name, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static String getUserName(Object hashMapUsers, String ressourceCode) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getUserName");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> userNameHash = new HashMap<String, String>();
+
+		if (ressourceCode == null) {
+			return null;
+		}
+
+		try {
+			userNameHash = (HashMap<String, String>) hashMapUsers;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ hashMapUsers);
+			return null;
+		}
+
+		String ressourceName = userNameHash.get(ressourceCode);
+
+		logger4j.trace(loglineheader + " -- hashMapUsers  -- " + hashMapUsers);
+		logger4j.trace(loglineheader + " -- ressourceCode ---- "
+				+ ressourceCode);
+		logger4j.trace(loglineheader + " -- ressourceName ---- "
+				+ ressourceName);
+
+		return ressourceName;
+	}
+
+	/**
+	 * This Method returns the valid Fiscal Period ID , for the PPM DB over
+	 * stat- and enddate from Planview Project
+	 *
+	 * @param hasMapFiscalPeriods
+	 *            Fiscal Periods Hash Map from PPM (already set before)
+	 *
+	 * @param ficalPeriodDate
+	 *            project, startDate from Planview
+	 *
+	 * @return ficalPeriodID, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean getFiscalPeriodIDValid(Object hasMapFiscalPeriods,
+			Date ficalPeriodDate, Boolean required) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getFiscalPeriodIDValid");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		if (ficalPeriodDate == null) {
+			return !required;
+		}
+
+		if (getFiscalPeriodID(hasMapFiscalPeriods, ficalPeriodDate) == null) {
+			return !required;
+		}
+		return true;
+	}
+
+	/**
+	 * This Method returns the valid Fiscal Period ID , for the PPM DB over
+	 * stat- and enddate from Planview Project
+	 *
+	 * @param hasMapFiscalPeriods
+	 *            Fiscal Periods Hash Map from PPM (already set before)
+	 *
+	 * @param ficalPeriodDate
+	 *            project, startDate from Planview
+	 *
+	 * @return ficalPeriodID, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static BigDecimal getFiscalPeriodID(Object hashMapFiscalPeriods,
+			Date ficalPeriodDate) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getFiscalPeriodID");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, BigDecimal> fiscalPeriods_id_hash = new HashMap<String, BigDecimal>();
+
+		if (ficalPeriodDate == null) {
+			return null;
+		}
+
+		try {
+			fiscalPeriods_id_hash = (HashMap<String, BigDecimal>) hashMapFiscalPeriods;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ hashMapFiscalPeriods);
+			return null;
+		}
+		DateFormat df = new SimpleDateFormat("MM.yyyy");
+		String ficalPeriodDateStr = df.format(ficalPeriodDate);
+
+		BigDecimal ficalPeriodDateID = fiscalPeriods_id_hash
+				.get(ficalPeriodDateStr);
+		/*
+		 * temporarry delete later start if (ficalPeriodDateID == null) {
+		 * ficalPeriodDateID = new BigDecimal("35860"); } ; temporarry delete
+		 * later end
+		 */
+		logger4j.trace(loglineheader + " -- hasMapFiscalPeriods  -- "
+				+ hashMapFiscalPeriods);
+		logger4j.trace(loglineheader + " -- ficalPeriodDate ---- "
+				+ ficalPeriodDate);
+		logger4j.trace(loglineheader + " -- ficalPeriodDateID ---- "
+				+ ficalPeriodDateID);
+
+		return ficalPeriodDateID;
+	}
+
+	/**
+	 * This Method returns the valid Fiscal Period Name , for the PPM DB over
+	 * stat- and enddate from Planview Project
+	 *
+	 * @param hasMapFiscalPeriods
+	 *            Fiscal Periods Hash Map from PPM (already set before)
+	 *
+	 * @param ficalPeriodDate
+	 *            project, startDate from Planview
+	 *
+	 * @return ficalPeriodDateString, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static String getFiscalPeriodString(Object hasMapFiscalPeriods,
+			Date ficalPeriodDate) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getFiscalPeriodString");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> fiscalPeriods_String_hash = new HashMap<String, String>();
+
+		if (ficalPeriodDate == null) {
+			return null;
+		}
+
+		try {
+			fiscalPeriods_String_hash = (HashMap<String, String>) hasMapFiscalPeriods;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ hasMapFiscalPeriods);
+			return null;
+		}
+		DateFormat df = new SimpleDateFormat("MM.yyyy");
+		String ficalPeriodDateStr = df.format(ficalPeriodDate);
+
+		logger4j.trace(loglineheader + " -- fiscalPeriods_String_hash -- "
+				+ fiscalPeriods_String_hash);
+
+		logger4j.trace(loglineheader + " -- ficalPeriodDateStr -- "
+				+ ficalPeriodDateStr);
+
+		String ficalPeriodDateString = fiscalPeriods_String_hash
+				.get(ficalPeriodDateStr);
+
+		logger4j.trace(loglineheader + " -- ficalPeriodDateString -- "
+				+ ficalPeriodDateString);
+
+		/*
+		 * temporarry delete later start if (ficalPeriodDateString == null) {
+		 * ficalPeriodDateString = "Dezember 2010"; } ; temporarry delete later
+		 * end
+		 */
+
+		logger4j.trace(loglineheader + " -- hasMapFiscalPeriods  -- "
+				+ hasMapFiscalPeriods);
+		logger4j.trace(loglineheader + " -- ficalPeriodDate ---- "
+				+ ficalPeriodDate);
+		logger4j.trace(loglineheader + " -- ficalPeriodDateID ---- "
+				+ ficalPeriodDateString);
+
+		return ficalPeriodDateString;
+	}
+
+	/**
+	 * This Method returns the items witch are not in the lookup PPM ArrayList,
+	 * for Error Handling
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return items witch are not in the lookup PPM ArrayList
+	 *
+	 * @since 1.00
+	 */
+	public static String checkPLVlkp(Object lookupPPMArrayList_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.checkPLVlkp");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList_ob ---- "
+				+ lookupPPMArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated ---- "
+				+ lookupPLVcommaSeparated);
+		List<String> items = Arrays.asList(lookupPLVcommaSeparated
+				.split("\\s*,\\s*"));
+		ArrayList<String> lookupPPMArrayList = (ArrayList<String>) lookupPPMArrayList_ob;
+		for (String item : items) {
+			item = item.replaceAll("^\\s*", "");
+			item = item.replaceAll("\\s*$", "");
+			Boolean isValue = false;
+			for (String itemx : lookupPPMArrayList) {
+				itemx = itemx.replaceAll("^\\s*", "");
+				itemx = itemx.replaceAll("\\s*$", "");
+				if (itemx.equalsIgnoreCase(item)) {
+					isValue = true;
+				}
+			}
+			if (!isValue) {
+				return item;
+			}
+			/*
+			 * if (!lookupPPMArrayList.contains(item)) { return item; }
+			 */
+		}
+		return "";
+	}
+
+	/**
+	 * This Method returns the items witch are not in the lookup PPM ArrayList,
+	 * for Error Handling
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return items witch are not in the lookup PPM ArrayList
+	 *
+	 * @since 1.00
+	 */
+	public static String checkPLVlkpSingle(Object lookupPPMArrayList_ob,
+			String lookupPLV) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.checkPLVlkpSingle");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPLV == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList_ob ---- "
+				+ lookupPPMArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLV ---- " + lookupPLV);
+		ArrayList<String> lookupPPMArrayList = (ArrayList<String>) lookupPPMArrayList_ob;
+		lookupPLV = lookupPLV.replaceAll("^\\s*", "");
+		lookupPLV = lookupPLV.replaceAll("\\s*$", "");
+		Boolean isValue = false;
+		for (String itemx : lookupPPMArrayList) {
+			itemx = itemx.replaceAll("^\\s*", "");
+			itemx = itemx.replaceAll("\\s*$", "");
+			if (itemx.equalsIgnoreCase(lookupPLV)) {
+				isValue = true;
+			}
+		}
+		if (!isValue) {
+			return lookupPLV;
+		}
+		return "";
+	}
+
+	/**
+	 * This Method returns the a Multiple checkPLVlkpRes, for the PPM DB
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            lookup Planview ArrayList from Resources (already set before)
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return Resources witch are not in the lookup PPM ArrayList
+	 *
+	 * @since 1.00
+	 */
+	public static String checkPLVlkpRes(Object lookupPVLPPMResArrayList_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.checkPLVlkpRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- lookupPVLPPMResArrayList_ob  -- "
+				+ lookupPVLPPMResArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated ---- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader
+				+ " -- Result "
+				+ checkPLVlkp(lookupPVLPPMResArrayList_ob,
+						lookupPLVcommaSeparated));
+
+		return checkPLVlkp(lookupPVLPPMResArrayList_ob, lookupPLVcommaSeparated);
+	}
+
+	/**
+	 * This Method returns the a Multiple checkPLVlkpRes, for the PPM DB
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            lookup Planview ArrayList from Resources (already set before)
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return Resources witch are not in the lookup PPM ArrayList
+	 *
+	 * @since 1.00
+	 */
+	public static String checkPLVlkpResOld(Object lookupPVLResArrayList_ob,
+			Object lookupPPMArrayList_ob, String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.checkPLVlkpRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- lookupPVLResArrayList_ob  -- "
+				+ lookupPVLResArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList_ob ---- "
+				+ lookupPPMArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated ---- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader
+				+ " -- converter ---- "
+				+ convertRessource(lookupPVLResArrayList_ob,
+						lookupPLVcommaSeparated));
+		logger4j.trace(loglineheader
+				+ " -- Result "
+				+ checkPLVlkp(
+						lookupPPMArrayList_ob,
+						convertRessource(lookupPVLResArrayList_ob,
+								lookupPLVcommaSeparated)));
+
+		return checkPLVlkp(
+				lookupPPMArrayList_ob,
+				convertRessource(lookupPVLResArrayList_ob,
+						lookupPLVcommaSeparated));
+	}
+
+	/**
+	 * This Method returns true if all values in the lookupPLVcommaSeparated are
+	 * valid
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @param mandatory
+	 *            if true it returns false if it is a NULL Value
+	 *
+	 * @return Boolean returns true if all values in the lookupPLVcommaSeparated
+	 *         are valid
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean validPLVlkp(Object lookupPPMArrayList_ob,
+			String lookupPLVcommaSeparated, Boolean mandatory) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.validPLVlkp");
+		ArrayList<String> lookupPPMArrayList = new ArrayList<String>();
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (lookupPPMArrayList_ob == null || mandatory == null) {
+			return false;
+		}
+		if (lookupPLVcommaSeparated == null) {
+			return !mandatory;
+		}
+		List<String> items = Arrays.asList(lookupPLVcommaSeparated
+				.split("\\s*,\\s*"));
+		try {
+			for (String value : ((List<String>) lookupPPMArrayList_ob)) {
+				lookupPPMArrayList.add(value);
+			}
+			// lookupPPMArrayList = (ArrayList<String>) lookupPPMArrayList_ob ;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a List -- "
+					+ lookupPPMArrayList_ob);
+			return true;
+		}
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList  -- "
+				+ lookupPPMArrayList + "-- items -- " + items);
+		for (String item : items) {
+			item = item.replaceAll("^\\s*", "");
+			item = item.replaceAll("\\s*$", "");
+			Boolean isValue = false;
+			for (String itemx : lookupPPMArrayList) {
+				if (!itemx.isEmpty()) {
+					itemx = itemx.replaceAll("^\\s*", "");
+					itemx = itemx.replaceAll("\\s*$", "");
+					if (itemx.equalsIgnoreCase(item)) {
+						isValue = true;
+					}
+				}
+			}
+			if (!isValue) {
+				logger4j.error(loglineheader
+						+ " -- Found false  -- item : ---'" + item + "'---");
+				for (String itemx : lookupPPMArrayList) {
+					itemx = itemx.replaceAll("^\\s*", "");
+					itemx = itemx.replaceAll("\\s*$", "");
+					logger4j.trace(loglineheader
+							+ " -- Found false  -- itemx : ---'" + itemx
+							+ "'---");
+				}
+
+				return false;
+			}
+		}
+		/*
+		 * for (String item : items) { item = item.replaceAll("^\\s*", ""); item
+		 * = item.replaceAll("\\s*$", ""); if
+		 * (!lookupPPMArrayList.contains(item)) { return false; } }
+		 */
+		return true;
+	}
+
+	/**
+	 * This Method returns true if all values in the lookupPLVcommaSeparated are
+	 * valid
+	 *
+	 * @param lookupPPMArrayList_ob
+	 *            lookup PPM ArrayList from PPM (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @param mandatory
+	 *            if true it returns false if it is a NULL Value
+	 *
+	 * @return Boolean returns true if all values in the lookupPLVcommaSeparated
+	 *         are valid
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean validPLVlkpSingle(Object lookupPPMArrayList_ob,
+			String lookupPLV, Boolean mandatory) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.validPLVlkpSingle");
+		ArrayList<String> lookupPPMArrayList = new ArrayList<String>();
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (lookupPPMArrayList_ob == null || mandatory == null) {
+			return false;
+		}
+		if (lookupPLV == null) {
+			return !mandatory;
+		}
+		try {
+			for (String value : ((List<String>) lookupPPMArrayList_ob)) {
+				lookupPPMArrayList.add(value);
+			}
+			// lookupPPMArrayList = (ArrayList<String>) lookupPPMArrayList_ob ;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a List -- "
+					+ lookupPPMArrayList_ob);
+			return true;
+		}
+		logger4j.trace(loglineheader + " -- lookupPPMArrayList  -- "
+				+ lookupPPMArrayList + "-- lookupPLV -- " + lookupPLV);
+		lookupPLV = lookupPLV.replaceAll("^\\s*", "");
+		lookupPLV = lookupPLV.replaceAll("\\s*$", "");
+		Boolean isValue = false;
+		for (String itemx : lookupPPMArrayList) {
+			itemx = itemx.replaceAll("^\\s*", "");
+			itemx = itemx.replaceAll("\\s*$", "");
+			if (itemx.equalsIgnoreCase(lookupPLV)) {
+				isValue = true;
+			}
+		}
+		if (!isValue) {
+			logger4j.error(loglineheader
+					+ " -- Found false  -- lookupPLV : ---'" + lookupPLV
+					+ "'---");
+			for (String itemx : lookupPPMArrayList) {
+				itemx = itemx.replaceAll("^\\s*", "");
+				itemx = itemx.replaceAll("\\s*$", "");
+				logger4j.trace(loglineheader
+						+ " -- Found false  -- itemx : ---'" + itemx + "'---");
+			}
+
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * This Method returns true if all values in the lookupPLVcommaSeparated are
+	 * valid
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            lookup Planview ArrayList from Resources (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @param mandatory
+	 *            if true it returns false if it is a NULL Value
+	 *
+	 * @return Boolean returns true if all values in the lookupPLVcommaSeparated
+	 *         are valid
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean validPLVlkpResOld(Object lookupPVLResArrayList_ob,
+			Object lookupPPMArrayList_ob, String lookupPLVcommaSeparated,
+			Boolean mandatory) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.validPLVlkpRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPVLResArrayList_ob == null || lookupPPMArrayList_ob == null
+				|| mandatory == null) {
+			return false;
+		}
+		if (lookupPLVcommaSeparated == null) {
+			return !mandatory;
+		}
+		return validPLVlkp(
+				lookupPPMArrayList_ob,
+				convertRessource(lookupPVLResArrayList_ob,
+						lookupPLVcommaSeparated), mandatory);
+	}
+
+	/**
+	 * This Method returns true if all values in the lookupPLVcommaSeparated are
+	 * valid
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            lookup Planview ArrayList from Resources (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @param mandatory
+	 *            if true it returns false if it is a NULL Value
+	 *
+	 * @return Boolean returns true if all values in the lookupPLVcommaSeparated
+	 *         are valid
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean validPLVlkpRes(Object lookupPPMArrayList_ob,
+			String lookupPLVcommaSeparated, Boolean mandatory) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.validPLVlkpRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		if (lookupPPMArrayList_ob == null || mandatory == null) {
+			return false;
+		}
+		if (lookupPLVcommaSeparated == null) {
+			return !mandatory;
+		}
+		return validPLVlkp(lookupPPMArrayList_ob, lookupPLVcommaSeparated,
+				mandatory);
+	}
+
+	/**
+	 * This Method generates a LookupValue for PPM for single and multiple
+	 * Lookupvalues
+	 *
+	 * @param user_id_hash_ob
+	 *            user_id hash with Email Address as Key and USER_ID as value
+	 *            (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String single and multiple Lookup values for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMUIDlkp(Object user_id_hash_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.generatePPMUIDlkp");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, Integer> user_id_hash = new HashMap<String, Integer>();
+
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+
+		List<String> username = Arrays.asList(lookupPLVcommaSeparated
+				.split("\\s*,\\s*"));
+		try {
+			user_id_hash = (HashMap<String, Integer>) user_id_hash_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ user_id_hash_ob);
+			return null;
+		}
+
+		ArrayList<String> username_ArrayList = new ArrayList<String>();
+		for (String user : username) {
+			logger4j.trace(loglineheader + " -- user  = " + user + " user id "
+					+ user_id_hash.get(user));
+			try {
+				username_ArrayList.add(user_id_hash.get(user).toString());
+			} catch (Exception e) {
+				logger4j.info(loglineheader + " -- can not add user_id-- "
+						+ user_id_hash.get(user) + " to user_id_hash");
+				username_ArrayList.add("0");
+			}
+		}
+		logger4j.trace(loglineheader + " -- user_id_hash_ob  -- "
+				+ user_id_hash_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated ---- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader + " -- username_ArrayList ---- "
+				+ username_ArrayList);
+		logger4j.trace(loglineheader + " -- genDeliminterStringFromArray ---- "
+				+ genDeliminterStringFromArray(username_ArrayList, "#@#"));
+
+		return genDeliminterStringFromArray(username_ArrayList, "#@#");
+	}
+
+	/**
+	 * This Method generates a LookupValue for PPM for single Lookupvalues
+	 *
+	 * @param plvLookupHash_ob
+	 *            Key Value hash with PLVValue as (PPM)Key and Code (PPM)Value
+	 *            (already set before)
+	 *
+	 * @param lookupPLVvalue
+	 *            Values from Planview
+	 *
+	 * @return String single Lookup Code for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMlkpSingle(Object plvLookupHash_ob,
+			String lookupPLVvalue) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.generatePPMlkpSingle");
+
+		String loglineheader = "Planview_Test_Run";
+		String lookupPPMcode = null;
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> plvLookupHash = new HashMap<String, String>();
+
+		if (lookupPLVvalue == null) {
+			return lookupPPMcode;
+		}
+
+		try {
+			plvLookupHash = (HashMap<String, String>) plvLookupHash_ob;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ plvLookupHash_ob);
+			return lookupPPMcode;
+		}
+		try {
+			lookupPPMcode = plvLookupHash.get(lookupPLVvalue);
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ plvLookupHash_ob);
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- plvLookupHash_ob  -- "
+				+ plvLookupHash_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVvalue ---- "
+				+ lookupPLVvalue);
+		logger4j.trace(loglineheader + " -- lookupPPMcode ---- "
+				+ lookupPPMcode);
+		return lookupPPMcode;
+	}
+
+	/**
+	 * This Method generates a LookupValue for single and multiple Lookupvalues
+	 * from Ressources
+	 *
+	 * @param user_id_hash_ob
+	 *            user_id hash with Email Address as Key and USER_ID as value
+	 *            (already set before)
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String single and multiple Lookup values for PPM from
+	 *         Ressources
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMUIDlkpRes(Object lookupPVLResArrayList_ob,
+			Object user_id_hash_ob, String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.generatePPMUIDlkpRes");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.trace(loglineheader + " -- lookupPVLResArrayList_ob  -- "
+				+ lookupPVLResArrayList_ob);
+		logger4j.trace(loglineheader + " -- user_id_hash_ob  -- "
+				+ user_id_hash_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated  -- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader
+				+ " -- generatePPMUIDlkp  -- "
+				+ generatePPMUIDlkp(
+						user_id_hash_ob,
+						convertRessource(lookupPVLResArrayList_ob,
+								lookupPLVcommaSeparated)));
+
+		return generatePPMUIDlkp(
+				user_id_hash_ob,
+				convertRessource(lookupPVLResArrayList_ob,
+						lookupPLVcommaSeparated));
+	}
+
+	/**
+	 * This Method generates a PPM Lookupvalue from a kommma sepperated String
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            user_id hash with Email Address as Key and USER_ID as value
+	 *            (already set before)
+	 *
+	 * @param ppmlookup
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String single and multiple Lookup/User values for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMlookupRes(Object lookupPVLResArrayList_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.generatePPMlookupRes");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (lookupPLVcommaSeparated == null) {
+			return null;
+		}
+		String ppmlookup = convertRessource(lookupPVLResArrayList_ob,
+				lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader + " -- lookupPVLResArrayList_ob  -- "
+				+ lookupPVLResArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated  -- "
+				+ lookupPLVcommaSeparated);
+		return generatePPMlookup(ppmlookup);
+	}
+
+	/**
+	 * This Method generates a sepperated String from ArrayList<String>
+	 *
+	 * @param ArrayList
+	 *            <String> values to be kommaseperated
+	 *
+	 * @param ppmlookup
+	 *            values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String with "separator" as separator
+	 *
+	 * @since 1.00
+	 */
+	public static String genDeliminterStringFromArray(
+			ArrayList<String> username, String separator) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.genDeliminterStringFromArray");
+		String loglineheader = "Planview_Test_Run";
+		int total = username.size() * separator.length();
+		for (String user_id : username) {
+			total += user_id.toString().length();
+		}
+
+		StringBuilder sb = new StringBuilder(total);
+		for (String user_id : username) {
+			sb.append(separator).append(user_id);
+		}
+
+		String delimmiterString = sb.substring(separator.length()); // remove
+																	// leading
+																	// separator
+		logger4j.trace(loglineheader + " -- username  -- " + username);
+		logger4j.trace(loglineheader + " -- separator  -- " + separator);
+		logger4j.trace(loglineheader + " -- delimmiterString  -- "
+				+ delimmiterString);
+
+		return delimmiterString;
+	}
+
+	/**
+	 * This Method generates a PPM Users single and multiple Lookupvalue as
+	 * String
+	 *
+	 * @param lookupPVLResArrayList_ob
+	 *            > values to be kommasepperated Ressources
+	 *
+	 * @param lookupPLVcommaSeparated
+	 *            values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String with separator
+	 *
+	 * @since 1.00
+	 */
+
+	public static String convertRessource(Object lookupPVLResArrayList_ob,
+			String lookupPLVcommaSeparated) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.convertRessource");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (lookupPVLResArrayList_ob == null || lookupPLVcommaSeparated == null
+				|| lookupPLVcommaSeparated.isEmpty()) {
+			return "";
+		}
+		HashMap<String, String> lookupPVLResArrayList = new HashMap<String, String>();
+		List<String> items = Arrays.asList(lookupPLVcommaSeparated
+				.split("\\s*,\\s*"));
+		try {
+			lookupPVLResArrayList = (HashMap<String, String>) lookupPVLResArrayList_ob;
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- is not a HashMap -- "
+					+ lookupPVLResArrayList);
+			return "";
+		}
+		ArrayList<String> username_ArrayList = new ArrayList<String>();
+		for (String item : items) {
+			item = item.replaceAll("^\\s*", "");
+			item = item.replaceAll("\\s*$", "");
+			if (item != null) {
+				try {
+					username_ArrayList.add(lookupPVLResArrayList.get(item)
+							.toString());
+				} catch (Exception e) {
+					logger4j.error(loglineheader + " -- item -- " + item
+							+ " can not be added " + e.getMessage());
+					return "";
+				}
+			}
+		}
+		logger4j.trace(loglineheader + " -- lookupPVLResArrayList_ob  -- "
+				+ lookupPVLResArrayList_ob);
+		logger4j.trace(loglineheader + " -- lookupPLVcommaSeparated  -- "
+				+ lookupPLVcommaSeparated);
+		logger4j.trace(loglineheader + " -- username_ArrayList  -- "
+				+ username_ArrayList);
+		logger4j.trace(loglineheader + " -- genDeliminterStringFromArray  -- "
+				+ genDeliminterStringFromArray(username_ArrayList, ","));
+
+		return genDeliminterStringFromArray(username_ArrayList, ",");
+	}
+
+	/**
+	 * This Method returns the a single lookupValueCode, for the PPM DB
+	 *
+	 * @param lookupValueHash
+	 *            lookup Value Hash Map from PPM (already set before)
+	 *
+	 * @param lookupValueMean
+	 *            the Meaning of the Lookup
+	 *
+	 * @return lookupValueCode, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static String getPPMLookupValueCodeMulti(Object lookupValueHash,
+			String lookupValueMean) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getPPMLookupValueCodeMulti");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> lookupValueHashMap = new HashMap<String, String>();
+
+		if (lookupValueMean == null) {
+			return null;
+		}
+
+		try {
+			lookupValueHashMap = (HashMap<String, String>) lookupValueHash;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ lookupValueHash);
+			return null;
+		}
+
+		List<String> lookupValueMeanArray = Arrays.asList(lookupValueMean
+				.split("\\s*,\\s*"));
+
+		ArrayList<String> lookupValueCodeArray = new ArrayList<String>();
+		for (String item : lookupValueMeanArray) {
+			item = item.replaceAll("^\\s*", "");
+			item = item.replaceAll("\\s*$", "");
+			if (item != null) {
+				try {
+					lookupValueCodeArray.add(lookupValueHashMap.get(item));
+				} catch (Exception e) {
+					logger4j.error(loglineheader + " -- item -- " + item
+							+ " can not be added " + e.getMessage());
+					return "";
+				}
+			}
+		}
+
+		StringBuilder b = new StringBuilder();
+		boolean erstmals = true;
+		for (String code : lookupValueCodeArray) {
+			if (!erstmals) {
+				b.append("#@#");
+			}
+			b.append(code);
+			if (erstmals) {
+				erstmals = false;
+			}
+		}
+		String lookupValueCode = b.toString();
+
+		logger4j.trace(loglineheader + " -- lookupValueHash  -- "
+				+ lookupValueHash);
+		logger4j.trace(loglineheader + " -- lookupValueMean ---- "
+				+ lookupValueMean);
+		logger4j.trace(loglineheader + " -- lookupValueCode ---- "
+				+ lookupValueCode);
+
+		return lookupValueCode;
+	}
+
+	/**
+	 * This Method returns the a single lookupValueCode, for the PPM DB
+	 *
+	 * @param lookupValueHash
+	 *            lookup Value Hash Map from PPM (already set before)
+	 *
+	 * @param lookupValueMean
+	 *            the Meaning of the Lookup
+	 *
+	 * @return lookupValueCode, for the PPM DB
+	 *
+	 * @since 1.00
+	 */
+	public static String getPPMLookupValueCode(Object lookupValueHash,
+			String lookupValueMean) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getPPMLookupValueCode");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> lookupValueHashMap = new HashMap<String, String>();
+
+		if (lookupValueMean == null) {
+			return null;
+		}
+
+		try {
+			lookupValueHashMap = (HashMap<String, String>) lookupValueHash;
+		} catch (Exception e) {
+			logger4j.info(loglineheader + " -- is not a hashmap -- "
+					+ lookupValueHash);
+			return null;
+		}
+
+		String lookupValueCode = lookupValueHashMap.get(lookupValueMean);
+
+		logger4j.trace(loglineheader + " -- lookupValueHash  -- "
+				+ lookupValueHash);
+		logger4j.trace(loglineheader + " -- lookupValueMean ---- "
+				+ lookupValueMean);
+		logger4j.trace(loglineheader + " -- lookupValueCode ---- "
+				+ lookupValueCode);
+
+		return lookupValueCode;
+	}
+
+	/**
+	 * This Method generates a PPM Lookupvalue from a kommma sepperated String
+	 *
+	 * @param ppmlookup
+	 *            Values (komma Sepperated or not) from Planview
+	 *
+	 * @return delimiter String single and multiple Lookup/User values for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String generatePPMlookup(String ppmlookup) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.generatePPMlookup");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (ppmlookup == null) {
+			return null;
+		}
+		logger4j.trace(loglineheader + " -- ppmlookup before -- " + ppmlookup);
+
+		if (ppmlookup.contains(",")) {
+			ppmlookup = ppmlookup.replaceAll("\\s*,\\s*", "#@#");
+			ppmlookup = ppmlookup.replaceAll("^\\s*", "");
+			ppmlookup = ppmlookup.replaceAll("\\s*$", "");
+		}
+		logger4j.trace(loglineheader + " -- ppmlookup after -- " + ppmlookup);
+		return ppmlookup;
+	}
+
+	/**
+	 * This Method generates a Ressource Chunk for parallel Timesheet Webservice
+	 * execution
+	 *
+	 * @param ressourceCodesObj
+	 *            a ArryList generated by talend (distinct ressource_code from
+	 *            timesheet )
+	 *
+	 * @return kommma sepperated Ressource String for the selection of
+	 *         Timesheets
+	 *
+	 * @since 1.00
+	 */
+	public static String getRessourceChunk(Object ressourceCodesObj,
+			Integer chunk) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.generatePPMlookup");
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+
+		Integer gesamt = 0;
+		Integer teiler = 3;
+		Integer anteil1 = 0;
+		Integer anteil = 0;
+		Integer rest = 0;
+		Integer start = 0;
+		Integer ende = 0;
+		String result = "0";
+
+		ArrayList<String> ressourceCodesAnteil = new ArrayList<String>();
+		ArrayList<String> ressourceCodes = (ArrayList<String>) ressourceCodesObj;
+
+		if (ressourceCodes != null && !ressourceCodes.isEmpty()) {
+			gesamt = ressourceCodes.size();
+			logger4j.warn(loglineheader + " gesamt : " + gesamt);
+
+			if (gesamt != 0) {
+				anteil = gesamt / teiler;
+				rest = gesamt - anteil * teiler;
+				anteil1 = anteil + rest;
+			}
+			logger4j.warn(loglineheader + " anteil1 : " + anteil1);
+			logger4j.warn(loglineheader + " anteil : " + anteil);
+			logger4j.warn(loglineheader + " rest : " + rest);
+
+			switch (chunk) {
+			case 1:
+				start = 0;
+				ende = anteil;
+				break;
+			case 2:
+				start = anteil;
+				ende = anteil + anteil;
+				break;
+			case 3:
+				start = anteil1 + anteil;
+				ende = gesamt;
+				break;
+			default:
+				break;
+			}
+
+			for (int i = start; i < ende; i++) {
+				ressourceCodesAnteil.add(ressourceCodes.get(i));
+			}
+
+			String separator = ",";
+			int total = ressourceCodesAnteil.size() * separator.length();
+			for (String ressourceCode : ressourceCodesAnteil) {
+				total += ressourceCode.toString().length();
+			}
+
+			StringBuilder sb = new StringBuilder(total);
+			for (String ressourceCode : ressourceCodesAnteil) {
+				sb.append(separator).append(ressourceCode);
+			}
+
+			result = sb.substring(separator.length()); // remove leading
+														// separator
+		}
+
+		logger4j.warn(loglineheader + " result : " + result);
+		return result;
+
+	}
+
+	/**
+	 * This Method returns the a pathNameListArray, for the TimeSheetBulkLoad
+	 *
+	 * @param vfWpTaskIdNameHashMap
+	 *            Hash Map TaskId and TaskName (already set before)
+	 *
+	 * @param vfPathIdList
+	 *            the Task Path Id List from DB
+	 *
+	 * @return pathNameListArray, for the TimeSheetBulkLoad
+	 *
+	 * @since 1.00
+	 */
+	public static String createWorkItemDescription(
+			Object vfWpTaskIdNameHashMap, String vfPathIdList, BigDecimal taskId) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.createWorkItemDescription");
+
+		String loglineheader = "Planview_Test_Run";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		HashMap<String, String> vfWpTaskIdNameHashMapTmp = new HashMap<String, String>();
+
+		if (vfWpTaskIdNameHashMap == null) {
+			return null;
+		}
+
+		if (taskId == null) {
+			return null;
+		}
+
+		logger4j.trace(loglineheader + " -- vfWpTaskIdNameHashMap  = "
+				+ vfWpTaskIdNameHashMap);
+
+		try {
+			vfWpTaskIdNameHashMapTmp = (HashMap<String, String>) vfWpTaskIdNameHashMap;
+		} catch (Exception e) {
+			logger4j.error(loglineheader + " -- is not a hashmap -- "
+					+ vfWpTaskIdNameHashMap);
+			return null;
+		}
+
+		logger4j.trace(loglineheader + " -- vfWpTaskIdNameHashMapTmp  = "
+				+ vfWpTaskIdNameHashMapTmp);
+
+		logger4j.debug(loglineheader + " vfPathIdList = " + vfPathIdList);
+
+		if (vfPathIdList == null) {
+			vfPathIdList = taskId.toString();
+		} else if (vfPathIdList.contains(":")) {
+			vfPathIdList = vfPathIdList + taskId.toString();
+		} else {
+			vfPathIdList = vfPathIdList + ":" + taskId.toString();
+		}
+
+		logger4j.debug(loglineheader + " vfPathIdList = " + vfPathIdList);
+
+		List<String> pathIdListArray = Arrays.asList(vfPathIdList
+				.split("\\s*:\\s*"));
+		ArrayList<String> pathNameListArrayTemp = new ArrayList<String>();
+
+		for (String item : pathIdListArray) {
+			// item = item.replaceAll("^\\s*", "");
+			// item = item.replaceAll("\\s*$", "");
+			if (item != null) {
+				try {
+					pathNameListArrayTemp.add((String) vfWpTaskIdNameHashMapTmp
+							.get(item));
+				} catch (Exception e) {
+					logger4j.error(loglineheader + " -- item -- " + item
+							+ " can not be added " + e.getMessage());
+				}
+			}
+		}
+
+		StringBuilder b = new StringBuilder();
+		boolean erstmals = true;
+		for (String code : pathNameListArrayTemp) {
+			if (!erstmals) {
+				b.append("#@#");
+			}
+			b.append(code);
+			if (erstmals) {
+				erstmals = false;
+			}
+		}
+		String pathNameListArray = b.toString();
+		pathNameListArray = pathNameListArray.replaceAll("^null...", "");
+
+		logger4j.debug(loglineheader + " -- vfPathIdList  -- " + vfPathIdList);
+		logger4j.debug(loglineheader + " -- pathNameListArrayTemp ---- "
+				+ pathNameListArrayTemp);
+		logger4j.debug(loglineheader + " -- pathNameListArray ---- "
+				+ pathNameListArray);
+
+		return pathNameListArray;
+	}
+
+	public static Date dateParser(String dateTimeString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.dateParser");
+
+		String loglineheader = " routine run ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (dateTimeString == null) {
+			return null;
+		}
+		Date currentDate = new Date();
+		Date datum = currentDate;
+		// System.out.println("Parsing ##" + dateTimeString + "##");
+		try {
+			// datum = (new
+			// SimpleDateFormat("yyyy-MM-dd")).parse(dateTimeString);
+			datum = (new SimpleDateFormat("MMM dd yyyy hh:mma"))
+					.parse(dateTimeString);
+			logger4j.info(loglineheader + "Parse Date" + datum);
+		} catch (Exception e) {
+			try {
+				// datum = (new
+				// SimpleDateFormat("yyyy-MM-dd")).parse(dateTimeString);
+				datum = (new SimpleDateFormat("yyyyMMdd"))
+						.parse(dateTimeString);
+				logger4j.info(loglineheader + "Parse Date" + datum);
+			} catch (Exception e1) {
+				try {
+					datum = (new SimpleDateFormat("MMM  dd yyyy  hh:mma"))
+							.parse(dateTimeString);
+				} catch (Exception e2) {
+					try {
+						datum = (new SimpleDateFormat("MMM dd yyyy  hh:mma"))
+								.parse(dateTimeString);
+					} catch (Exception e3) {
+						try {
+							datum = (new SimpleDateFormat(
+									"MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH))
+									.parse(dateTimeString);
+						} catch (Exception e4) {
+							try {
+								datum = (new SimpleDateFormat(
+										"EEE MMM dd HH:mm:ss zzz yyyy",
+										Locale.ENGLISH)).parse(dateTimeString);
+							} catch (Exception e5) {
+								try {
+									datum = (new SimpleDateFormat("dd.MM.yyyy"))
+											.parse(dateTimeString);
+								} catch (Exception e6) {
+									logger4j.info(loglineheader
+											+ "cannot Parse Date ---"
+											+ dateTimeString
+											+ "--- take currentDate: " + datum);
+									/*
+									 * e.printStackTrace();
+									 * e2.printStackTrace();
+									 * System.out.println("Parsing Error :" +
+									 * e); System.out.println("Parsing Error :"
+									 * + e2);
+									 * System.out.println("Parsing Error :" +
+									 * e3);
+									 */
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return datum;
+	}
+
+	/**
+	 * This Method converts the JASON String to a SugarCRM readable.
+	 * 
+	 * @param jasonString
+	 *            error message from Webservice
+	 * 
+	 * @return jasonString error message for PPM
+	 *
+	 * @since 1.00
+	 */
+	public static String convertToSugarJASON(String jasonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.convertToSugarJASON");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jasonString  ---" + jasonString
+				+ "---");
+
+		if (jasonString == null || jasonString.isEmpty()) {
+			return jasonString;
+		}
+		jasonString = jasonString.replaceAll("^\\{\"root\":", "");
+		jasonString = jasonString.replaceAll("\\}\\s*$", "}");
+		logger4j.info(loglineheader + " -- jasonString  ---" + jasonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- Ende  -- ");
+		return jasonString;
+	}
+
+	/**
+	 * This Method gets the Access Token from the SugarCRM Server for the Rest
+	 * Interface.
+	 * 
+	 * @param tokenURL
+	 * 
+	 * @param username
+	 * 
+	 * @param password
+	 * 
+	 * @return response the access_token , the expiresIn , the Status
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getAccessToken(String tokenURL,
+			String username, String password) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getAccessToken");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- tokenURL  ---" + tokenURL + "---");
+		logger4j.debug(loglineheader + " -- username  ---" + username + "---");
+		// logger4j.debug(loglineheader + " -- password  ---"+password+"---" );
+
+		HashMap<String, String> response = new HashMap<String, String>();
+
+		try {
+
+			OAuthClientRequest request = OAuthClientRequest
+					.tokenLocation(tokenURL).setGrantType(GrantType.PASSWORD)
+					.setClientId("sugar").setClientSecret("")
+					.setParameter("username", username)
+					.setParameter("password", password)
+					.setParameter("platform", "base").buildBodyMessage();
+
+			OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+
+			OAuthJSONAccessTokenResponse jsonResponse = oAuthClient
+					.accessToken(request);
+
+			response.put("access_token", jsonResponse.getAccessToken());
+			// response.put("expiresIn","105");
+			response.put("expiresIn", jsonResponse.getExpiresIn().toString());
+			response.put("status", "ok");
+			logger4j.debug(loglineheader + " -- End  -- ");
+
+			return response;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger4j.error(loglineheader + e.toString());
+			response.put("status", "ERROR");
+			return response;
+		}
+	}
+
+	/**
+	 * This Method gets the Access Token from the SugarCRM Server for the Rest
+	 * Interface.
+	 * 
+	 * @param tokenURL
+	 * 
+	 * @param username
+	 * 
+	 * @param password
+	 * 
+	 * @return response the access_token , the expiresIn , the Status
+	 *
+	 * @since 1.00
+	 */
+	public static String getAccessTokenOnly(String tokenURL, String username,
+			String password) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getAccessTokenOnly");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- tokenURL  ---" + tokenURL + "---");
+		logger4j.debug(loglineheader + " -- username  ---" + username + "---");
+		// logger4j.debug(loglineheader + " -- password  ---"+password+"---" );
+
+		HashMap<String, String> response = new HashMap<String, String>();
+
+		try {
+
+			OAuthClientRequest request = OAuthClientRequest
+					.tokenLocation(tokenURL).setGrantType(GrantType.PASSWORD)
+					.setClientId("sugar").setClientSecret("")
+					.setParameter("username", username)
+					.setParameter("password", password)
+					.setParameter("platform", "base").buildBodyMessage();
+
+			OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
+
+			OAuthJSONAccessTokenResponse jsonResponse = oAuthClient
+					.accessToken(request);
+			String token = jsonResponse.getAccessToken();
+			logger4j.debug(loglineheader + "renew Access Token ---" + token
+					+ "---");
+			logger4j.debug(loglineheader + " -- End  -- ");
+			return token;
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			response.put("status", "ERROR");
+			return "ERROR";
+		}
+	}
+
+	/**
+	 * This Method updates an SugarCRM Entry over the Rest Interface.
+	 *
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param jsonString
+	 *
+	 * @return status
+	 *
+	 * @since 1.00
+	 */
+	public static String putSugarCRMEntry(String resourceUrl, String token,
+			Object jsonObject) {
+
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.putSugarCRMEntry");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonObject  --"
+				+ jsonObject.toString() + "--");
+
+		JSONObject toJsonObj = new JSONObject();
+		try {
+			toJsonObj = (JSONObject) jsonObject;
+			logger4j.debug(loglineheader + " -- toJsonObj.get(email) --"
+					+ toJsonObj.get("email") + "--");
+			logger4j.debug(loglineheader + " -- toJsonObj  --"
+					+ toJsonObj.toString() + "--");
+			for (Object key : toJsonObj.keySet()) {
+				Object aObj = toJsonObj.get(key);
+				String keyStr = (String) key;
+				if (aObj instanceof String && !"email".contains(keyStr)) {
+					String oldJsonString = (String) aObj;
+					String newJsonString = oldJsonString.replaceAll("\\\\",
+							"-#-#-#-#-");
+					newJsonString = newJsonString.replaceAll("\"", "\'");
+					logger4j.debug(loglineheader + " -- oldJsonString  --"
+							+ oldJsonString + "--");
+					logger4j.debug(loglineheader + " -- newJsonString  --"
+							+ newJsonString + "--");
+
+					toJsonObj.replace(key, oldJsonString, newJsonString);
+				}
+			}
+		} catch (Exception e) {
+			logger4j.warn(loglineheader + " -- toJsonObj  --"
+					+ toJsonObj.toString() + "-- error : " + e.toString());
+		}
+		String finalJsonString = toJsonObj.toJSONString();
+		finalJsonString = finalJsonString.replaceFirst("\"\\[", "\\[");
+		finalJsonString = finalJsonString.replaceFirst("\\]\"", "\\]");
+		finalJsonString = finalJsonString.replaceAll("\\\\", "");
+		finalJsonString = finalJsonString.replaceAll("-#-#-#-#-", "\\\\");
+		return putSugarCRMEntry(resourceUrl, token, finalJsonString);
+	}
+
+	/**
+	 * This Method updates an SugarCRM Entry over the Rest Interface.
+	 *
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param jsonString
+	 *
+	 * @return status
+	 *
+	 * @since 1.00
+	 */
+	public static String putSugarCRMEntry(String resourceUrl, String token,
+			String jsonString) {
+
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.putSugarCRMEntry");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- tokeresourceUrlnURL  ---"
+				+ resourceUrl + "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		// String resourceUrl = tokenURL.replace(":account-id", ACCOUNT_ID);
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("PUT");
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept", "application/json");
+
+			logger4j.debug(loglineheader + " resource_cxn created = "
+					+ resource_cxn.toString());
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+			logger4j.info(loglineheader + " outputstream = " + os.toString());
+
+			// read the response
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode = resource_cxn.getResponseCode();
+			logger4j.info(loglineheader + " -- responseCode  -- "
+					+ responseCode);
+			logger4j.debug(loglineheader + " -- Result  -- " + result);
+			logger4j.debug(loglineheader + " -- End  -- ");
+			if (responseCode.equals(200)) {
+				return "Ok : " + responseCode + result;
+			}
+			return "ERROR : " + responseCode + result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger4j.error(loglineheader + " -- Error -- jsonString  ---"
+					+ jsonString + "---");
+			logger4j.error(loglineheader + " -- Error  -- " + e.toString());
+			logger4j.error(loglineheader + " -- End  -- ");
+			return "Error " + e.toString();
+		}
+
+	}
+
+	/**
+	 * This Method updates an SugarCRM Entry over the Rest Interface.
+	 *
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param jsonString
+	 *
+	 * @return status
+	 *
+	 * @since 1.00
+	 */
+	public static String postSugarCRMEntry(String resourceUrl, String token,
+			Object jsonObject) {
+
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.postSugarCRMEntry");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonObject  --"
+				+ jsonObject.toString() + "--");
+
+		JSONObject toJsonObj = new JSONObject();
+		try {
+			toJsonObj = (JSONObject) jsonObject;
+			logger4j.debug(loglineheader + " -- toJsonObj.get(email) --"
+					+ toJsonObj.get("email") + "--");
+			logger4j.debug(loglineheader + " -- toJsonObj  --"
+					+ toJsonObj.toString() + "--");
+			for (Object key : toJsonObj.keySet()) {
+				Object aObj = toJsonObj.get(key);
+				String keyStr = (String) key;
+				if (aObj instanceof String && !"email".contains(keyStr)) {
+					String oldJsonString = (String) aObj;
+					String newJsonString = oldJsonString.replaceAll("\\\\",
+							"-#-#-#-#-");
+					newJsonString = newJsonString.replaceAll("\"", "\'");
+					logger4j.debug(loglineheader + " -- oldJsonString  --"
+							+ oldJsonString + "--");
+					logger4j.debug(loglineheader + " -- newJsonString  --"
+							+ newJsonString + "--");
+					toJsonObj.replace(key, oldJsonString, newJsonString);
+				}
+			}
+		} catch (Exception e) {
+			logger4j.warn(loglineheader + " -- toJsonObj  --"
+					+ toJsonObj.toString() + "-- error : " + e.toString());
+		}
+		String finalJsonString = toJsonObj.toJSONString();
+		finalJsonString = finalJsonString.replaceFirst("\"\\[", "\\[");
+		finalJsonString = finalJsonString.replaceFirst("\\]\"", "\\]");
+		finalJsonString = finalJsonString.replaceAll("\\\\", "");
+		finalJsonString = finalJsonString.replaceAll("-#-#-#-#-", "\\\\");
+		return postSugarCRMEntry(resourceUrl, token, finalJsonString);
+	}
+
+	/**
+	 * This Method updates an SugarCRM Entry over the Rest Interface.
+	 *
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param jsonString
+	 *
+	 * @return status
+	 *
+	 * @since 1.00
+	 */
+	public static String postSugarCRMEntry(String resourceUrl, String token,
+			String jsonString) {
+
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.postSugarCRMEntry");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- tokeresourceUrlnURL  ---"
+				+ resourceUrl + "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		// String resourceUrl = tokenURL.replace(":account-id", ACCOUNT_ID);
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(CONNECTION_TIMEOUT);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("POST");
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept", "application/json");
+
+			logger4j.debug(loglineheader + " resource_cxn created = "
+					+ resource_cxn.toString());
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+			logger4j.info(loglineheader + " outputstream = " + os.toString());
+
+			// read the response
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode = resource_cxn.getResponseCode();
+			logger4j.info(loglineheader + " -- responseCode  -- "
+					+ responseCode);
+			logger4j.debug(loglineheader + " -- Result  -- " + result);
+			logger4j.debug(loglineheader + " -- End  -- ");
+			if (responseCode.equals(200)) {
+				return "Ok : " + responseCode + result;
+			}
+			return "ERROR : " + responseCode + result;
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger4j.error(loglineheader + " -- Error -- jsonString  ---"
+					+ jsonString + "---");
+			logger4j.error(loglineheader + " -- Error  -- " + e.toString());
+			logger4j.error(loglineheader + " -- End  -- ");
+			return "Error " + e.toString();
+		}
+
+	}
+
+	/**
+	 * This Method truncates the Json String so that only Elements
+	 * 
+	 * @param jsonString
+	 * 
+	 * @return NewJsonString
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateJsonString(String jsonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.truncateJsonstring");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.trace(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		String NewJsonString = "";
+		if (jsonString == null || jsonString.isEmpty()) {
+			return jsonString;
+		}
+
+		String[] jsonArray = jsonString.split(",");
+
+		for (String jsonElement : jsonArray) {
+			if (jsonElement != null && !jsonElement.isEmpty()
+					&& !(jsonElement.indexOf("[]") > 0)) {
+				NewJsonString = NewJsonString + jsonElement + ",";
+			}
+			;
+		}
+
+		NewJsonString = NewJsonString.replaceAll(",$", "");
+		NewJsonString = NewJsonString + "}";
+		NewJsonString = NewJsonString.replaceAll("}}$", "}");
+		logger4j.info(loglineheader + " -- NewJsonString  ---" + NewJsonString
+				+ "---");
+		logger4j.trace(loglineheader + " -- End  -- ");
+
+		return NewJsonString;
+	}
+
+	/**
+	 * This Method truncates the Json String so that only Elements
+	 * 
+	 * @param jsonString
+	 * 
+	 * @return NewJsonString
+	 *
+	 * @since 1.00
+	 */
+	public static String truncateJsonString2(String jsonString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.truncateJsonstring");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+
+		String NewJsonString = "";
+		if (jsonString == null || jsonString.isEmpty()) {
+			return jsonString;
+		}
+		jsonString = jsonString.replace("^.", "");
+		jsonString = jsonString.replace(".$", "");
+		String[] jsonArray = jsonString.split(",");
+
+		for (String jsonElement : jsonArray) {
+			if (jsonElement != null && !jsonElement.isEmpty()
+					&& !(jsonElement.indexOf("[]") > 0)) {
+				NewJsonString = NewJsonString + jsonElement + ",";
+			}
+			;
+		}
+		NewJsonString = "{" + NewJsonString;
+		NewJsonString = NewJsonString.replaceAll(",$", "");
+		NewJsonString = NewJsonString + "}";
+		NewJsonString = NewJsonString.replaceAll("}}$", "}");
+		logger4j.info(loglineheader + " -- NewJsonString  ---" + NewJsonString
+				+ "---");
+		logger4j.trace(loglineheader + " -- End  -- ");
+
+		return NewJsonString;
+	}
+
+    /**
+     * This Method truncates the Json String so that only Elements
+     *
+     * @param jsonString
+     *
+     * @return NewJsonString
+     *
+     * @since 1.00
+     */
+    public static String truncateJsonString3(String jsonString)
+    {
+        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+                .getLogger("SugarCRMHelper.truncateJsonString2");
+        String loglineheader = "NOUNIQUEID NOHOST ";
+        logger4j.debug(loglineheader + " -- Start  -- ");
+        logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+                + "---");
+
+        String NewJsonString = "";
+        if (jsonString == null || jsonString.isEmpty()) {
+            return jsonString;
+        }
+        jsonString = jsonString.replace("^.", "");
+        jsonString = jsonString.replace(".$", "");
+        String[] jsonArray = jsonString.split(",");
+
+        for (String jsonElement : jsonArray) {
+            if (jsonElement != null && !jsonElement.isEmpty()
+                    && !(jsonElement.indexOf("[]") > 0)) {
+                NewJsonString = NewJsonString + jsonElement + ",";
+            }
+            ;
+        }
+        NewJsonString = "{" + NewJsonString;
+        NewJsonString = NewJsonString.replaceAll(",$", "");
+        NewJsonString = NewJsonString + "}";
+        NewJsonString = NewJsonString.replaceAll("}}$", "}");
+        NewJsonString = NewJsonString.replaceFirst("\\{\\{", "\\{");
+        NewJsonString = NewJsonString.replaceAll("\"false\"", "false");
+        NewJsonString = NewJsonString.replaceAll("\"true\"", "true");
+        logger4j.info(loglineheader + " -- NewJsonString  ---" + NewJsonString
+                + "---");
+        logger4j.trace(loglineheader + " -- End  -- ");
+
+        return NewJsonString;
+    }
+	
+	
+	/**
+	 * This Method checks the ID if it is a SugarCRM ID Interface.
+	 * 
+	 * @param idString
+	 * 
+	 * @return Boolean
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean isID(String idString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.isID");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- idString  ---" + idString);
+		Integer Zahl = 36;
+		if (idString != null && !idString.isEmpty()) {
+			Integer id = (Integer) idString.length();
+			logger4j.info(loglineheader + " -- length ID String ---"
+					+ id.toString());
+			logger4j.debug(loglineheader + " -- End  -- ");
+			return id.equals(Zahl);
+		}
+		return false;
+	}
+
+	/**
+	 * This Method checks the ID if it is a SugarCRM ID Interface.
+	 * 
+	 * @param idString
+	 * 
+	 * @return Boolean
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean isIDspecial(String idString) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.isID");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- idString  ---" + idString);
+		Integer Zahl = 36;
+		if (idString != null && !idString.isEmpty()) {
+			Integer id = (Integer) idString.length();
+			logger4j.info(loglineheader + " -- length ID String ---"
+					+ id.toString());
+			logger4j.debug(loglineheader + " -- End  -- ");
+			return id.equals(Zahl);
+		}
+		if (idString == null || idString.isEmpty()) {
+			logger4j.info(loglineheader + " -- ID String is null or empty ---");
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * This Method removes NULL
+	 * 
+	 * @param removeNULL
+	 * 
+	 * @return input without NULL
+	 *
+	 * @since 1.00
+	 */
+	public static String removeNULL(String input) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.removeNULL");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		if (input != null && !input.isEmpty()) {
+			input = input.replaceAll("^\\s*NULL\\s*$", "");
+			input = input.replaceAll("^\\s+", "");
+			input = input.replaceAll("\\s+$", "");
+			input = input.replaceAll("#X#X#", "\"");
+		}
+		return input;
+	}
+
+	/**
+	 * This Method gets the the Element from a json String Interface.
+	 * 
+	 * @param jsonString
+	 * 
+	 * @param jsonElement
+	 * 
+	 * @return content of the jsonElement
+	 *
+	 * @since 1.00
+	 */
+	public static String getJsonElement(String jsonString, String jsonElement) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getJsonElement");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonElement  ---" + jsonElement
+				+ "---");
+		String elementValue = null;
+		if (jsonString != null && !jsonString.isEmpty() && jsonElement != null
+				&& !jsonElement.isEmpty()) {
+			try {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject = (JSONObject) jsonParser
+						.parse(jsonString);
+				logger4j.debug(loglineheader + " jsonElement Value "
+						+ jsonObject.get(jsonElement));
+				elementValue = jsonObject.get(jsonElement).toString();
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.debug(loglineheader + " -- ERROR  -- " + e.toString());
+			}
+		}
+		logger4j.debug(loglineheader + "jsonElement ---" + jsonElement + "---"
+				+ " elementValue ---" + elementValue + "---");
+		logger4j.debug(loglineheader + " -- End  -- ");
+		return elementValue;
+	}
+
+	/**
+	 * This Method puts a Json Element to json String.
+	 * 
+	 * @param jsonString
+	 * 
+	 * @param jsonElement
+	 * 
+	 * @return content of the jsonElement
+	 *
+	 * @since 1.00
+	 */
+	public static String putJsonElement(String jsonString, String jsonElement,
+			String jsonValue) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.putJsonElement");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- jsonString  ---" + jsonString
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonElement  ---" + jsonElement
+				+ "---");
+		logger4j.debug(loglineheader + " -- jsonValue  ---" + jsonValue + "---");
+
+		if (jsonString != null && !jsonString.isEmpty() && jsonElement != null
+				&& !jsonElement.isEmpty()) {
+			try {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject jsonObject = (JSONObject) jsonParser
+						.parse(jsonString);
+
+				jsonObject.put(jsonElement, jsonValue);
+				jsonString = jsonObject.toJSONString();
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.debug(loglineheader + " -- ERROR  -- " + e.toString());
+			}
+		}
+		logger4j.debug(loglineheader + "jsonElement ---" + jsonElement + "---"
+				+ "jsonValue ---" + jsonValue + "---" + " jsonString ---"
+				+ jsonString + "---");
+		logger4j.debug(loglineheader + " -- End  -- ");
+		return jsonString;
+	}
+
+	/**
+	 * This Method waitUntil waits until the currentime reaches the timeString.
+	 * 
+	 * @param timeString
+	 *
+	 * @since 1.00
+	 */
+	public static void waitUntil(String timeString, Integer waitTimeInMs) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.waitUntil");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- waitUntil  ---" + timeString
+				+ "---");
+		Boolean waitForStart = true;
+		if (timeString != null && !timeString.isEmpty()) {
+			Date currentDate = new Date();
+			try {
+				while (waitForStart) {
+					LocalDateTime testDate = new LocalDateTime();
+					Integer days = testDate.getDayOfMonth();
+					Integer month = testDate.getMonthOfYear();
+					Integer year = testDate.getYear();
+					String dateTimeString = days.toString() + "-"
+							+ month.toString() + "-" + year.toString() + " "
+							+ timeString;
+					Date expireDate = dateTime
+							.dateParserSchramm(dateTimeString);
+					currentDate = new Date();
+					if (dateTime.compare(currentDate, expireDate)) {
+						waitForStart = false;
+						logger4j.warn(loglineheader + " start ");
+					}
+					logger4j.warn(loglineheader + " wait until : "
+							+ expireDate.toString());
+					Thread.sleep(waitTimeInMs);
+
+					Thread.sleep(waitTimeInMs);
+					logger4j.warn(loglineheader + " time reached : "
+							+ new Date());
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				logger4j.error(loglineheader + " -- ERROR  -- " + e.toString());
+			}
+		}
+
+	}
+
+	/**
+	 * This Method getModuleID returns the id from the shearching Modulet
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param fieldValue
+	 *
+	 * @return the id
+	 *
+	 * @since 1.00
+	 */
+	public static String getModuleID(String resourceUrl, String token,
+			String field, String fieldValue) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getModuleID");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- field  ---" + field + "---");
+		logger4j.debug(loglineheader + " -- fieldValue  ---" + fieldValue
+				+ "---");
+		// String resourceUrl =
+		// "https://schrammcrmtest.sugaropencloud.eu/rest/v10/Accounts/filter" ;
+		// String token = "ec92a7a7-8a27-4eb2-a72b-71aa261cac6b" ;
+		// String jsonString = "{\"name\":\"PPE Services Limited\" }";
+		String id = null;
+		if (resourceUrl != null && !resourceUrl.isEmpty() && token != null
+				&& !token.isEmpty() && field != null && !field.isEmpty()
+				&& fieldValue != null && !fieldValue.isEmpty()) {
+
+			String jsonString = "{\"filter\":[{ \""
+					+ field
+					+ "\":\""
+					+ fieldValue
+					+ "\"}],\"max_num\":1,\"offset\":0,\"fields\":\"id\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+			logger4j.debug(loglineheader + "jsonString (filter) : ---" + jsonString
+					+ "---");
+			try {
+				HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+						resourceUrl).openConnection());
+				resource_cxn.addRequestProperty("OAuth-Token", token);
+				resource_cxn.setConnectTimeout(5000);
+				resource_cxn.setReadTimeout(5000);
+				resource_cxn.setDoOutput(true);
+				resource_cxn.setDoInput(true);
+				resource_cxn.setRequestMethod("POST");
+				resource_cxn.setFollowRedirects(true);
+				resource_cxn.setRequestProperty("Content-Type",
+						"application/json; charset=UTF-8");
+				resource_cxn.setRequestProperty("Accept", "application/json");
+
+				OutputStream os = resource_cxn.getOutputStream();
+				os.write(jsonString.getBytes("UTF-8"));
+				os.close();
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				// read the response
+				Integer responseCode = resource_cxn.getResponseCode();
+				logger4j.debug(loglineheader + "responseCode : " + responseCode);
+
+				InputStream in = new BufferedInputStream(
+						resource_cxn.getInputStream());
+				String result = org.apache.commons.io.IOUtils.toString(in,
+						"UTF-8");
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				logger4j.debug(loglineheader + "result : " + result);
+
+				JSONParser jsonParser = new JSONParser();
+
+				try {
+					JSONObject jsonObject = (JSONObject) jsonParser
+							.parse(result);
+					for (Object key : jsonObject.keySet()) {
+						String keyStr = (String) key;
+						JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+						logger4j.debug(loglineheader + "key: " + keyStr
+								+ " value: " + keyvalue);
+						for (Object o : keyvalue) {
+							if (o instanceof JSONObject) {
+								id = (String) ((JSONObject) o).get("id");
+								logger4j.debug(loglineheader + " id :" + id);
+							}
+						}
+
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				logger4j.debug(loglineheader + "The id is: " + id);
+
+			} catch (Exception e) {
+				logger4j.error(loglineheader + " Error : " + e.toString());
+
+			}
+		}
+
+		return id;
+	}
+
+	/**
+	 * This Method getModuleIDandDisposer returns the id from the shearching
+	 * Modul
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param fieldValue
+	 *
+	 * @return the id
+	 *
+	 * @since 1.00
+	 */
+	public static String getModuleIDandDisposer(String resourceUrl,
+			String token, String field, String fieldValue) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getModuleIDandDisposer");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- field  ---" + field + "---");
+		logger4j.debug(loglineheader + " -- fieldValue  ---" + fieldValue
+				+ "---");
+		// String resourceUrl =
+		// "https://schrammcrmtest.sugaropencloud.eu/rest/v10/Accounts/filter" ;
+		// String token = "ec92a7a7-8a27-4eb2-a72b-71aa261cac6b" ;
+		// String jsonString = "{\"name\":\"PPE Services Limited\" }";
+		String id = null;
+		String assigned_user_id = null;
+
+		if (resourceUrl != null && !resourceUrl.isEmpty() && token != null
+				&& !token.isEmpty() && field != null && !field.isEmpty()
+				&& fieldValue != null && !fieldValue.isEmpty()) {
+
+			String jsonString = "{\"filter\":[{ \""
+					+ field
+					+ "\":\""
+					+ fieldValue
+					+ "\"}],\"max_num\":1,\"offset\":0,\"fields\":\"id,assigned_user_id\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+			logger4j.debug(loglineheader + "jsonString : ---" + jsonString
+					+ "---");
+			try {
+				HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+						resourceUrl).openConnection());
+				resource_cxn.addRequestProperty("OAuth-Token", token);
+				resource_cxn.setConnectTimeout(5000);
+				resource_cxn.setReadTimeout(5000);
+				resource_cxn.setDoOutput(true);
+				resource_cxn.setDoInput(true);
+				resource_cxn.setRequestMethod("POST");
+				resource_cxn.setFollowRedirects(true);
+				resource_cxn.setRequestProperty("Content-Type",
+						"application/json; charset=UTF-8");
+				resource_cxn.setRequestProperty("Accept", "application/json");
+
+				OutputStream os = resource_cxn.getOutputStream();
+				os.write(jsonString.getBytes("UTF-8"));
+				os.close();
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				// read the response
+				Integer responseCode = resource_cxn.getResponseCode();
+				logger4j.debug(loglineheader + "responseCode : " + responseCode);
+
+				InputStream in = new BufferedInputStream(
+						resource_cxn.getInputStream());
+				String result = org.apache.commons.io.IOUtils.toString(in,
+						"UTF-8");
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				logger4j.debug(loglineheader + "result : " + result);
+
+				JSONParser jsonParser = new JSONParser();
+
+				try {
+					JSONObject jsonObject = (JSONObject) jsonParser
+							.parse(result);
+					for (Object key : jsonObject.keySet()) {
+						String keyStr = (String) key;
+						JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+						logger4j.debug(loglineheader + "key: " + keyStr
+								+ " value: " + keyvalue);
+						for (Object o : keyvalue) {
+							if (o instanceof JSONObject) {
+								id = (String) ((JSONObject) o).get("id");
+								logger4j.debug(loglineheader + " id :" + id);
+							}
+						}
+
+						for (Object o : keyvalue) {
+							if (o instanceof JSONObject) {
+								assigned_user_id = (String) ((JSONObject) o)
+										.get("assigned_user_id");
+								logger4j.debug(loglineheader
+										+ " assigned_user_id :"
+										+ assigned_user_id);
+							}
+						}
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				logger4j.debug(loglineheader + "The id is: " + id);
+				logger4j.debug(loglineheader + "The assigned_user_id is: "
+						+ assigned_user_id);
+
+			} catch (Exception e) {
+				logger4j.error(loglineheader + " Error : " + e.toString());
+
+			}
+		}
+
+		return id + "##" + assigned_user_id;
+	}
+
+	/**
+	 * This Method splitStringResult returns the splitResult of
+	 * id##assigned_user Module
+	 * 
+	 * @param splitString
+	 *
+	 * @param returnAssiUser
+	 *
+	 * @param field
+	 *
+	 * @param fieldValue
+	 *
+	 * @param fieldToReturn
+	 *
+	 * @return the returnAssiUser
+	 *
+	 * @since 1.00
+	 */
+	public static String splitStringResult(String splitString,
+			Boolean returnAssiUser) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.splitStringResult");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- splitString  ---" + splitString
+				+ "---");
+		logger4j.debug(loglineheader + " -- returnAssiUser  ---"
+				+ returnAssiUser + "---");
+		// TODO Auto-generated method stub
+		if (splitString == null || splitString.isEmpty() || !splitString.contains("##") ) {
+			return splitString;
+		}
+		String[] splitResult = splitString.split("##");
+		if (splitResult.length < 2) {
+			return splitString;
+		}
+		if (returnAssiUser == null) {
+			returnAssiUser = false;
+		}
+
+		String id = splitResult[0];
+		String assigned_user_id = splitResult[1];
+		if (returnAssiUser) {
+			logger4j.debug(loglineheader + " -- assigned_user_id : "
+					+ assigned_user_id);
+			logger4j.debug(loglineheader + " -- End  -- ");
+			return assigned_user_id;
+		} else {
+			logger4j.debug(loglineheader + " -- id : " + id);
+			logger4j.debug(loglineheader + " -- End  -- ");
+			return id;
+		}
+	}
+
+	/**
+	 * This Method getModuleField returns the fieldToReturn from the shearching
+	 * Module
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @param field
+	 *
+	 * @param fieldValue
+	 *
+	 * @param fieldToReturn
+	 *
+	 * @return the fieldToReturnValue
+	 *
+	 * @since 1.00
+	 */
+	public static String getModuleField(String resourceUrl, String token,
+			String field, String fieldValue, String fieldToReturn) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getModuleField");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		logger4j.debug(loglineheader + " -- field  ---" + field + "---");
+		logger4j.debug(loglineheader + " -- fieldValue  ---" + fieldValue
+				+ "---");
+		logger4j.debug(loglineheader + " -- fieldToReturn  ---" + fieldToReturn
+				+ "---");
+		// String resourceUrl =
+		// "https://schrammcrmtest.sugaropencloud.eu/rest/v10/Accounts/filter" ;
+		// String token = "ec92a7a7-8a27-4eb2-a72b-71aa261cac6b" ;
+		// String jsonString = "{\"name\":\"PPE Services Limited\" }";
+		String fieldToReturnValue = null;
+		if (resourceUrl != null && !resourceUrl.isEmpty() && token != null
+				&& !token.isEmpty() && field != null && !field.isEmpty()
+				&& fieldValue != null && !fieldValue.isEmpty()) {
+
+			String jsonString = "{\"filter\":[{ \""
+					+ field
+					+ "\":\""
+					+ fieldValue
+					+ "\"}],\"max_num\":1,\"offset\":0,\"fields\":\"id\",\"fields\":"
+					+ "\""
+					+ fieldToReturn
+					+ "\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+			logger4j.debug(loglineheader + "jsonString : ---" + jsonString
+					+ "---");
+			try {
+				HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+						resourceUrl).openConnection());
+				resource_cxn.addRequestProperty("OAuth-Token", token);
+				resource_cxn.setConnectTimeout(5000);
+				resource_cxn.setReadTimeout(5000);
+				resource_cxn.setDoOutput(true);
+				resource_cxn.setDoInput(true);
+				resource_cxn.setRequestMethod("POST");
+				resource_cxn.setFollowRedirects(true);
+				resource_cxn.setRequestProperty("Content-Type",
+						"application/json; charset=UTF-8");
+				resource_cxn.setRequestProperty("Accept", "application/json");
+
+				OutputStream os = resource_cxn.getOutputStream();
+				os.write(jsonString.getBytes("UTF-8"));
+				os.close();
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				// read the response
+				Integer responseCode = resource_cxn.getResponseCode();
+
+				InputStream in = new BufferedInputStream(
+						resource_cxn.getInputStream());
+				String result = org.apache.commons.io.IOUtils.toString(in,
+						"UTF-8");
+
+				Integer responseCode2 = resource_cxn.getResponseCode();
+
+				logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+				logger4j.debug(loglineheader + "result : " + result);
+
+				JSONParser jsonParser = new JSONParser();
+
+				try {
+					JSONObject jsonObject = (JSONObject) jsonParser
+							.parse(result);
+					for (Object key : jsonObject.keySet()) {
+						String keyStr = (String) key;
+						JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+						logger4j.debug(loglineheader + "key: " + keyStr
+								+ " value: " + keyvalue);
+						for (Object o : keyvalue) {
+							if (o instanceof JSONObject) {
+								fieldToReturnValue = (String) ((JSONObject) o)
+										.get(fieldToReturn);
+								logger4j.debug(loglineheader
+										+ " fieldToReturnValue :"
+										+ fieldToReturnValue);
+							}
+						}
+
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+
+				logger4j.debug(loglineheader + "The " + fieldToReturn + " is: "
+						+ fieldToReturnValue);
+
+			} catch (Exception e) {
+				logger4j.error(loglineheader + " Error : " + e.toString());
+
+			}
+		}
+
+		return fieldToReturnValue;
+	}
+
+	/**
+	 * This Method getUserHash the ID from then shearching Account
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getUserHash(String resourceUrl,
+			String token) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getUserHash");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		HashMap<String, String> userIDHashMap = new HashMap<String, String>();
+		String jsonString = "{\"filter\":[{\"txt_erp_id_c\":{\"$not_null\":\"\"}}],\"max_num\":10000,\"offset\":0,\"fields\":\"id\",\"fields\":\"name\",\"fields\":\"txt_erp_id_c\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(5000);
+			resource_cxn.setReadTimeout(5000);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("POST");
+			resource_cxn.setFollowRedirects(true);
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept", "application/json");
+
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+			// read the response
+			Integer responseCode = resource_cxn.getResponseCode();
+
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode2 = resource_cxn.getResponseCode();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+
+			logger4j.debug(loglineheader + "result : " + result);
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject;
+			try {
+				jsonObject = (JSONObject) jsonParser.parse(result);
+				for (Object key : jsonObject.keySet()) {
+					// based on you key types
+					String keyStr = (String) key;
+					JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+					// Print key and value
+					logger4j.debug(loglineheader + "key: " + keyStr
+							+ " value: " + keyvalue);
+
+					for (Object o : keyvalue) {
+						if (o instanceof JSONObject) {
+							userIDHashMap.put((String) ((JSONObject) o)
+									.get("txt_erp_id_c"),
+									(String) ((JSONObject) o).get("id"));
+						}
+					}
+
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			logger4j.debug(loglineheader + "userIDHashMap: " + userIDHashMap);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return userIDHashMap;
+	}
+
+																   
+	/**
+	 * This Method getVertreterHash the ID from then shearching Account
+	 * 
+	 * @param resourceUrl
+	 *
+	 * @param token
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static HashMap<String, String> getVertreterHash(String resourceUrl,
+			String token) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.getVertreterHash");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- resourceUrl  ---" + resourceUrl
+				+ "---");
+		logger4j.debug(loglineheader + " -- token  ---" + token + "---");
+		HashMap<String, String> vertreterIDHashMap = new HashMap<String, String>();
+		String jsonString = "{\"filter\":[{\"txt_erpid\":{\"$not_null\":\"\"}}],\"max_num\":10000,\"offset\":0,\"fields\":\"txt_erpid,assigned_user_id\",\"order_by\":\"date_entered\",\"favorites\":false,\"my_items\":false}";
+
+		try {
+			HttpURLConnection resource_cxn = (HttpURLConnection) (new URL(
+					resourceUrl).openConnection());
+			resource_cxn.addRequestProperty("OAuth-Token", token);
+			resource_cxn.setConnectTimeout(5000);
+			resource_cxn.setReadTimeout(5000);
+			resource_cxn.setDoOutput(true);
+			resource_cxn.setDoInput(true);
+			resource_cxn.setRequestMethod("POST");
+			resource_cxn.setFollowRedirects(true);
+			resource_cxn.setRequestProperty("Content-Type",
+					"application/json; charset=UTF-8");
+			resource_cxn.setRequestProperty("Accept", "application/json");
+
+			OutputStream os = resource_cxn.getOutputStream();
+			os.write(jsonString.getBytes("UTF-8"));
+			os.close();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+			// read the response
+			Integer responseCode = resource_cxn.getResponseCode();
+
+			InputStream in = new BufferedInputStream(
+					resource_cxn.getInputStream());
+			String result = org.apache.commons.io.IOUtils.toString(in, "UTF-8");
+
+			Integer responseCode2 = resource_cxn.getResponseCode();
+
+			logger4j.debug(loglineheader + "resource_cxn : " + resource_cxn);
+
+			logger4j.debug(loglineheader + "result : " + result);
+
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObject;
+			try {
+				jsonObject = (JSONObject) jsonParser.parse(result);
+				for (Object key : jsonObject.keySet()) {
+					// based on you key types
+					String keyStr = (String) key;
+					JSONArray keyvalue = (JSONArray) jsonObject.get(keyStr);
+
+					// Print key and value
+					logger4j.debug(loglineheader + "key: " + keyStr
+							+ " value: " + keyvalue);
+
+					for (Object o : keyvalue) {
+						if (o instanceof JSONObject) {
+							vertreterIDHashMap.put((String) ((JSONObject) o)
+									.get("txt_erpid"),
+									(String) ((JSONObject) o)
+											.get("assigned_user_id"));
+						}
+					}
+  
+
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			logger4j.debug(loglineheader + "userIDHashMap: "
+					+ vertreterIDHashMap);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return vertreterIDHashMap;
+						   
+					  
+  
+						   
+	}
+
+ 
+
+							  
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkIfNotNull(Integer value) {
+
+		return value != null;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static String convertToString(Integer value) {
+		String strgValue = null;
+		if (checkIfNotNull(value)) {
+			strgValue = value.toString();
+		}
+		return strgValue;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkIfNotNullFloat(Float value) {
+
+		return value != null;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static String convertToStringFloat(Float value) {
+		String strgValue = null;
+		if (checkIfNotNullFloat(value)) {
+			strgValue = value.toString();
+		}
+		return strgValue;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static Boolean checkIfNotNullDouble(Double value) {
+
+		return value != null;
+	}
+
+	/**
+	 * This Method checkIfNotNull
+	 * 
+	 * @param Integer
+	 *
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+	public static String convertToStringDouble(Double value) {
+		String strgValue = null;
+		if (checkIfNotNullDouble(value)) {
+			strgValue = value.toString();
+		}
+		return strgValue;
+	}
+
+	/**
+	 * This Method findFile
+	 *
+	 * @param rootPath
+	 *            to begin search
+	 * 
+	 * @param fileName
+	 *            to search
+	 * 
+	 * @return the <txt_erp_id_c> <id> HashMap
+	 *
+	 * @since 1.00
+	 */
+
+	public static String findFile(String rootPath, String fileName) {
+		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
+				.getLogger("SugarCRMHelper.findFile");
+		String loglineheader = "NOUNIQUEID NOHOST ";
+		logger4j.debug(loglineheader + " -- Start  -- ");
+		logger4j.debug(loglineheader + " -- rootPath  ---" + rootPath + "---");
+		logger4j.debug(loglineheader + " -- fileName  ---" + fileName + "---");
+		String foundAbsolutePath = null;
+		File root = new File(rootPath);
+		try {
+			boolean recursive = true;
+
+			Collection files = FileUtils.listFiles(root, null, recursive);
+
+			for (Iterator iterator = files.iterator(); iterator.hasNext();) {
+				File file = (File) iterator.next();
+				if (file.getName().equals(fileName))
+					foundAbsolutePath = file.getAbsolutePath();
+				logger4j.debug(loglineheader + "foundAbsolutePath"
+						+ foundAbsolutePath);
+			}
+
+		} catch (Exception e) {
+			logger4j.debug(loglineheader + e.toString());
+		}
+		return foundAbsolutePath;
+	}
+
+}

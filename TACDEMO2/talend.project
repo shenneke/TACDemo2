@@ -228,6 +228,39 @@
       <relatedItems xmi:id="_nsd76vRhEeqA8dkdHUapAQ" id="TalendDate" version="Latest" type="routine"/>
       <relatedItems xmi:id="_nsd76_RhEeqA8dkdHUapAQ" id="Mathematical" version="Latest" type="routine"/>
     </ItemsRelations>
+    <ItemsRelations xmi:id="_tNSWwPR6EeqgcelwQ7XlCg">
+      <baseItem xmi:id="_tNSWwfR6EeqgcelwQ7XlCg" id="_hAV8oPoGEeihgI6Ta9sQQw" version="1.2" type="job"/>
+      <relatedItems xmi:id="_tNSWwvR6EeqgcelwQ7XlCg" id="_EUOKYHxaEei9N4iyPSTHAg" version="Latest" type="context"/>
+      <relatedItems xmi:id="_tNSWw_R6EeqgcelwQ7XlCg" id="_5ARsEIpiEeOffO5TDztmGA" version="Latest" type="job"/>
+      <relatedItems xmi:id="_tNSWxPR6EeqgcelwQ7XlCg" id="_t-2SkH7EEeihMp_oSxbuxQ" version="Latest" type="property"/>
+      <relatedItems xmi:id="_tNSWxfR6EeqgcelwQ7XlCg" id="_hke74IqyEeisVZIKof9NAg" version="Latest" type="property"/>
+      <relatedItems xmi:id="_tNSWxvR6EeqgcelwQ7XlCg" id="_3H-aQH7EEeihMp_oSxbuxQ" version="Latest" type="property"/>
+      <relatedItems xmi:id="_tNSWx_R6EeqgcelwQ7XlCg" id="_lNApgH7EEeihMp_oSxbuxQ" version="Latest" type="property"/>
+      <relatedItems xmi:id="_tNSWyPR6EeqgcelwQ7XlCg" id="_qBYH8H42EeiCOf_wFQXGbg" version="Latest" type="property"/>
+      <relatedItems xmi:id="_tNSWyfR6EeqgcelwQ7XlCg" id="Numeric" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSWyvR6EeqgcelwQ7XlCg" id="DataOperation" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSWy_R6EeqgcelwQ7XlCg" id="SpansetHelper" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSWzPR6EeqgcelwQ7XlCg" id="CasuleCRMHelper" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSWzfR6EeqgcelwQ7XlCg" id="StringHandling" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSWzvR6EeqgcelwQ7XlCg" id="TalendDate" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSWz_R6EeqgcelwQ7XlCg" id="SugarCRMHelper" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW0PR6EeqgcelwQ7XlCg" id="SugarAttachmentsHelper" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW0fR6EeqgcelwQ7XlCg" id="UUID" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW0vR6EeqgcelwQ7XlCg" id="FoerderserviceHelper" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW0_R6EeqgcelwQ7XlCg" id="CapsuleCRMHelper" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW1PR6EeqgcelwQ7XlCg" id="TalendString" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW1fR6EeqgcelwQ7XlCg" id="TalendDataGenerator" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW1vR6EeqgcelwQ7XlCg" id="JoblokalHelper" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW1_R6EeqgcelwQ7XlCg" id="Create_UUID" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW2PR6EeqgcelwQ7XlCg" id="Mathematical" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW2fR6EeqgcelwQ7XlCg" id="JsonHelper" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW2vR6EeqgcelwQ7XlCg" id="Relational" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW2_R6EeqgcelwQ7XlCg" id="TalendStringUtil" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW3PR6EeqgcelwQ7XlCg" id="Sugar_UUID" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW3fR6EeqgcelwQ7XlCg" id="dateTime" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW3vR6EeqgcelwQ7XlCg" id="CustomStringOperation" version="Latest" type="routine"/>
+      <relatedItems xmi:id="_tNSW3_R6EeqgcelwQ7XlCg" id="_t-2SkH7EEeihMp_oSxbuxQ - metadataEmailJL" version="Latest" type="schema"/>
+    </ItemsRelations>
     <migrationTask xmi:id="_z43mIPRHEeqA8dkdHUapAQ" id="org.talend.repository.localprovider.RemoveRoutineFolderTask" breaks="5.1.1" version="5.1.2" status="noimpact"/>
     <migrationTask xmi:id="_z43mIfRHEeqA8dkdHUapAQ" id="org.talend.repository.localprovider.model.migration.ChangeXmiSerialization" breaks="5.1.1" version="5.1.2" status="noimpact"/>
     <migrationTask xmi:id="_z43mIvRHEeqA8dkdHUapAQ" id="org.talend.repository.model.migration.CleanFoldersMigrationTask" breaks="5.1.1" version="5.1.2" status="noimpact"/>

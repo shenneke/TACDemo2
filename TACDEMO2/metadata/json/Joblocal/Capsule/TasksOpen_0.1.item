@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:TalendJSON="http://www.talend.org/json" xmlns:TalendMetadata="http://www.talend.org/metadata/connection/2010" xmlns:orgomg.cwm.resource.record="http:///orgomg/cwm/resource/record.ecore">
+  <TalendJSON:JSONFileConnection xmi:id="_hkos4IqyEeisVZIKof9NAg" name="TasksOpen" dataPackage="_hkos-YqyEeisVZIKof9NAg" JSONFilePath="C:/Projekte/Joblocal/JSON/Capsule/tasks4.json" Encoding="UTF-8" readbyMode="JSONPATH">
+    <schema xmi:id="_hkos4YqyEeisVZIKof9NAg" LimitBoucle="50" AbsoluteXPathQuery="$.tasks[*]">
+      <schemaTargets xmi:id="_hkos4oqyEeisVZIKof9NAg" RelativeXPathQuery="id" TagName="id"/>
+      <schemaTargets xmi:id="_hkos44qyEeisVZIKof9NAg" RelativeXPathQuery="category" TagName="category"/>
+      <schemaTargets xmi:id="_hkos5IqyEeisVZIKof9NAg" RelativeXPathQuery="description" TagName="description"/>
+      <schemaTargets xmi:id="_hkos5YqyEeisVZIKof9NAg" RelativeXPathQuery="detail" TagName="detail"/>
+      <schemaTargets xmi:id="_hkos5oqyEeisVZIKof9NAg" RelativeXPathQuery="dueTime" TagName="dueTime"/>
+      <schemaTargets xmi:id="_hkos54qyEeisVZIKof9NAg" RelativeXPathQuery="status" TagName="status"/>
+      <schemaTargets xmi:id="_hkos6IqyEeisVZIKof9NAg" RelativeXPathQuery="party" TagName="party"/>
+      <schemaTargets xmi:id="_hkos6YqyEeisVZIKof9NAg" RelativeXPathQuery="opportunity" TagName="opportunity"/>
+      <schemaTargets xmi:id="_hkos6oqyEeisVZIKof9NAg" RelativeXPathQuery="owner" TagName="owner"/>
+      <schemaTargets xmi:id="_hkos64qyEeisVZIKof9NAg" RelativeXPathQuery="daysAfter" TagName="daysAfter"/>
+      <schemaTargets xmi:id="_hkos7IqyEeisVZIKof9NAg" RelativeXPathQuery="taskDelayRule" TagName="taskDelayRule"/>
+      <schemaTargets xmi:id="_hkos7YqyEeisVZIKof9NAg" RelativeXPathQuery="nextTask" TagName="nextTask"/>
+      <schemaTargets xmi:id="_hkos7oqyEeisVZIKof9NAg" RelativeXPathQuery="active" TagName="active"/>
+      <schemaTargets xmi:id="_hkos74qyEeisVZIKof9NAg" RelativeXPathQuery="createdAt" TagName="createdAt"/>
+      <schemaTargets xmi:id="_hkos8IqyEeisVZIKof9NAg" RelativeXPathQuery="updatedAt" TagName="updatedAt"/>
+      <schemaTargets xmi:id="_hkos8YqyEeisVZIKof9NAg" RelativeXPathQuery="dueOn" TagName="dueOn"/>
+      <schemaTargets xmi:id="_hkos8oqyEeisVZIKof9NAg" RelativeXPathQuery="completedBy" TagName="completedBy"/>
+      <schemaTargets xmi:id="_hkos84qyEeisVZIKof9NAg" RelativeXPathQuery="completedAt" TagName="completedAt"/>
+      <schemaTargets xmi:id="_hkos9IqyEeisVZIKof9NAg" RelativeXPathQuery="kase" TagName="kase"/>
+      <schemaTargets xmi:id="_hkos9YqyEeisVZIKof9NAg" RelativeXPathQuery="repeat" TagName="repeat"/>
+      <schemaTargets xmi:id="_hkos9oqyEeisVZIKof9NAg" RelativeXPathQuery="taskDayDelayRule" TagName="taskDayDelayRule"/>
+      <schemaTargets xmi:id="_hkos94qyEeisVZIKof9NAg" RelativeXPathQuery="hasTrack" TagName="hasTrack"/>
+      <schemaTargets xmi:id="_hkos-IqyEeisVZIKof9NAg" RelativeXPathQuery="overrideToCurrentUser" TagName="overrideToCurrentUser"/>
+    </schema>
+  </TalendJSON:JSONFileConnection>
+  <orgomg.cwm.resource.record:RecordFile xmi:id="_hkos-YqyEeisVZIKof9NAg" name="default" dataManager="_hkos4IqyEeisVZIKof9NAg">
+    <ownedElement xsi:type="TalendMetadata:MetadataTable" xmi:id="_hkos-oqyEeisVZIKof9NAg" id="_F7BskIqyEeisVZIKof9NAg" label="metadataTasksOpen">
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkos-4qyEeisVZIKof9NAg" label="id" length="8" talendType="id_Integer" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkos_IqyEeisVZIKof9NAg" label="category" length="51" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkos_YqyEeisVZIKof9NAg" label="description" length="79" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkos_oqyEeisVZIKof9NAg" label="detail" length="170" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkos_4qyEeisVZIKof9NAg" label="dueTime" length="8" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotAIqyEeisVZIKof9NAg" label="status" length="4" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotAYqyEeisVZIKof9NAg" label="party" length="1372" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotAoqyEeisVZIKof9NAg" label="opportunity" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotA4qyEeisVZIKof9NAg" label="owner" length="152" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotBIqyEeisVZIKof9NAg" label="daysAfter" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotBYqyEeisVZIKof9NAg" label="taskDelayRule" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotBoqyEeisVZIKof9NAg" label="nextTask" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotB4qyEeisVZIKof9NAg" label="active" length="4" talendType="id_Boolean" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotCIqyEeisVZIKof9NAg" label="createdAt" length="20" talendType="id_Date" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotCYqyEeisVZIKof9NAg" label="updatedAt" length="20" talendType="id_Date" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotCoqyEeisVZIKof9NAg" label="dueOn" length="10" talendType="id_Date" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotC4qyEeisVZIKof9NAg" label="completedBy" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotDIqyEeisVZIKof9NAg" label="completedAt" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotDYqyEeisVZIKof9NAg" label="kase" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotDoqyEeisVZIKof9NAg" label="repeat" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotD4qyEeisVZIKof9NAg" label="taskDayDelayRule" length="10" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotEIqyEeisVZIKof9NAg" label="hasTrack" length="5" talendType="id_Boolean" pattern="&quot;dd-MM-yyyy&quot;"/>
+      <feature xsi:type="TalendMetadata:MetadataColumn" xmi:id="_hkotEYqyEeisVZIKof9NAg" label="overrideToCurrentUser" talendType="id_String" pattern="&quot;dd-MM-yyyy&quot;"/>
+    </ownedElement>
+  </orgomg.cwm.resource.record:RecordFile>
+</xmi:XMI>
