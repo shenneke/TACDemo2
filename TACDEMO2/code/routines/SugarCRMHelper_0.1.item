@@ -1704,7 +1704,7 @@ public class SugarCRMHelper {
 	 *
 	 * @since 1.00
 	 */
-	public static String convertToSugarJASON(String jasonString) {
+	public static String convertToSugarJSON(String jasonString) {
 		org.apache.log4j.Logger logger4j = org.apache.log4j.Logger
 				.getLogger("SugarCRMHelper.convertToSugarJASON");
 		String loglineheader = "NOUNIQUEID NOHOST ";
