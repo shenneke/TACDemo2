@@ -356,10 +356,6 @@
     "version" : "Latest",
     "type" : "routine"
   }, {
-    "id" : "CasuleCRMHelper",
-    "version" : "Latest",
-    "type" : "routine"
-  }, {
     "id" : "Create_UUID",
     "version" : "Latest",
     "type" : "routine"
@@ -393,6 +389,10 @@
     "type" : "routine"
   }, {
     "id" : "Relational",
+    "version" : "Latest",
+    "type" : "routine"
+  }, {
+    "id" : "SQLike",
     "version" : "Latest",
     "type" : "routine"
   }, {
