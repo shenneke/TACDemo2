@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<talendfile:ProcessType xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:talendfile="platform:/resource/org.talend.model/model/TalendFile.xsd" defaultContext="Default" jobType="Standard">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><talendfile:ProcessType xmlns:talendfile="platform:/resource/org.talend.model/model/TalendFile.xsd" xmlns:xmi="http://www.omg.org/XMI" defaultContext="Default" jobType="Standard" xmi:version="2.0">
   <context confirmationNeeded="false" name="Default">
     <contextParameter comment="" name="error" prompt="error?" promptNeeded="false" type="id_Boolean" value="false"/>
     <contextParameter comment="" name="access_token" prompt="access_token?" promptNeeded="false" repositoryContextId="_WbpZgJiWEeaCzqXdxfBdjw" type="id_String" value=""/>
@@ -154,99 +153,99 @@
     <contextParameter comment="" name="waitForNextCheck" prompt="waitForNextCheck?" promptNeeded="false" repositoryContextId="_WbpZgJiWEeaCzqXdxfBdjw" type="id_Integer" value=""/>
   </context>
   <parameters>
-    <elementParameter field="TEXT" name="SCREEN_OFFSET_X" value="0" show="false"/>
-    <elementParameter field="TEXT" name="SCREEN_OFFSET_Y" value="0" show="false"/>
-    <elementParameter field="TEXT" name="REPOSITORY_CONNECTION_ID" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_PROPERTY_TYPENAME" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_HADOOP_DISTRIBUTION" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_HADOOP_VERSION" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_ENABLE_KERBEROS" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_NAME_NODE_PRINCIPAL" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_USERNAME" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_GROUP" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_USE_KEYTAB" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_KT_PRINCIPAL" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_KEY_TAB" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_ENABLE_OO_KERBEROS" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_NAME_NODE_END_POINT" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_JOB_TRACKER_ENDPOINT" value="" show="false"/>
-    <elementParameter field="TEXT" name="OOZIE_END_POINT" value="" show="false"/>
-    <elementParameter field="CHECK" name="IMPLICITCONTEXT_USE_PROJECT_SETTINGS" value="true" show="false"/>
-    <elementParameter field="CHECK" name="STATANDLOG_USE_PROJECT_SETTINGS" value="true" show="false"/>
+    <elementParameter field="TEXT" name="SCREEN_OFFSET_X" show="false" value="0"/>
+    <elementParameter field="TEXT" name="SCREEN_OFFSET_Y" show="false" value="0"/>
+    <elementParameter field="TEXT" name="REPOSITORY_CONNECTION_ID" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_PROPERTY_TYPENAME" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_HADOOP_DISTRIBUTION" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_HADOOP_VERSION" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_ENABLE_KERBEROS" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_NAME_NODE_PRINCIPAL" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_USERNAME" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_GROUP" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_USE_KEYTAB" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_KT_PRINCIPAL" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_KEY_TAB" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_ENABLE_OO_KERBEROS" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_NAME_NODE_END_POINT" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_JOB_TRACKER_ENDPOINT" show="false" value=""/>
+    <elementParameter field="TEXT" name="OOZIE_END_POINT" show="false" value=""/>
+    <elementParameter field="CHECK" name="IMPLICITCONTEXT_USE_PROJECT_SETTINGS" show="false" value="true"/>
+    <elementParameter field="CHECK" name="STATANDLOG_USE_PROJECT_SETTINGS" show="false" value="true"/>
     <elementParameter field="CHECK" name="MULTI_THREAD_EXECATION" value="false"/>
     <elementParameter field="CHECK" name="IMPLICIT_TCONTEXTLOAD" value="false"/>
-    <elementParameter field="RADIO" name="FROM_FILE_FLAG_IMPLICIT_CONTEXT" value="false" show="false"/>
-    <elementParameter field="RADIO" name="FROM_DATABASE_FLAG_IMPLICIT_CONTEXT" value="false" show="false"/>
-    <elementParameter field="FILE" name="IMPLICIT_TCONTEXTLOAD_FILE" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="FIELDSEPARATOR" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TECHNICAL" name="PROPERTY_TYPE_IMPLICIT_CONTEXT:PROPERTY_TYPE" value="" show="false"/>
-    <elementParameter field="TECHNICAL" name="PROPERTY_TYPE_IMPLICIT_CONTEXT:REPOSITORY_PROPERTY_TYPE" value="" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="DB_TYPE_IMPLICIT_CONTEXT" value="" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="DB_VERSION_IMPLICIT_CONTEXT" value="" show="false"/>
-    <elementParameter field="TEXT" name="URL_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
+    <elementParameter field="RADIO" name="FROM_FILE_FLAG_IMPLICIT_CONTEXT" show="false" value="false"/>
+    <elementParameter field="RADIO" name="FROM_DATABASE_FLAG_IMPLICIT_CONTEXT" show="false" value="false"/>
+    <elementParameter field="FILE" name="IMPLICIT_TCONTEXTLOAD_FILE" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="FIELDSEPARATOR" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TECHNICAL" name="PROPERTY_TYPE_IMPLICIT_CONTEXT:PROPERTY_TYPE" show="false" value=""/>
+    <elementParameter field="TECHNICAL" name="PROPERTY_TYPE_IMPLICIT_CONTEXT:REPOSITORY_PROPERTY_TYPE" show="false" value=""/>
+    <elementParameter field="CLOSED_LIST" name="DB_TYPE_IMPLICIT_CONTEXT" show="false" value=""/>
+    <elementParameter field="CLOSED_LIST" name="DB_VERSION_IMPLICIT_CONTEXT" show="false" value=""/>
+    <elementParameter field="TEXT" name="URL_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
     <elementParameter field="TABLE" name="DRIVER_JAR_IMPLICIT_CONTEXT" show="false"/>
-    <elementParameter field="TEXT" name="DRIVER_CLASS_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="HOST_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PORT_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="DBNAME_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="LOCAL_SERVICE_NAME_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROPERTIES_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="SCHEMA_DB_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="USER_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PASS_IMPLICIT_CONTEXT" value="0RMsyjmybrE=" show="false"/>
-    <elementParameter field="FILE" name="DBFILE_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="DBTABLE" name="DBTABLE_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="QUERY_CONDITION_IMPLICIT_CONTEXT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="LOAD_NEW_VARIABLE" value="Warning" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="NOT_LOAD_OLD_VARIABLE" value="Warning" show="false"/>
-    <elementParameter field="CHECK" name="PRINT_OPERATIONS" value="false" show="false"/>
-    <elementParameter field="CHECK" name="DISABLE_ERROR" value="false" show="false"/>
-    <elementParameter field="CHECK" name="DISABLE_WARNINGS" value="false" show="false"/>
-    <elementParameter field="CHECK" name="DISABLE_INFO" value="false" show="false"/>
+    <elementParameter field="TEXT" name="DRIVER_CLASS_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="HOST_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PORT_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="DBNAME_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="LOCAL_SERVICE_NAME_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PROPERTIES_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="SCHEMA_DB_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="USER_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="PASS_IMPLICIT_CONTEXT" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="FILE" name="DBFILE_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="DBTABLE" name="DBTABLE_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="QUERY_CONDITION_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="CLOSED_LIST" name="LOAD_NEW_VARIABLE" show="false" value="Warning"/>
+    <elementParameter field="CLOSED_LIST" name="NOT_LOAD_OLD_VARIABLE" show="false" value="Warning"/>
+    <elementParameter field="CHECK" name="PRINT_OPERATIONS" show="false" value="false"/>
+    <elementParameter field="CHECK" name="DISABLE_ERROR" show="false" value="false"/>
+    <elementParameter field="CHECK" name="DISABLE_WARNINGS" show="false" value="false"/>
+    <elementParameter field="CHECK" name="DISABLE_INFO" show="false" value="false"/>
     <elementParameter field="CHECK" name="ON_STATCATCHER_FLAG" value="false"/>
     <elementParameter field="CHECK" name="ON_LOGCATCHER_FLAG" value="false"/>
     <elementParameter field="CHECK" name="ON_METERCATCHER_FLAG" value="false"/>
-    <elementParameter field="CHECK" name="ON_CONSOLE_FLAG" value="false" show="false"/>
-    <elementParameter field="CHECK" name="ON_FILES_FLAG" value="false" show="false"/>
-    <elementParameter field="DIRECTORY" name="FILE_PATH" value="&quot;/mnt/ssd/tools/talend/Studio/workspace/.metadata&quot;" show="false"/>
-    <elementParameter field="TEXT" name="FILENAME_STATS" value="&quot;stats_file.txt&quot;" show="false"/>
-    <elementParameter field="TEXT" name="FILENAME_LOGS" value="&quot;logs_file.txt&quot;" show="false"/>
-    <elementParameter field="TEXT" name="FILENAME_METTER" value="&quot;meter_file.txt&quot;" show="false"/>
-    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="ISO-8859-15" show="false"/>
-    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
-    <elementParameter field="CHECK" name="ON_DATABASE_FLAG" value="false" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="DB_TYPE" value="tJDBCOutput" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="DB_VERSION" value="ORACLE_11" show="false"/>
-    <elementParameter field="TEXT" name="URL" value="&quot;&quot;" show="false"/>
+    <elementParameter field="CHECK" name="ON_CONSOLE_FLAG" show="false" value="false"/>
+    <elementParameter field="CHECK" name="ON_FILES_FLAG" show="false" value="false"/>
+    <elementParameter field="DIRECTORY" name="FILE_PATH" show="false" value="&quot;/mnt/ssd/tools/talend/Studio/workspace/.metadata&quot;"/>
+    <elementParameter field="TEXT" name="FILENAME_STATS" show="false" value="&quot;stats_file.txt&quot;"/>
+    <elementParameter field="TEXT" name="FILENAME_LOGS" show="false" value="&quot;logs_file.txt&quot;"/>
+    <elementParameter field="TEXT" name="FILENAME_METTER" show="false" value="&quot;meter_file.txt&quot;"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="ISO-8859-15"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="ISO-8859-15"/>
+    <elementParameter field="CHECK" name="ON_DATABASE_FLAG" show="false" value="false"/>
+    <elementParameter field="CLOSED_LIST" name="DB_TYPE" show="false" value="tJDBCOutput"/>
+    <elementParameter field="CLOSED_LIST" name="DB_VERSION" show="false" value="ORACLE_11"/>
+    <elementParameter field="TEXT" name="URL" show="false" value="&quot;&quot;"/>
     <elementParameter field="TABLE" name="DRIVER_JAR" show="false"/>
-    <elementParameter field="TEXT" name="DRIVER_CLASS" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="HOST" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PORT" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="DATASOURCE" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="DBNAME" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="LOCAL_SERVICE_NAME" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROPERTIES" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="SCHEMA_DB" value="&quot;&quot;" show="false"/>
-    <elementParameter field="TEXT" name="USER" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PASS" value="0RMsyjmybrE=" show="false"/>
-    <elementParameter field="FILE" name="DBFILE" value="&quot;&quot;" show="false"/>
-    <elementParameter field="DBTABLE" name="TABLE_STATS" value="&quot;&quot;" show="false"/>
-    <elementParameter field="DBTABLE" name="TABLE_LOGS" value="&quot;&quot;" show="false"/>
-    <elementParameter field="DBTABLE" name="TABLE_METER" value="&quot;&quot;" show="false"/>
-    <elementParameter field="CHECK" name="CATCH_RUNTIME_ERRORS" value="true" show="false"/>
-    <elementParameter field="CHECK" name="CATCH_USER_ERRORS" value="true" show="false"/>
-    <elementParameter field="CHECK" name="CATCH_USER_WARNING" value="true" show="false"/>
-    <elementParameter field="CHECK" name="CATCH_REALTIME_STATS" value="false" show="false"/>
-    <elementParameter field="TEXT" name="HEADERFOOTER_HEADERID" value="" show="false"/>
-    <elementParameter field="CHECK" name="HEADER_ENABLED" value="false" show="false"/>
-    <elementParameter field="TEXT" name="HEADER_LIBRARY" value="" show="false"/>
-    <elementParameter field="TEXT" name="HEADER_CODE" value="" show="false"/>
-    <elementParameter field="TEXT" name="HEADER_IMPORT" value="" show="false"/>
-    <elementParameter field="TEXT" name="HEADERFOOTER_FOOTERID" value="" show="false"/>
-    <elementParameter field="CHECK" name="FOOTER_ENABLED" value="false" show="false"/>
-    <elementParameter field="TEXT" name="FOOTER_LIBRARY" value="" show="false"/>
-    <elementParameter field="TEXT" name="FOOTER_CODE" value="" show="false"/>
-    <elementParameter field="TEXT" name="FOOTER_IMPORT" value="" show="false"/>
+    <elementParameter field="TEXT" name="DRIVER_CLASS" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="HOST" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PORT" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="DATASOURCE" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="DBNAME" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="LOCAL_SERVICE_NAME" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="PROPERTIES" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="SCHEMA_DB" show="false" value="&quot;&quot;"/>
+    <elementParameter field="TEXT" name="USER" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="PASS" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="FILE" name="DBFILE" show="false" value="&quot;&quot;"/>
+    <elementParameter field="DBTABLE" name="TABLE_STATS" show="false" value="&quot;&quot;"/>
+    <elementParameter field="DBTABLE" name="TABLE_LOGS" show="false" value="&quot;&quot;"/>
+    <elementParameter field="DBTABLE" name="TABLE_METER" show="false" value="&quot;&quot;"/>
+    <elementParameter field="CHECK" name="CATCH_RUNTIME_ERRORS" show="false" value="true"/>
+    <elementParameter field="CHECK" name="CATCH_USER_ERRORS" show="false" value="true"/>
+    <elementParameter field="CHECK" name="CATCH_USER_WARNING" show="false" value="true"/>
+    <elementParameter field="CHECK" name="CATCH_REALTIME_STATS" show="false" value="false"/>
+    <elementParameter field="TEXT" name="HEADERFOOTER_HEADERID" show="false" value=""/>
+    <elementParameter field="CHECK" name="HEADER_ENABLED" show="false" value="false"/>
+    <elementParameter field="TEXT" name="HEADER_LIBRARY" show="false" value=""/>
+    <elementParameter field="TEXT" name="HEADER_CODE" show="false" value=""/>
+    <elementParameter field="TEXT" name="HEADER_IMPORT" show="false" value=""/>
+    <elementParameter field="TEXT" name="HEADERFOOTER_FOOTERID" show="false" value=""/>
+    <elementParameter field="CHECK" name="FOOTER_ENABLED" show="false" value="false"/>
+    <elementParameter field="TEXT" name="FOOTER_LIBRARY" show="false" value=""/>
+    <elementParameter field="TEXT" name="FOOTER_CODE" show="false" value=""/>
+    <elementParameter field="TEXT" name="FOOTER_IMPORT" show="false" value=""/>
     <routinesParameter id="_9mPAoODjEeee7K3nospX2g" name="DataOperation"/>
     <routinesParameter id="_9mMkYODjEeee7K3nospX2g" name="Mathematical"/>
     <routinesParameter id="_9l4bUODjEeee7K3nospX2g" name="Numeric"/>
@@ -261,23 +260,23 @@
     <routinesParameter id="_vQo5sCGQEeasjakqkkLyAQ" name="dateTime"/>
   </parameters>
   <node componentName="tJava" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="64" posY="416">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_2" show="false"/>
-    <elementParameter field="MEMO_JAVA" name="CODE" value="org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#xA;                                       .getLogger(this.getClass());&#xA;&#xA;logger4j.warn(context.logLineHeader + &quot;************************************* getAccessToken start ********************************************&quot;);                                          &#xA;&#xA;logger4j.warn(context.logLineHeader + &quot;SpansetHelper.getAccessToken(&quot;+context.SSUK_SugarURL_Rest + context.SSUK_Sugar_Rest_Token+&quot;, &quot;+context.SSUK_SugarUser+&quot;, ******** );&quot;);&#xA;&#x9;&#x9;&#x9;  &#xA;HashMap&lt;String, String> response = new HashMap&lt;String, String>();&#xA;response = SpansetHelper.getAccessToken(context.SSUK_SugarURL_Rest + context.SSUK_Sugar_Rest_Token, context.SSUK_SugarUser, context.SSUK_SugarPWD);&#xA;context.access_token  =  response.get(&quot;access_token&quot;) ;&#xA;context.accessExpieresIn  =  response.get(&quot;expiresIn&quot;) ;&#xA;String status  =  response.get(&quot;status&quot;) ;&#xA;&#xA;if (status.equalsIgnoreCase(&quot;ERROR&quot;) ) {&#xA;        logger4j.error(context.logLineHeader + &quot;context.access_token --&quot;+context.access_token+&quot;--&quot;); &#xA;//      System.exit(1); &#xA;};&#xA;context.nextAccessTokenExpieres = dateTime.addTimeToDateOffset(TalendDate.getCurrentDate(), context.accessExpieresIn, 100);&#xA;&#xA;logger4j.warn(context.logLineHeader + &quot;context.access_token --&quot;+context.access_token+&quot;--&quot;);&#xA;logger4j.warn(context.logLineHeader + &quot;context.accessExpieresIn --&quot;+context.accessExpieresIn+&quot;--&quot;);&#xA;logger4j.warn(context.logLineHeader + &quot;*************************************  getAccessToken end  ********************************************&quot;);                                          &#xA;&#xA;context.SSUK_Sugar_Rest_Accounts = context.SSUK_Sugar_Rest_Path + &quot;Accounts&quot;;&#xA;context.SSUK_Sugar_Rest_Contacts = context.SSUK_Sugar_Rest_Path + &quot;Contacts&quot;;&#xA;context.SSUK_Sugar_Rest_Calls = context.SSUK_Sugar_Rest_Path + &quot;Calls&quot;;&#xA;context.SSUK_Sugar_Rest_Notes = context.SSUK_Sugar_Rest_Path + &quot;Notes&quot;;&#xA;context.SSUK_Sugar_Rest_Meetings = context.SSUK_Sugar_Rest_Path + &quot;Meetings&quot;;&#xA;context.SSUK_Sugar_Rest_ProductTemplates = context.SSUK_Sugar_Rest_Path + &quot;ProductTemplates&quot;;&#xA;context.SSUK_Sugar_Rest_Emails = context.SSUK_Sugar_Rest_Path + &quot;Emails&quot;;&#xA;context.SSUK_Sugar_Rest_Documents = context.SSUK_Sugar_Rest_Path + &quot;Documents&quot;;&#xA;&#xA;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Accounts --&quot;+context.SSUK_Sugar_Rest_Accounts+&quot;--&quot;);&#xA;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Contacts --&quot;+context.SSUK_Sugar_Rest_Contacts+&quot;--&quot;);&#xA;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Calls --&quot;+context.SSUK_Sugar_Rest_Calls+&quot;--&quot;);&#xA;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Notes --&quot;+context.SSUK_Sugar_Rest_Notes+&quot;--&quot;);&#xA;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Meetings --&quot;+context.SSUK_Sugar_Rest_Meetings+&quot;--&quot;);&#xA;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_ProductTemplates --&quot;+context.SSUK_Sugar_Rest_ProductTemplates+&quot;--&quot;);&#xA;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Emails --&quot;+context.SSUK_Sugar_Rest_Emails+&quot;--&quot;);&#xA;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Documents --&quot;+context.SSUK_Sugar_Rest_Documents+&quot;--&quot;);&#xA;&#xA;logger4j.info(context.logLineHeader + &quot;*************************************  set PathURL end  **********info*********************************&quot;); &#xA;logger4j.info(context.logLineHeader + &quot;************************************* start Customer Prozessing  ********************************************&quot;); &#xA;"/>
-    <elementParameter field="MEMO_IMPORT" name="IMPORT" value="import java.util.HashMap;&#xA;import java.util.Map;&#xA;import java.util.Iterator;&#xA;import java.util.Set;"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_2"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#10;                                       .getLogger(this.getClass());&#10;&#10;logger4j.warn(context.logLineHeader + &quot;************************************* getAccessToken start ********************************************&quot;);                                          &#10;&#10;logger4j.warn(context.logLineHeader + &quot;SpansetHelper.getAccessToken(&quot;+context.SSUK_SugarURL_Rest + context.SSUK_Sugar_Rest_Token+&quot;, &quot;+context.SSUK_SugarUser+&quot;, ******** );&quot;);&#10;&#9;&#9;&#9;  &#10;HashMap&lt;String, String&gt; response = new HashMap&lt;String, String&gt;();&#10;response = SpansetHelper.getAccessToken(context.SSUK_SugarURL_Rest + context.SSUK_Sugar_Rest_Token, context.SSUK_SugarUser, context.SSUK_SugarPWD);&#10;context.access_token  =  response.get(&quot;access_token&quot;) ;&#10;context.accessExpieresIn  =  response.get(&quot;expiresIn&quot;) ;&#10;String status  =  response.get(&quot;status&quot;) ;&#10;&#10;if (status.equalsIgnoreCase(&quot;ERROR&quot;) ) {&#10;        logger4j.error(context.logLineHeader + &quot;context.access_token --&quot;+context.access_token+&quot;--&quot;); &#10;//      System.exit(1); &#10;};&#10;context.nextAccessTokenExpieres = dateTime.addTimeToDateOffset(TalendDate.getCurrentDate(), context.accessExpieresIn, 100);&#10;&#10;logger4j.warn(context.logLineHeader + &quot;context.access_token --&quot;+context.access_token+&quot;--&quot;);&#10;logger4j.warn(context.logLineHeader + &quot;context.accessExpieresIn --&quot;+context.accessExpieresIn+&quot;--&quot;);&#10;logger4j.warn(context.logLineHeader + &quot;*************************************  getAccessToken end  ********************************************&quot;);                                          &#10;&#10;context.SSUK_Sugar_Rest_Accounts = context.SSUK_Sugar_Rest_Path + &quot;Accounts&quot;;&#10;context.SSUK_Sugar_Rest_Contacts = context.SSUK_Sugar_Rest_Path + &quot;Contacts&quot;;&#10;context.SSUK_Sugar_Rest_Calls = context.SSUK_Sugar_Rest_Path + &quot;Calls&quot;;&#10;context.SSUK_Sugar_Rest_Notes = context.SSUK_Sugar_Rest_Path + &quot;Notes&quot;;&#10;context.SSUK_Sugar_Rest_Meetings = context.SSUK_Sugar_Rest_Path + &quot;Meetings&quot;;&#10;context.SSUK_Sugar_Rest_ProductTemplates = context.SSUK_Sugar_Rest_Path + &quot;ProductTemplates&quot;;&#10;context.SSUK_Sugar_Rest_Emails = context.SSUK_Sugar_Rest_Path + &quot;Emails&quot;;&#10;context.SSUK_Sugar_Rest_Documents = context.SSUK_Sugar_Rest_Path + &quot;Documents&quot;;&#10;&#10;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Accounts --&quot;+context.SSUK_Sugar_Rest_Accounts+&quot;--&quot;);&#10;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Contacts --&quot;+context.SSUK_Sugar_Rest_Contacts+&quot;--&quot;);&#10;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Calls --&quot;+context.SSUK_Sugar_Rest_Calls+&quot;--&quot;);&#10;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Notes --&quot;+context.SSUK_Sugar_Rest_Notes+&quot;--&quot;);&#10;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Meetings --&quot;+context.SSUK_Sugar_Rest_Meetings+&quot;--&quot;);&#10;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_ProductTemplates --&quot;+context.SSUK_Sugar_Rest_ProductTemplates+&quot;--&quot;);&#10;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Emails --&quot;+context.SSUK_Sugar_Rest_Emails+&quot;--&quot;);&#10;logger4j.info(context.logLineHeader + &quot;context.SSUK_Sugar_Rest_Documents --&quot;+context.SSUK_Sugar_Rest_Documents+&quot;--&quot;);&#10;&#10;logger4j.info(context.logLineHeader + &quot;*************************************  set PathURL end  **********info*********************************&quot;); &#10;logger4j.info(context.logLineHeader + &quot;************************************* start Customer Prozessing  ********************************************&quot;); &#10;"/>
+    <elementParameter field="MEMO_IMPORT" name="IMPORT" value="import java.util.HashMap;&#10;import java.util.Map;&#10;import java.util.Iterator;&#10;import java.util.Set;"/>
     <elementParameter field="TEXT" name="LABEL" value="getToken"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tJava_2"/>
   </node>
   <node componentName="tJava" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="992" posY="320">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_4" show="false"/>
-    <elementParameter field="MEMO_JAVA" name="CODE" value="org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#xA;                                       .getLogger(this.getClass());&#xA;                                       &#xA;//Code erstellt anhand des Eingabe- und Ausgabeschemas&#xA;&#xA;logger4j.info(context.logLineHeader + &quot;File --&quot;+context.sageInterfaceProcessing + &quot;/&quot; + ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;))+&quot;--&quot;);&#xA;String oldFileName = context.sageInterfaceProcessing + &quot;/&quot; + ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;));&#xA;String newFileName = ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;));&#xA;newFileName = newFileName.replaceAll(&quot;([0-9]{4,}-)([0-9]{2,}-)([0-9]{2,}-)(.*)&quot;, &quot;$3$2$1$4&quot;);&#xA;logger4j.warn(context.logLineHeader + &quot; move File Processed to : &quot;+ context.sageInterfaceProcessed + &quot;/&quot; + newFileName);&#xA;// Move files to destination folder&#xA;new File(oldFileName).renameTo(new File(context.sageInterfaceProcessed + &quot;/&quot; + newFileName));"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_4"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#10;                                       .getLogger(this.getClass());&#10;                                       &#10;//Code erstellt anhand des Eingabe- und Ausgabeschemas&#10;&#10;logger4j.info(context.logLineHeader + &quot;File --&quot;+context.sageInterfaceProcessing + &quot;/&quot; + ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;))+&quot;--&quot;);&#10;String oldFileName = context.sageInterfaceProcessing + &quot;/&quot; + ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;));&#10;String newFileName = ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;));&#10;newFileName = newFileName.replaceAll(&quot;([0-9]{4,}-)([0-9]{2,}-)([0-9]{2,}-)(.*)&quot;, &quot;$3$2$1$4&quot;);&#10;logger4j.warn(context.logLineHeader + &quot; move File Processed to : &quot;+ context.sageInterfaceProcessed + &quot;/&quot; + newFileName);&#10;// Move files to destination folder&#10;new File(oldFileName).renameTo(new File(context.sageInterfaceProcessed + &quot;/&quot; + newFileName));"/>
     <elementParameter field="MEMO_IMPORT" name="IMPORT" value="import java.io.File;"/>
     <elementParameter field="TEXT" name="LABEL" value="file_OK"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tJava_4"/>
   </node>
   <node componentName="tWaitForFile" componentVersion="0.102" offsetLabelX="0" offsetLabelY="0" posX="224" posY="416">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tWaitForFile_2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tWaitForFile_2"/>
     <elementParameter field="TEXT" name="WAIT" value="1"/>
     <elementParameter field="TEXT" name="MAX_ITERATIONS" value=""/>
     <elementParameter field="DIRECTORY" name="DIRECTORY" value="context.sageInterfaceProcessing"/>
@@ -288,21 +287,21 @@
     <elementParameter field="CLOSED_LIST" name="ACTION_ON" value="filecreated"/>
     <elementParameter field="CLOSED_LIST" name="THEN" value="continue"/>
     <elementParameter field="CHECK" name="WAIT_RELEASE" value="false"/>
-    <elementParameter field="TEXT" name="INTERVAL_CHECK" value="500" show="false"/>
-    <elementParameter field="CHECK" name="NON_UPDATE" value="false" show="false"/>
+    <elementParameter field="TEXT" name="INTERVAL_CHECK" show="false" value="500"/>
+    <elementParameter field="CHECK" name="NON_UPDATE" show="false" value="false"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tWaitForFile_2">
-      <column defaultValue="" key="false" length="0" name="CURRENT_ITERATION" nullable="true" precision="0" sourceType="" type="id_Integer" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="PRESENT_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="DELETED_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="CREATED_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="UPDATED_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="FILENAME" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="NOT_UPDATED_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+      <column defaultValue="" key="false" length="0" name="CURRENT_ITERATION" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Integer" usefulColumn="true"/>
+      <column key="false" length="255" name="PRESENT_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="DELETED_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="CREATED_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="UPDATED_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="FILENAME" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="NOT_UPDATED_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
     </metadata>
   </node>
   <node componentName="tFileList" componentVersion="0.102" offsetLabelX="0" offsetLabelY="0" posX="416" posY="416">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFileList_1" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFileList_1"/>
     <elementParameter field="DIRECTORY" name="DIRECTORY" value="context.sageInterfaceProcessing"/>
     <elementParameter field="CLOSED_LIST" name="LIST_MODE" value="FILES"/>
     <elementParameter field="CHECK" name="INCLUDSUBDIR" value="true"/>
@@ -319,19 +318,19 @@
     <elementParameter field="RADIO" name="ORDER_ACTION_ASC" value="true"/>
     <elementParameter field="RADIO" name="ORDER_ACTION_DESC" value="false"/>
     <elementParameter field="CHECK" name="IFEXCLUDE" value="false"/>
-    <elementParameter field="TEXT" name="EXCLUDEFILEMASK" value="&quot;*.txt&quot;" show="false"/>
+    <elementParameter field="TEXT" name="EXCLUDEFILEMASK" show="false" value="&quot;*.txt&quot;"/>
     <elementParameter field="CHECK" name="FORMAT_FILEPATH_TO_SLASH" value="false"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
   </node>
   <node componentName="tRunJob" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="640" posY="416">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tRunJob_2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tRunJob_2"/>
     <elementParameter field="CHECK" name="USE_DYNAMIC_JOB" value="false"/>
-    <elementParameter field="TEXT" name="CONTEXT_JOB" value="" show="false"/>
+    <elementParameter field="TEXT" name="CONTEXT_JOB" show="false" value=""/>
     <elementParameter field="PROCESS_TYPE" name="PROCESS" value="Sub_InterfaceCSVToSugarCRM_Contact_Rest_us"/>
     <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_CONTEXT" value="Default"/>
     <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_PROCESS" value="_WwAWQJQjEeq645YK4-1JTQ"/>
     <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_VERSION" value="Latest"/>
-    <elementParameter field="TEXT" name="CONTEXT_NAME" value="Default" show="false"/>
+    <elementParameter field="TEXT" name="CONTEXT_NAME" show="false" value="Default"/>
     <elementParameter field="CHECK" name="USE_INDEPENDENT_PROCESS" value="false"/>
     <elementParameter field="CHECK" name="DIE_ON_CHILD_ERROR" value="true"/>
     <elementParameter field="CHECK" name="TRANSMIT_WHOLE_CONTEXT" value="true"/>
@@ -341,61 +340,61 @@
     </elementParameter>
     <elementParameter field="CHECK" name="PROPAGATE_CHILD_RESULT" value="true"/>
     <elementParameter field="CHECK" name="PRINT_PARAMETER" value="false"/>
-    <elementParameter field="CHECK" name="TRANSMIT_ORIGINAL_CONTEXT" value="true" show="false"/>
+    <elementParameter field="CHECK" name="TRANSMIT_ORIGINAL_CONTEXT" show="false" value="true"/>
     <elementParameter field="TEXT" name="LABEL" value="__PROCESS__"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRunJob_2">
-      <column comment="" key="false" length="-1" name="error" nullable="true" pattern="" precision="-1" sourceType="" type="id_Boolean" originalLength="-1" usefulColumn="true"/>
-      <column defaultValue="" key="false" length="0" name="CURRENT_ITERATION" nullable="true" precision="0" sourceType="" type="id_Integer" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="PRESENT_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="DELETED_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="CREATED_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="UPDATED_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="FILENAME" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
-      <column key="false" length="255" name="NOT_UPDATED_FILE" nullable="true" precision="0" sourceType="" type="id_String" originalLength="-1" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="error" nullable="true" originalLength="-1" pattern="" precision="-1" sourceType="" type="id_Boolean" usefulColumn="true"/>
+      <column defaultValue="" key="false" length="0" name="CURRENT_ITERATION" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Integer" usefulColumn="true"/>
+      <column key="false" length="255" name="PRESENT_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="DELETED_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="CREATED_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="UPDATED_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="FILENAME" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
+      <column key="false" length="255" name="NOT_UPDATED_FILE" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
     </metadata>
   </node>
   <node componentName="tJavaRow" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="832" posY="416">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJavaRow_1" show="false"/>
-    <elementParameter field="MEMO_JAVA" name="CODE" value="//Code erstellt anhand des Eingabe- und Ausgabeschemas&#xD;&#xA;context.error = input_row.error;&#xD;&#xA;&#xA;// System.out.println(&quot; context.error &quot; + context.error);"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJavaRow_1"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="//Code erstellt anhand des Eingabe- und Ausgabeschemas&#13;&#10;context.error = input_row.error;&#13;&#10;&#10;// System.out.println(&quot; context.error &quot; + context.error);"/>
     <elementParameter field="MEMO_IMPORT" name="IMPORT" value="//import java.util.List;"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tJavaRow_1">
-      <column comment="" key="false" length="-1" name="error" nullable="true" pattern="" precision="-1" sourceType="" type="id_Boolean" originalLength="-1" usefulColumn="true"/>
+      <column comment="" key="false" length="-1" name="error" nullable="true" originalLength="-1" pattern="" precision="-1" sourceType="" type="id_Boolean" usefulColumn="true"/>
     </metadata>
   </node>
   <node componentName="tJava" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="992" posY="480">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_5" show="false"/>
-    <elementParameter field="MEMO_JAVA" name="CODE" value="org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#xA;                                       .getLogger(this.getClass());&#xA;                                       &#xA;//Code erstellt anhand des Eingabe- und Ausgabeschemas&#xA;&#xA;logger4j.warn(context.logLineHeader + &quot;File --&quot;+context.sageInterfaceProcessing + &quot;/&quot; + ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;))+&quot;--&quot;);&#xA;String oldFileName = context.sageInterfaceProcessing + &quot;/&quot; + ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;));&#xA;String newFileName = ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;));&#xA;newFileName = newFileName.replaceAll(&quot;([0-9]{4,}-)([0-9]{2,}-)([0-9]{2,}-)(.*)&quot;, &quot;$3$2$1$4&quot;);&#xA;logger4j.error(context.logLineHeader + &quot; move File Processed to : &quot;+ context.sageInterfaceError + &quot;/&quot; + newFileName);&#xA;// Move files to destination folder&#xA;new File(oldFileName).renameTo(new File(context.sageInterfaceError + &quot;/&quot; + newFileName));"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_5"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#10;                                       .getLogger(this.getClass());&#10;                                       &#10;//Code erstellt anhand des Eingabe- und Ausgabeschemas&#10;&#10;logger4j.warn(context.logLineHeader + &quot;File --&quot;+context.sageInterfaceProcessing + &quot;/&quot; + ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;))+&quot;--&quot;);&#10;String oldFileName = context.sageInterfaceProcessing + &quot;/&quot; + ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;));&#10;String newFileName = ((String)globalMap.get(&quot;tFileList_1_CURRENT_FILE&quot;));&#10;newFileName = newFileName.replaceAll(&quot;([0-9]{4,}-)([0-9]{2,}-)([0-9]{2,}-)(.*)&quot;, &quot;$3$2$1$4&quot;);&#10;logger4j.error(context.logLineHeader + &quot; move File Processed to : &quot;+ context.sageInterfaceError + &quot;/&quot; + newFileName);&#10;// Move files to destination folder&#10;new File(oldFileName).renameTo(new File(context.sageInterfaceError + &quot;/&quot; + newFileName));"/>
     <elementParameter field="MEMO_IMPORT" name="IMPORT" value="import java.io.File;"/>
     <elementParameter field="TEXT" name="LABEL" value="file_Error"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tJava_5"/>
   </node>
   <node componentName="tFTPPut" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="1184" posY="320">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPPut_1" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPPut_1"/>
     <elementParameter field="CHECK" name="USE_EXISTING_CONNECTION" value="false"/>
-    <elementParameter field="COMPONENT_LIST" name="CONNECTION" value="" show="false"/>
+    <elementParameter field="COMPONENT_LIST" name="CONNECTION" show="false" value=""/>
     <elementParameter field="TEXT" name="HOST" value="context.FTPHost"/>
     <elementParameter field="TEXT" name="PORT" value="context.FTPPort"/>
     <elementParameter field="TEXT" name="USERNAME" value="context.FTPUser"/>
     <elementParameter field="PASSWORD" name="PASSWORD" value="8pW6Nmy2kufaw4bx+WfdQGS+MG/gYDx6"/>
     <elementParameter field="CHECK" name="SFTP" value="true"/>
-    <elementParameter field="CHECK" name="FTPS" value="false" show="false"/>
+    <elementParameter field="CHECK" name="FTPS" show="false" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_METHOD" value="PASSWORD"/>
-    <elementParameter field="FILE" name="PRIVATEKEY" value="&quot;/.ssh/id_dsa&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PASSPHRASE" value="wiXuUBxiyoc5L4zXsOuoEQ==" show="false"/>
+    <elementParameter field="FILE" name="PRIVATEKEY" show="false" value="&quot;/.ssh/id_dsa&quot;"/>
+    <elementParameter field="PASSWORD" name="PASSPHRASE" show="false" value="wiXuUBxiyoc5L4zXsOuoEQ=="/>
     <elementParameter field="DIRECTORY" name="LOCALDIR" value="context.sageInterfaceProcessed"/>
     <elementParameter field="TEXT" name="REMOTEDIR" value="context.sageFTPInterfaceProcessed"/>
-    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" value="true" show="false"/>
-    <elementParameter field="FILE" name="KEYSTORE_FILE" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="KEYSTORE_PASS" value="k0OOTVG4MsZpHb1iYbZyRw==" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="MODE" value="ascii" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="OVERWRITE" value="always" show="false"/>
-    <elementParameter field="CHECK" name="APPEND" value="false" show="false"/>
+    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" show="false" value="true"/>
+    <elementParameter field="FILE" name="KEYSTORE_FILE" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="KEYSTORE_PASS" show="false" value="k0OOTVG4MsZpHb1iYbZyRw=="/>
+    <elementParameter field="CLOSED_LIST" name="MODE" show="false" value="ascii"/>
+    <elementParameter field="CLOSED_LIST" name="OVERWRITE" show="false" value="always"/>
+    <elementParameter field="CHECK" name="APPEND" show="false" value="false"/>
     <elementParameter field="CLOSED_LIST" name="SFTPOVERWRITE" value="overwrite"/>
-    <elementParameter field="CLOSED_LIST" name="FTPSOVERWRITE" value="always" show="false"/>
-    <elementParameter field="LABEL" name="NOTE_CUSTOMER" value="Note: File can not be renamed while using &quot;append&quot; mode in SFTP" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="FTPSOVERWRITE" show="false" value="always"/>
+    <elementParameter field="LABEL" name="NOTE_CUSTOMER" show="false" value="Note: File can not be renamed while using &quot;append&quot; mode in SFTP"/>
     <elementParameter field="CHECK" name="PERL5_REGEX" value="false"/>
     <elementParameter field="TABLE" name="FILES">
       <elementValue elementRef="FILEMASK" value="&quot;CONT*.csv&quot;"/>
@@ -403,211 +402,211 @@
       <elementValue elementRef="FILEMASK" value="context.SSUS_customerWithNoAccountLink + &quot;*.csv&quot;"/>
       <elementValue elementRef="NEWNAME" value="&quot;&quot;"/>
     </elementParameter>
-    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" value="PASSIVE" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="SECURITY_MODE" value="IMPLICIT" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" show="false" value="PASSIVE"/>
+    <elementParameter field="CLOSED_LIST" name="SECURITY_MODE" show="false" value="IMPLICIT"/>
     <elementParameter field="CHECK" name="USE_ENCODING" value="false"/>
-    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;ISO-8859-15&quot;" show="false"/>
-    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;ISO-8859-15&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="ISO-8859-15"/>
     <elementParameter field="CHECK" name="DIE_ON_ERROR" value="true"/>
     <elementParameter field="CHECK" name="USE_PROXY" value="false"/>
-    <elementParameter field="TEXT" name="PROXY_HOST" value="&quot;61.163.92.4&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_PORT" value="&quot;1080&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_USERNAME" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" value="0RMsyjmybrE=" show="false"/>
-    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" value="false" show="false"/>
+    <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="&quot;1080&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" show="false" value="false"/>
     <elementParameter field="TEXT" name="LABEL" value="Processed"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tFTPPut_1"/>
   </node>
   <node componentName="tFTPPut" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="1184" posY="480">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPPut_2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPPut_2"/>
     <elementParameter field="CHECK" name="USE_EXISTING_CONNECTION" value="false"/>
-    <elementParameter field="COMPONENT_LIST" name="CONNECTION" value="" show="false"/>
+    <elementParameter field="COMPONENT_LIST" name="CONNECTION" show="false" value=""/>
     <elementParameter field="TEXT" name="HOST" value="context.FTPHost"/>
     <elementParameter field="TEXT" name="PORT" value="context.FTPPort"/>
     <elementParameter field="TEXT" name="USERNAME" value="context.FTPUser"/>
     <elementParameter field="PASSWORD" name="PASSWORD" value="8pW6Nmy2kufaw4bx+WfdQGS+MG/gYDx6"/>
     <elementParameter field="CHECK" name="SFTP" value="true"/>
-    <elementParameter field="CHECK" name="FTPS" value="false" show="false"/>
+    <elementParameter field="CHECK" name="FTPS" show="false" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_METHOD" value="PASSWORD"/>
-    <elementParameter field="FILE" name="PRIVATEKEY" value="&quot;/.ssh/id_dsa&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PASSPHRASE" value="wiXuUBxiyoc5L4zXsOuoEQ==" show="false"/>
+    <elementParameter field="FILE" name="PRIVATEKEY" show="false" value="&quot;/.ssh/id_dsa&quot;"/>
+    <elementParameter field="PASSWORD" name="PASSPHRASE" show="false" value="wiXuUBxiyoc5L4zXsOuoEQ=="/>
     <elementParameter field="DIRECTORY" name="LOCALDIR" value="context.sageInterfaceError"/>
     <elementParameter field="TEXT" name="REMOTEDIR" value="context.sageFTPInterfaceError"/>
-    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" value="true" show="false"/>
-    <elementParameter field="FILE" name="KEYSTORE_FILE" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="KEYSTORE_PASS" value="k0OOTVG4MsZpHb1iYbZyRw==" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="MODE" value="ascii" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="OVERWRITE" value="always" show="false"/>
-    <elementParameter field="CHECK" name="APPEND" value="false" show="false"/>
+    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" show="false" value="true"/>
+    <elementParameter field="FILE" name="KEYSTORE_FILE" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="KEYSTORE_PASS" show="false" value="k0OOTVG4MsZpHb1iYbZyRw=="/>
+    <elementParameter field="CLOSED_LIST" name="MODE" show="false" value="ascii"/>
+    <elementParameter field="CLOSED_LIST" name="OVERWRITE" show="false" value="always"/>
+    <elementParameter field="CHECK" name="APPEND" show="false" value="false"/>
     <elementParameter field="CLOSED_LIST" name="SFTPOVERWRITE" value="overwrite"/>
-    <elementParameter field="CLOSED_LIST" name="FTPSOVERWRITE" value="always" show="false"/>
-    <elementParameter field="LABEL" name="NOTE_CUSTOMER" value="Note: File can not be renamed while using &quot;append&quot; mode in SFTP" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="FTPSOVERWRITE" show="false" value="always"/>
+    <elementParameter field="LABEL" name="NOTE_CUSTOMER" show="false" value="Note: File can not be renamed while using &quot;append&quot; mode in SFTP"/>
     <elementParameter field="CHECK" name="PERL5_REGEX" value="false"/>
     <elementParameter field="TABLE" name="FILES">
       <elementValue elementRef="FILEMASK" value="&quot;CONT*.csv&quot;"/>
       <elementValue elementRef="NEWNAME" value="&quot;&quot;"/>
     </elementParameter>
-    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" value="PASSIVE" show="false"/>
-    <elementParameter field="CLOSED_LIST" name="SECURITY_MODE" value="IMPLICIT" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" show="false" value="PASSIVE"/>
+    <elementParameter field="CLOSED_LIST" name="SECURITY_MODE" show="false" value="IMPLICIT"/>
     <elementParameter field="CHECK" name="USE_ENCODING" value="false"/>
-    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;ISO-8859-15&quot;" show="false"/>
-    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;ISO-8859-15&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="ISO-8859-15"/>
     <elementParameter field="CHECK" name="DIE_ON_ERROR" value="true"/>
     <elementParameter field="CHECK" name="USE_PROXY" value="false"/>
-    <elementParameter field="TEXT" name="PROXY_HOST" value="&quot;61.163.92.4&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_PORT" value="&quot;1080&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_USERNAME" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" value="0RMsyjmybrE=" show="false"/>
-    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" value="false" show="false"/>
+    <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="&quot;1080&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" show="false" value="false"/>
     <elementParameter field="TEXT" name="LABEL" value="Error"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tFTPPut_2"/>
   </node>
   <node componentName="tFTPFileList" componentVersion="0.100" offsetLabelX="0" offsetLabelY="0" posX="1376" posY="320">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPFileList_1" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPFileList_1"/>
     <elementParameter field="CHECK" name="USE_EXISTING_CONNECTION" value="false"/>
-    <elementParameter field="COMPONENT_LIST" name="CONNECTION" value="tFTPConnection_1" show="false"/>
+    <elementParameter field="COMPONENT_LIST" name="CONNECTION" show="false" value="tFTPConnection_1"/>
     <elementParameter field="TEXT" name="HOST" value="context.FTPHost"/>
     <elementParameter field="TEXT" name="PORT" value="context.FTPPort"/>
     <elementParameter field="TEXT" name="USERNAME" value="context.FTPUser"/>
     <elementParameter field="PASSWORD" name="PASSWORD" value="8pW6Nmy2kufaw4bx+WfdQGS+MG/gYDx6"/>
     <elementParameter field="CHECK" name="SFTP" value="true"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_METHOD" value="PASSWORD"/>
-    <elementParameter field="FILE" name="PRIVATEKEY" value="&quot;/.ssh/id_dsa&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PASSPHRASE" value="wiXuUBxiyoc5L4zXsOuoEQ==" show="false"/>
+    <elementParameter field="FILE" name="PRIVATEKEY" show="false" value="&quot;/.ssh/id_dsa&quot;"/>
+    <elementParameter field="PASSWORD" name="PASSPHRASE" show="false" value="wiXuUBxiyoc5L4zXsOuoEQ=="/>
     <elementParameter field="TEXT" name="REMOTEDIR" value="context.sageFTPInterfaceProcessed"/>
-    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" value="true" show="false"/>
+    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" show="false" value="true"/>
     <elementParameter field="CHECK" name="DIR_FULL" value="true"/>
     <elementParameter field="TABLE" name="FILES">
       <elementValue elementRef="FILEMASK" value="&quot;CONT*.csv&quot;"/>
     </elementParameter>
-    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" value="PASSIVE" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" show="false" value="PASSIVE"/>
     <elementParameter field="CHECK" name="USE_ENCODING" value="false"/>
-    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;ISO-8859-15&quot;" show="false"/>
-    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;ISO-8859-15&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="ISO-8859-15"/>
     <elementParameter field="CHECK" name="USE_PROXY" value="false"/>
-    <elementParameter field="TEXT" name="PROXY_HOST" value="&quot;61.163.92.4&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_PORT" value="&quot;1080&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_USERNAME" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" value="0RMsyjmybrE=" show="false"/>
-    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" value="true" show="false"/>
+    <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="&quot;1080&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" show="false" value="true"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
   </node>
   <node componentName="tJava" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="1536" posY="320">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_1" show="false"/>
-    <elementParameter field="MEMO_JAVA" name="CODE" value="&#xA;        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#xA;            .getLogger(this.getClass());&#xA;&#xA;&#xA; &#xA;//logger4j.info(context.logLineHeader + &quot;file : &quot; + ((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILE&quot;))));                                        &#xA;logger4j.info(context.logLineHeader + &quot;file : &quot; + ((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILEPATH&quot;))));                                        &#xA;&#xA;String file = context.sageInterfaceProcessed + &quot;/&quot; + ((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILE&quot;)));&#xA;Path path = Paths.get(file);&#xA; try {&#xA;    Files.delete(path);&#xA;    logger4j.warn(context.logLineHeader + &quot;file : &quot; + file + &quot; deleted!&quot;);                                            &#xA;} catch (NoSuchFileException x) {&#xA;    logger4j.info(context.logLineHeader + &quot; no such &quot; + file + &quot; file &quot;);&#xA;} catch (IOException x) {&#xA;    // File permission problems are caught here.&#xA;    logger4j.error(context.logLineHeader + x.toString());&#xA;}"/>
-    <elementParameter field="MEMO_IMPORT" name="IMPORT" value="import java.io.IOException;&#xA;import java.nio.file.DirectoryNotEmptyException;&#xA;import java.nio.file.Files;&#xA;import java.nio.file.NoSuchFileException;&#xA;import java.nio.file.Path;&#xA;import java.nio.file.Paths;"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_1"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="&#10;        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#10;            .getLogger(this.getClass());&#10;&#10;&#10; &#10;//logger4j.info(context.logLineHeader + &quot;file : &quot; + ((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILE&quot;))));                                        &#10;logger4j.info(context.logLineHeader + &quot;file : &quot; + ((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILEPATH&quot;))));                                        &#10;&#10;String file = context.sageInterfaceProcessed + &quot;/&quot; + ((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILE&quot;)));&#10;Path path = Paths.get(file);&#10; try {&#10;    Files.delete(path);&#10;    logger4j.warn(context.logLineHeader + &quot;file : &quot; + file + &quot; deleted!&quot;);                                            &#10;} catch (NoSuchFileException x) {&#10;    logger4j.info(context.logLineHeader + &quot; no such &quot; + file + &quot; file &quot;);&#10;} catch (IOException x) {&#10;    // File permission problems are caught here.&#10;    logger4j.error(context.logLineHeader + x.toString());&#10;}"/>
+    <elementParameter field="MEMO_IMPORT" name="IMPORT" value="import java.io.IOException;&#10;import java.nio.file.DirectoryNotEmptyException;&#10;import java.nio.file.Files;&#10;import java.nio.file.NoSuchFileException;&#10;import java.nio.file.Path;&#10;import java.nio.file.Paths;"/>
     <elementParameter field="TEXT" name="LABEL" value="local_Deletion_of_Files_transfered"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tJava_1"/>
   </node>
   <node componentName="tFTPDelete" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="1536" posY="384">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPDelete_1" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPDelete_1"/>
     <elementParameter field="CHECK" name="USE_EXISTING_CONNECTION" value="false"/>
-    <elementParameter field="COMPONENT_LIST" name="CONNECTION" value="" show="false"/>
+    <elementParameter field="COMPONENT_LIST" name="CONNECTION" show="false" value=""/>
     <elementParameter field="TEXT" name="HOST" value="context.FTPHost"/>
     <elementParameter field="TEXT" name="PORT" value="context.FTPPort"/>
     <elementParameter field="TEXT" name="USERNAME" value="context.FTPUser"/>
     <elementParameter field="PASSWORD" name="PASSWORD" value="8pW6Nmy2kufaw4bx+WfdQGS+MG/gYDx6"/>
     <elementParameter field="CHECK" name="SFTP" value="true"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_METHOD" value="PASSWORD"/>
-    <elementParameter field="FILE" name="PRIVATEKEY" value="&quot;/.ssh/id_dsa&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PASSPHRASE" value="wiXuUBxiyoc5L4zXsOuoEQ==" show="false"/>
+    <elementParameter field="FILE" name="PRIVATEKEY" show="false" value="&quot;/.ssh/id_dsa&quot;"/>
+    <elementParameter field="PASSWORD" name="PASSPHRASE" show="false" value="wiXuUBxiyoc5L4zXsOuoEQ=="/>
     <elementParameter field="TEXT" name="REMOTEDIR" value="context.sageFTPInterfaceProcessing"/>
-    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" value="true" show="false"/>
+    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" show="false" value="true"/>
     <elementParameter field="CHECK" name="PERL5_REGEX" value="false"/>
     <elementParameter field="TABLE" name="FILES">
       <elementValue elementRef="FILEMASK" value="((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILE&quot;)))"/>
     </elementParameter>
     <elementParameter field="CLOSED_LIST" name="TARGET_TYPE" value="FILE"/>
-    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" value="PASSIVE" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" show="false" value="PASSIVE"/>
     <elementParameter field="CHECK" name="USE_ENCODING" value="false"/>
-    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;ISO-8859-15&quot;" show="false"/>
-    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;ISO-8859-15&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="ISO-8859-15"/>
     <elementParameter field="CHECK" name="DIE_ON_ERROR" value="false"/>
     <elementParameter field="CHECK" name="USE_PROXY" value="false"/>
-    <elementParameter field="TEXT" name="PROXY_HOST" value="&quot;61.163.92.4&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_PORT" value="&quot;1080&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_USERNAME" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" value="0RMsyjmybrE=" show="false"/>
-    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" value="false" show="false"/>
+    <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="&quot;1080&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" show="false" value="false"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tFTPDelete_1"/>
   </node>
   <node componentName="tFTPFileList" componentVersion="0.100" offsetLabelX="0" offsetLabelY="0" posX="1376" posY="480">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPFileList_2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPFileList_2"/>
     <elementParameter field="CHECK" name="USE_EXISTING_CONNECTION" value="false"/>
-    <elementParameter field="COMPONENT_LIST" name="CONNECTION" value="tFTPConnection_1" show="false"/>
+    <elementParameter field="COMPONENT_LIST" name="CONNECTION" show="false" value="tFTPConnection_1"/>
     <elementParameter field="TEXT" name="HOST" value="context.FTPHost"/>
     <elementParameter field="TEXT" name="PORT" value="context.FTPPort"/>
     <elementParameter field="TEXT" name="USERNAME" value="context.FTPUser"/>
     <elementParameter field="PASSWORD" name="PASSWORD" value="8pW6Nmy2kufaw4bx+WfdQGS+MG/gYDx6"/>
     <elementParameter field="CHECK" name="SFTP" value="true"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_METHOD" value="PASSWORD"/>
-    <elementParameter field="FILE" name="PRIVATEKEY" value="&quot;/.ssh/id_dsa&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PASSPHRASE" value="wiXuUBxiyoc5L4zXsOuoEQ==" show="false"/>
+    <elementParameter field="FILE" name="PRIVATEKEY" show="false" value="&quot;/.ssh/id_dsa&quot;"/>
+    <elementParameter field="PASSWORD" name="PASSPHRASE" show="false" value="wiXuUBxiyoc5L4zXsOuoEQ=="/>
     <elementParameter field="TEXT" name="REMOTEDIR" value="context.sageFTPInterfaceError"/>
-    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" value="true" show="false"/>
+    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" show="false" value="true"/>
     <elementParameter field="CHECK" name="DIR_FULL" value="true"/>
     <elementParameter field="TABLE" name="FILES">
       <elementValue elementRef="FILEMASK" value="&quot;CONT*.csv&quot;"/>
     </elementParameter>
-    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" value="PASSIVE" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" show="false" value="PASSIVE"/>
     <elementParameter field="CHECK" name="USE_ENCODING" value="false"/>
-    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;ISO-8859-15&quot;" show="false"/>
-    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;ISO-8859-15&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="ISO-8859-15"/>
     <elementParameter field="CHECK" name="USE_PROXY" value="false"/>
-    <elementParameter field="TEXT" name="PROXY_HOST" value="&quot;61.163.92.4&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_PORT" value="&quot;1080&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_USERNAME" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" value="0RMsyjmybrE=" show="false"/>
-    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" value="false" show="false"/>
+    <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="&quot;1080&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" show="false" value="false"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
   </node>
   <node componentName="tJava" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="1536" posY="480">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_6" show="false"/>
-    <elementParameter field="MEMO_JAVA" name="CODE" value="&#xA;        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#xA;            .getLogger(this.getClass());&#xA;&#xA;&#xA; &#xA;//logger4j.info(context.logLineHeader + &quot;file : &quot; + ((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILE&quot;))));                                        &#xA;logger4j.info(context.logLineHeader + &quot;file : &quot; + ((String)(globalMap.get(&quot;tFTPFileList_2_CURRENT_FILEPATH&quot;))));                                        &#xA;&#xA;String file = context.sageInterfaceError + &quot;/&quot; + ((String)(globalMap.get(&quot;tFTPFileList_2_CURRENT_FILE&quot;)));&#xA;Path path = Paths.get(file);&#xA; try {&#xA;    Files.delete(path);&#xA;    logger4j.warn(context.logLineHeader + &quot;file : &quot; + file + &quot; deleted!&quot;);                                            &#xA;} catch (NoSuchFileException x) {&#xA;    logger4j.info(context.logLineHeader + &quot; no such &quot; + file + &quot; file &quot;);&#xA;} catch (IOException x) {&#xA;    // File permission problems are caught here.&#xA;    logger4j.error(context.logLineHeader + x.toString());&#xA;}"/>
-    <elementParameter field="MEMO_IMPORT" name="IMPORT" value="import java.io.IOException;&#xA;import java.nio.file.DirectoryNotEmptyException;&#xA;import java.nio.file.Files;&#xA;import java.nio.file.NoSuchFileException;&#xA;import java.nio.file.Path;&#xA;import java.nio.file.Paths;"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_6"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="&#10;        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#10;            .getLogger(this.getClass());&#10;&#10;&#10; &#10;//logger4j.info(context.logLineHeader + &quot;file : &quot; + ((String)(globalMap.get(&quot;tFTPFileList_1_CURRENT_FILE&quot;))));                                        &#10;logger4j.info(context.logLineHeader + &quot;file : &quot; + ((String)(globalMap.get(&quot;tFTPFileList_2_CURRENT_FILEPATH&quot;))));                                        &#10;&#10;String file = context.sageInterfaceError + &quot;/&quot; + ((String)(globalMap.get(&quot;tFTPFileList_2_CURRENT_FILE&quot;)));&#10;Path path = Paths.get(file);&#10; try {&#10;    Files.delete(path);&#10;    logger4j.warn(context.logLineHeader + &quot;file : &quot; + file + &quot; deleted!&quot;);                                            &#10;} catch (NoSuchFileException x) {&#10;    logger4j.info(context.logLineHeader + &quot; no such &quot; + file + &quot; file &quot;);&#10;} catch (IOException x) {&#10;    // File permission problems are caught here.&#10;    logger4j.error(context.logLineHeader + x.toString());&#10;}"/>
+    <elementParameter field="MEMO_IMPORT" name="IMPORT" value="import java.io.IOException;&#10;import java.nio.file.DirectoryNotEmptyException;&#10;import java.nio.file.Files;&#10;import java.nio.file.NoSuchFileException;&#10;import java.nio.file.Path;&#10;import java.nio.file.Paths;"/>
     <elementParameter field="TEXT" name="LABEL" value="local_Deletion_of_Files_transfered"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tJava_6"/>
   </node>
   <node componentName="tFTPDelete" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="1536" posY="576">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPDelete_2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPDelete_2"/>
     <elementParameter field="CHECK" name="USE_EXISTING_CONNECTION" value="false"/>
-    <elementParameter field="COMPONENT_LIST" name="CONNECTION" value="" show="false"/>
+    <elementParameter field="COMPONENT_LIST" name="CONNECTION" show="false" value=""/>
     <elementParameter field="TEXT" name="HOST" value="context.FTPHost"/>
     <elementParameter field="TEXT" name="PORT" value="context.FTPPort"/>
     <elementParameter field="TEXT" name="USERNAME" value="context.FTPUser"/>
     <elementParameter field="PASSWORD" name="PASSWORD" value="8pW6Nmy2kufaw4bx+WfdQGS+MG/gYDx6"/>
     <elementParameter field="CHECK" name="SFTP" value="true"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_METHOD" value="PASSWORD"/>
-    <elementParameter field="FILE" name="PRIVATEKEY" value="&quot;/.ssh/id_dsa&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PASSPHRASE" value="wiXuUBxiyoc5L4zXsOuoEQ==" show="false"/>
+    <elementParameter field="FILE" name="PRIVATEKEY" show="false" value="&quot;/.ssh/id_dsa&quot;"/>
+    <elementParameter field="PASSWORD" name="PASSPHRASE" show="false" value="wiXuUBxiyoc5L4zXsOuoEQ=="/>
     <elementParameter field="TEXT" name="REMOTEDIR" value="context.sageFTPInterfaceProcessing"/>
-    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" value="true" show="false"/>
+    <elementParameter field="CHECK" name="MOVE_TO_THE_CURRENT_DIRECTORY" show="false" value="true"/>
     <elementParameter field="CHECK" name="PERL5_REGEX" value="false"/>
     <elementParameter field="TABLE" name="FILES">
       <elementValue elementRef="FILEMASK" value="((String)(globalMap.get(&quot;tFTPFileList_2_CURRENT_FILE&quot;)))"/>
     </elementParameter>
     <elementParameter field="CLOSED_LIST" name="TARGET_TYPE" value="FILE"/>
-    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" value="PASSIVE" show="false"/>
+    <elementParameter field="CLOSED_LIST" name="CONNECT_MODE" show="false" value="PASSIVE"/>
     <elementParameter field="CHECK" name="USE_ENCODING" value="false"/>
-    <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;ISO-8859-15&quot;" show="false"/>
-    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="ISO-8859-15" show="false"/>
+    <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;ISO-8859-15&quot;"/>
+    <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="ISO-8859-15"/>
     <elementParameter field="CHECK" name="DIE_ON_ERROR" value="false"/>
     <elementParameter field="CHECK" name="USE_PROXY" value="false"/>
-    <elementParameter field="TEXT" name="PROXY_HOST" value="&quot;61.163.92.4&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_PORT" value="&quot;1080&quot;" show="false"/>
-    <elementParameter field="TEXT" name="PROXY_USERNAME" value="&quot;&quot;" show="false"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" value="0RMsyjmybrE=" show="false"/>
-    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" value="false" show="false"/>
+    <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="&quot;1080&quot;"/>
+    <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="CHECK" name="IGNORE_FAILURE_AT_QUIT" show="false" value="false"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tFTPDelete_2"/>
   </node>
   <node componentName="tDie" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="64" posY="96">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tDie_2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tDie_2"/>
     <elementParameter field="TEXT" name="MESSAGE" value="&quot;WADL Parameters empty&quot;"/>
     <elementParameter field="TEXT" name="CODE" value="4"/>
     <elementParameter field="CLOSED_LIST" name="PRIORITY" value="5"/>
@@ -616,14 +615,14 @@
     <metadata connector="FLOW" name="tDie_2"/>
   </node>
   <node componentName="tRunJob" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="448" posY="96">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tRunJob_3" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tRunJob_3"/>
     <elementParameter field="CHECK" name="USE_DYNAMIC_JOB" value="false"/>
-    <elementParameter field="TEXT" name="CONTEXT_JOB" value="" show="false"/>
+    <elementParameter field="TEXT" name="CONTEXT_JOB" show="false" value=""/>
     <elementParameter field="PROCESS_TYPE" name="PROCESS" value="LoadSettings"/>
     <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_CONTEXT" value="Default"/>
     <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_PROCESS" value="_5ARsEIpiEeOffO5TDztmGA"/>
     <elementParameter field="TECHNICAL" name="PROCESS:PROCESS_TYPE_VERSION" value="Latest"/>
-    <elementParameter field="TEXT" name="CONTEXT_NAME" value="Default" show="false"/>
+    <elementParameter field="TEXT" name="CONTEXT_NAME" show="false" value="Default"/>
     <elementParameter field="CHECK" name="USE_INDEPENDENT_PROCESS" value="false"/>
     <elementParameter field="CHECK" name="DIE_ON_CHILD_ERROR" value="true"/>
     <elementParameter field="CHECK" name="TRANSMIT_WHOLE_CONTEXT" value="true"/>
@@ -633,7 +632,7 @@
     </elementParameter>
     <elementParameter field="CHECK" name="PROPAGATE_CHILD_RESULT" value="false"/>
     <elementParameter field="CHECK" name="PRINT_PARAMETER" value="false"/>
-    <elementParameter field="CHECK" name="TRANSMIT_ORIGINAL_CONTEXT" value="true" show="false"/>
+    <elementParameter field="CHECK" name="TRANSMIT_ORIGINAL_CONTEXT" show="false" value="true"/>
     <elementParameter field="TEXT" name="LABEL" value="__PROCESS__"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRunJob_3">
@@ -642,7 +641,7 @@
     </metadata>
   </node>
   <node componentName="tContextLoad" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="640" posY="96">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tContextLoad_2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tContextLoad_2"/>
     <elementParameter field="CLOSED_LIST" name="LOAD_NEW_VARIABLE" value="Warning"/>
     <elementParameter field="CLOSED_LIST" name="NOT_LOAD_OLD_VARIABLE" value="Warning"/>
     <elementParameter field="CHECK" name="PRINT_OPERATIONS" value="false"/>
@@ -658,14 +657,14 @@
     </metadata>
   </node>
   <node componentName="tLogRow" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="864" posY="96">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tLogRow_2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tLogRow_2"/>
     <elementParameter field="CHECK" name="ACTIVATE" value="false"/>
     <elementParameter field="RADIO" name="BASIC_MODE" value="true"/>
     <elementParameter field="RADIO" name="TABLE_PRINT" value="false"/>
     <elementParameter field="RADIO" name="VERTICAL" value="false"/>
-    <elementParameter field="RADIO" name="PRINT_UNIQUE" value="true" show="false"/>
-    <elementParameter field="RADIO" name="PRINT_LABEL" value="false" show="false"/>
-    <elementParameter field="RADIO" name="PRINT_UNIQUE_LABEL" value="false" show="false"/>
+    <elementParameter field="RADIO" name="PRINT_UNIQUE" show="false" value="true"/>
+    <elementParameter field="RADIO" name="PRINT_LABEL" show="false" value="false"/>
+    <elementParameter field="RADIO" name="PRINT_UNIQUE_LABEL" show="false" value="false"/>
     <elementParameter field="TEXT" name="FIELDSEPARATOR" value="&quot;|&quot;"/>
     <elementParameter field="CHECK" name="PRINT_HEADER" value="false"/>
     <elementParameter field="CHECK" name="PRINT_UNIQUE_NAME" value="false"/>
@@ -678,7 +677,7 @@
       <elementValue elementRef="LENGTH" value="10"/>
     </elementParameter>
     <elementParameter field="CHECK" name="PRINT_CONTENT_WITH_LOG4J" value="true"/>
-    <elementParameter field="TEXT" name="SCHEMA_OPT_NUM" value="100" show="false"/>
+    <elementParameter field="TEXT" name="SCHEMA_OPT_NUM" show="false" value="100"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tLogRow_2">
       <column defaultValue="" key="false" length="255" name="key" nullable="true" precision="0" sourceType="" type="id_String" usefulColumn="true"/>
@@ -686,36 +685,36 @@
     </metadata>
   </node>
   <node componentName="tJava" componentVersion="0.101" offsetLabelX="0" offsetLabelY="0" posX="64" posY="224">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_7" show="false"/>
-    <elementParameter field="MEMO_JAVA" name="CODE" value="&#xA;        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#xA;            .getLogger(this.getClass());&#xA;&#xA;&#xA; &#xA;logger4j.debug(context.logLineHeader + &quot;*************************************            started        ********************************************&quot;);                                       &#xA;        String[] contextElements = {&quot;log4jConfigurationFile&quot;,&quot;SPContentHashLength&quot;,&quot;SSUS_customerWithNoAccountLink&quot;,&quot;incrementalRun&quot;,&quot;forceRun&quot;,&quot;firstNameFile&quot;,&quot;SSUK_SugarURL_Rest&quot;,&quot;SSUK_Sugar_Rest_Token&quot;,&quot;SSUK_Sugar_Rest_Path&quot;,&quot;SSUK_SugarUser&quot;,&quot;SSUK_SugarPWD&quot;,&quot;SSUKMysqldb_host_name&quot;,&quot;SSUKMysqldb_user_name&quot;,&quot;SSUKMysqldb_password&quot;,&quot;SSUKMysqldb_name&quot;,&quot;SSUKMysqldb_port&quot;,&quot;doChangemod&quot;,&quot;currencies&quot;,&quot;productCategories&quot;,&quot;SSUK_ftp_infiniti_loop&quot;,&quot;SSUK_ftp_log_entry_duration&quot;,&quot;SSUK_export_infiniti_loop&quot;,&quot;SSUK_export_log_entry_duration&quot;,&quot;SSUK_update&quot;,&quot;SSUK_create&quot;,&quot;SSUK_FTP_transfer&quot;,&quot;SSUK_FTP_IN_only&quot;,&quot;DefaultCustomerTypeSage&quot;,&quot;DefaultDeliveryTypeSage&quot;,&quot;sageInterfaceInBox&quot;,&quot;sageInterfaceError&quot;,&quot;sageInterfaceOutBox&quot;,&quot;sageInterfaceProcessed&quot;,&quot;sageInterfaceProcessing&quot;,&quot;sageFTPInterfaceInBox&quot;,&quot;sageFTPInterfaceError&quot;,&quot;sageFTPInterfaceOutBox&quot;,&quot;sageFTPInterfaceProcessed&quot;,&quot;sageFTPInterfaceProcessing&quot;,&quot;FTPHost&quot;,&quot;FTPPort&quot;,&quot;FTPUser&quot;,&quot;FTPassword&quot;,&quot;timeToRun&quot;,&quot;waitForNextCheck&quot;,&quot;doChangemod&quot;};&#xA;&#xA;       String[] contextElementsNotClearText = {&quot;SSUKMysqldb_password&quot;,&quot;SSUK_SugarPWD&quot;,&quot;FTPassword&quot;};&#xA; &#xA;       &#xA;        Integer SPContentHashLength = context.SPContentHashLength;&#xA;&#xA;        for (String ces : contextElements) {&#xA;            if (context.getProperty(ces) != null &amp;&amp; !context.getProperty(ces).isEmpty()) {&#xA;                String ContextStringHC = UUID.sha1Raw(ces + &quot;: '&quot; + context.getProperty(ces) + &quot;'&quot;);&#xA;                SPContentHashLength = context.SPContentHashLength;&#xA;                if (ContextStringHC.length() &lt; context.SPContentHashLength) {&#xA;                    SPContentHashLength = ContextStringHC.length();&#xA;                };&#xA;                if (java.util.Arrays.asList(contextElementsNotClearText).contains(ces)) {&#xA;                    String ContextStringHC2 = UUID.sha1Raw(ces + &quot;: '&quot; + ContextStringHC + &quot;'&quot;);&#xA;                    SPContentHashLength = context.SPContentHashLength;&#xA;                    if (ContextStringHC2.length() &lt; context.SPContentHashLength) {&#xA;                        SPContentHashLength = ContextStringHC2.length();&#xA;                    };&#xA;                    logger4j.warn(context.logLineHeader + &quot;:&quot; + ContextStringHC2.substring(ContextStringHC2.length() - SPContentHashLength) + &quot;:&quot; + &quot; &quot; + ces + &quot;: '&quot; + ContextStringHC + &quot;'&quot;);&#xA;                } else {&#xA;                    logger4j.warn(context.logLineHeader + &quot;:&quot; + ContextStringHC.substring(ContextStringHC.length() - SPContentHashLength) + &quot;:&quot; + &quot; &quot; + ces + &quot;: '&quot; + context.getProperty(ces) + &quot;'&quot;);&#xA;                }&#xA;            }&#xA;        }&#xA;        &#xA;       "/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_7"/>
+    <elementParameter field="MEMO_JAVA" name="CODE" value="&#10;        org.apache.log4j.Logger logger4j = org.apache.log4j.Logger&#10;            .getLogger(this.getClass());&#10;&#10;&#10; &#10;logger4j.debug(context.logLineHeader + &quot;*************************************            started        ********************************************&quot;);                                       &#10;        String[] contextElements = {&quot;log4jConfigurationFile&quot;,&quot;SPContentHashLength&quot;,&quot;SSUS_customerWithNoAccountLink&quot;,&quot;incrementalRun&quot;,&quot;forceRun&quot;,&quot;firstNameFile&quot;,&quot;SSUK_SugarURL_Rest&quot;,&quot;SSUK_Sugar_Rest_Token&quot;,&quot;SSUK_Sugar_Rest_Path&quot;,&quot;SSUK_SugarUser&quot;,&quot;SSUK_SugarPWD&quot;,&quot;SSUKMysqldb_host_name&quot;,&quot;SSUKMysqldb_user_name&quot;,&quot;SSUKMysqldb_password&quot;,&quot;SSUKMysqldb_name&quot;,&quot;SSUKMysqldb_port&quot;,&quot;doChangemod&quot;,&quot;currencies&quot;,&quot;productCategories&quot;,&quot;SSUK_ftp_infiniti_loop&quot;,&quot;SSUK_ftp_log_entry_duration&quot;,&quot;SSUK_export_infiniti_loop&quot;,&quot;SSUK_export_log_entry_duration&quot;,&quot;SSUK_update&quot;,&quot;SSUK_create&quot;,&quot;SSUK_FTP_transfer&quot;,&quot;SSUK_FTP_IN_only&quot;,&quot;DefaultCustomerTypeSage&quot;,&quot;DefaultDeliveryTypeSage&quot;,&quot;sageInterfaceInBox&quot;,&quot;sageInterfaceError&quot;,&quot;sageInterfaceOutBox&quot;,&quot;sageInterfaceProcessed&quot;,&quot;sageInterfaceProcessing&quot;,&quot;sageFTPInterfaceInBox&quot;,&quot;sageFTPInterfaceError&quot;,&quot;sageFTPInterfaceOutBox&quot;,&quot;sageFTPInterfaceProcessed&quot;,&quot;sageFTPInterfaceProcessing&quot;,&quot;FTPHost&quot;,&quot;FTPPort&quot;,&quot;FTPUser&quot;,&quot;FTPassword&quot;,&quot;timeToRun&quot;,&quot;waitForNextCheck&quot;,&quot;doChangemod&quot;};&#10;&#10;       String[] contextElementsNotClearText = {&quot;SSUKMysqldb_password&quot;,&quot;SSUK_SugarPWD&quot;,&quot;FTPassword&quot;};&#10; &#10;       &#10;        Integer SPContentHashLength = context.SPContentHashLength;&#10;&#10;        for (String ces : contextElements) {&#10;            if (context.getProperty(ces) != null &amp;&amp; !context.getProperty(ces).isEmpty()) {&#10;                String ContextStringHC = UUID.sha1Raw(ces + &quot;: '&quot; + context.getProperty(ces) + &quot;'&quot;);&#10;                SPContentHashLength = context.SPContentHashLength;&#10;                if (ContextStringHC.length() &lt; context.SPContentHashLength) {&#10;                    SPContentHashLength = ContextStringHC.length();&#10;                };&#10;                if (java.util.Arrays.asList(contextElementsNotClearText).contains(ces)) {&#10;                    String ContextStringHC2 = UUID.sha1Raw(ces + &quot;: '&quot; + ContextStringHC + &quot;'&quot;);&#10;                    SPContentHashLength = context.SPContentHashLength;&#10;                    if (ContextStringHC2.length() &lt; context.SPContentHashLength) {&#10;                        SPContentHashLength = ContextStringHC2.length();&#10;                    };&#10;                    logger4j.warn(context.logLineHeader + &quot;:&quot; + ContextStringHC2.substring(ContextStringHC2.length() - SPContentHashLength) + &quot;:&quot; + &quot; &quot; + ces + &quot;: '&quot; + ContextStringHC + &quot;'&quot;);&#10;                } else {&#10;                    logger4j.warn(context.logLineHeader + &quot;:&quot; + ContextStringHC.substring(ContextStringHC.length() - SPContentHashLength) + &quot;:&quot; + &quot; &quot; + ces + &quot;: '&quot; + context.getProperty(ces) + &quot;'&quot;);&#10;                }&#10;            }&#10;        }&#10;        &#10;       "/>
     <elementParameter field="MEMO_IMPORT" name="IMPORT" value="//import java.util.List;"/>
     <elementParameter field="TEXT" name="LABEL" value="checkKonfig"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tJava_7"/>
   </node>
   <node componentName="tInitLog4J" componentVersion="1.2" offsetLabelX="0" offsetLabelY="0" posX="480" posY="224" sizeX="32" sizeY="35">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tInitLog4J_1" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tInitLog4J_1"/>
     <elementParameter field="FILE" name="LOG4J_CONF_FILE" value="context.log4jConfigurationFile"/>
     <elementParameter field="CHECK" name="DIE_ON_ERROR" value="false"/>
     <elementParameter field="CHECK" name="LOCK_CONFIG" value="true"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
   </node>
   <connection connectorName="SUBJOB_OK" label="OnSubjobOk" lineStyle="1" metaname="tJava_2" offsetLabelX="0" offsetLabelY="0" source="tJava_2" target="tWaitForFile_2">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="OnSubjobOk2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="OnSubjobOk2"/>
   </connection>
   <connection connectorName="RUN_IF" label="If" lineStyle="6" metaname="tJava_4" offsetLabelX="0" offsetLabelY="0" source="tJava_4" target="tFTPPut_1">
     <elementParameter field="MEMO_JAVA" name="CONDITION" value="context.SSUK_FTP_transfer"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="If1" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="If1"/>
   </connection>
   <connection connectorName="ITERATE" label="Iterate" lineStyle="7" metaname="tWaitForFile_2" offsetLabelX="0" offsetLabelY="0" source="tWaitForFile_2" target="tFileList_1">
     <elementParameter field="CHECK" name="ENABLE_PARALLEL" value="false"/>
-    <elementParameter field="TEXT" name="NUMBER_PARALLEL" value="2" show="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="iterate4" show="false"/>
+    <elementParameter field="TEXT" name="NUMBER_PARALLEL" show="false" value="2"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="iterate4"/>
   </connection>
   <connection connectorName="ITERATE" label="Iterate" lineStyle="7" metaname="tFileList_1" offsetLabelX="0" offsetLabelY="0" source="tFileList_1" target="tRunJob_2">
     <elementParameter field="CHECK" name="ENABLE_PARALLEL" value="false"/>
-    <elementParameter field="TEXT" name="NUMBER_PARALLEL" value="2" show="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="iterate1" show="false"/>
+    <elementParameter field="TEXT" name="NUMBER_PARALLEL" show="false" value="2"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="iterate1"/>
   </connection>
   <connection connectorName="FLOW" label="row1" lineStyle="0" metaname="tRunJob_2" offsetLabelX="0" offsetLabelY="0" source="tRunJob_2" target="tJavaRow_1">
     <elementParameter field="TABLE" name="TRACES_CONNECTION_FILTER" show="false">
@@ -724,45 +723,45 @@
       <elementValue elementRef="TRACE_COLUMN_CONDITION" value=""/>
     </elementParameter>
     <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="row1" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="row1"/>
   </connection>
   <connection connectorName="RUN_IF" label="If" lineStyle="6" metaname="tJavaRow_1" offsetLabelX="0" offsetLabelY="0" outputId="1" source="tJavaRow_1" target="tJava_4">
     <elementParameter field="MEMO_JAVA" name="CONDITION" value="!context.error"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="If3" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="If3"/>
   </connection>
   <connection connectorName="RUN_IF" label="If" lineStyle="6" metaname="tJavaRow_1" offsetLabelX="0" offsetLabelY="0" outputId="2" source="tJavaRow_1" target="tJava_5">
     <elementParameter field="MEMO_JAVA" name="CONDITION" value="context.error"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="If4" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="If4"/>
   </connection>
   <connection connectorName="RUN_IF" label="If" lineStyle="6" metaname="tJava_5" offsetLabelX="0" offsetLabelY="0" source="tJava_5" target="tFTPPut_2">
     <elementParameter field="MEMO_JAVA" name="CONDITION" value="context.SSUK_FTP_transfer"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="If2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="If2"/>
   </connection>
   <connection connectorName="SUBJOB_OK" label="OnSubjobOk" lineStyle="1" metaname="tFTPPut_1" offsetLabelX="0" offsetLabelY="0" source="tFTPPut_1" target="tFTPFileList_1">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="OnSubjobOk3" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="OnSubjobOk3"/>
   </connection>
   <connection connectorName="SUBJOB_OK" label="OnSubjobOk" lineStyle="1" metaname="tFTPPut_2" offsetLabelX="0" offsetLabelY="0" source="tFTPPut_2" target="tFTPFileList_2">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="OnSubjobOk4" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="OnSubjobOk4"/>
   </connection>
   <connection connectorName="ITERATE" label="Iterate" lineStyle="7" metaname="tFTPFileList_1" offsetLabelX="0" offsetLabelY="0" outputId="1" source="tFTPFileList_1" target="tJava_1">
     <elementParameter field="CHECK" name="ENABLE_PARALLEL" value="false"/>
-    <elementParameter field="TEXT" name="NUMBER_PARALLEL" value="2" show="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="iterate3" show="false"/>
+    <elementParameter field="TEXT" name="NUMBER_PARALLEL" show="false" value="2"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="iterate3"/>
   </connection>
   <connection connectorName="ITERATE" label="Iterate" lineStyle="7" metaname="tFTPFileList_1" offsetLabelX="0" offsetLabelY="0" outputId="2" source="tFTPFileList_1" target="tFTPDelete_1">
     <elementParameter field="CHECK" name="ENABLE_PARALLEL" value="false"/>
-    <elementParameter field="TEXT" name="NUMBER_PARALLEL" value="2" show="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="iterate6" show="false"/>
+    <elementParameter field="TEXT" name="NUMBER_PARALLEL" show="false" value="2"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="iterate6"/>
   </connection>
   <connection connectorName="ITERATE" label="Iterate" lineStyle="7" metaname="tFTPFileList_2" offsetLabelX="0" offsetLabelY="0" outputId="1" source="tFTPFileList_2" target="tJava_6">
     <elementParameter field="CHECK" name="ENABLE_PARALLEL" value="false"/>
-    <elementParameter field="TEXT" name="NUMBER_PARALLEL" value="2" show="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="iterate5" show="false"/>
+    <elementParameter field="TEXT" name="NUMBER_PARALLEL" show="false" value="2"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="iterate5"/>
   </connection>
   <connection connectorName="ITERATE" label="Iterate" lineStyle="7" metaname="tFTPFileList_2" offsetLabelX="0" offsetLabelY="0" outputId="2" source="tFTPFileList_2" target="tFTPDelete_2">
     <elementParameter field="CHECK" name="ENABLE_PARALLEL" value="false"/>
-    <elementParameter field="TEXT" name="NUMBER_PARALLEL" value="2" show="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="iterate7" show="false"/>
+    <elementParameter field="TEXT" name="NUMBER_PARALLEL" show="false" value="2"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="iterate7"/>
   </connection>
   <connection connectorName="FLOW" label="row2" lineStyle="0" metaname="tRunJob_3" offsetLabelX="0" offsetLabelY="0" source="tRunJob_3" target="tContextLoad_2">
     <elementParameter field="TABLE" name="TRACES_CONNECTION_FILTER" show="false">
@@ -774,91 +773,119 @@
       <elementValue elementRef="TRACE_COLUMN_CONDITION" value=""/>
     </elementParameter>
     <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="row2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="row2"/>
   </connection>
   <connection connectorName="SUBJOB_ERROR" label="OnSubjobError" lineStyle="4" metaname="tRunJob_3" offsetLabelX="0" offsetLabelY="0" source="tRunJob_3" target="tDie_2">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="OnSubjobError2" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="OnSubjobError2"/>
   </connection>
   <connection connectorName="COMPONENT_OK" label="OnComponentOk" lineStyle="3" metaname="tRunJob_3" offsetLabelX="0" offsetLabelY="0" source="tRunJob_3" target="tInitLog4J_1">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="OnComponentOk4" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="OnComponentOk4"/>
   </connection>
   <connection connectorName="FLOW" label="row3" lineStyle="0" metaname="tContextLoad_2" offsetLabelX="0" offsetLabelY="0" source="tContextLoad_2" target="tLogRow_2">
     <elementParameter field="CHECK" name="MONITOR_CONNECTION" value="false"/>
-    <elementParameter field="CHECK" name="ACTIVATE" value="false" show="false"/>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="row3" show="false"/>
+    <elementParameter field="CHECK" name="ACTIVATE" show="false" value="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="row3"/>
   </connection>
   <connection connectorName="SUBJOB_OK" label="OnSubjobOk" lineStyle="1" metaname="tJava_7" offsetLabelX="0" offsetLabelY="0" source="tJava_7" target="tJava_2">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="OnSubjobOk5" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="OnSubjobOk5"/>
   </connection>
   <connection connectorName="COMPONENT_OK" label="OnComponentOk" lineStyle="3" metaname="tInitLog4J_1" offsetLabelX="0" offsetLabelY="0" source="tInitLog4J_1" target="tJava_7">
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="OnComponentOk6" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="OnComponentOk6"/>
   </connection>
   <note opaque="false" posX="1024" posY="64" sizeHeight="65" sizeWidth="225" text="Job konfiguration lesen"/>
-  <note opaque="true" posX="1248" posY="192" sizeHeight="64" sizeWidth="289" text="csv Files auf FTP Server kopieren&#xD;&#xA;und lokal löschen"/>
-  <note opaque="false" posX="448" posY="288" sizeHeight="65" sizeWidth="353" text="auf File warten, SugarCRM Daten lesen.&#xD;&#xA;Daten aus CSV File lesen und inSugarCRM schreiben."/>
+  <note opaque="true" posX="1248" posY="192" sizeHeight="64" sizeWidth="289" text="csv Files auf FTP Server kopieren&#13;&#10;und lokal löschen"/>
+  <note opaque="false" posX="448" posY="288" sizeHeight="65" sizeWidth="353" text="auf File warten, SugarCRM Daten lesen.&#13;&#10;Daten aus CSV File lesen und inSugarCRM schreiben."/>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_2" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_2"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_4" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_4"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tWaitForFile_2" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tWaitForFile_2"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_5" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_5"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPPut_1" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPPut_1"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPPut_2" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPPut_2"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPFileList_1" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPFileList_1"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tFTPFileList_2" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tFTPFileList_2"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tDie_2" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tDie_2"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tRunJob_3" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tRunJob_3"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tLogRow_2" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tLogRow_2"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tJava_7" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tJava_7"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
   <subjob>
-    <elementParameter field="TEXT" name="UNIQUE_NAME" value="tInitLog4J_1" show="false"/>
-    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" value="92;131;150" show="false"/>
+    <elementParameter field="TEXT" name="UNIQUE_NAME" show="false" value="tInitLog4J_1"/>
+    <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
-</talendfile:ProcessType>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#" Id="_723e04ae-f007-4e36-ad4d-7edfaf955e88"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/><DigestValue>RbEj57jjt0cJ2nI5MGieRVF9MZUAtkZkwp03CqpJvPETkXeyGkPGn8kohR3+42gMKIXJnsFKU7PY
+xu5sWAL/OQ==</DigestValue></Reference><Reference Type="http://www.w3.org/2000/09/xmldsig#SignatureProperties" URI="#_f0798868-39aa-4093-8a2b-b74bf9148a21"><Transforms><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/><DigestValue>4T54pBpYiMSLwP+xRIM23nWIdDK/PuawW5tb+HYRmLMFq5m9p50M8XzkN0Y5ETtqnE5Qmp5R11wq
+0SesatBS5g==</DigestValue></Reference></SignedInfo><SignatureValue>a4mm3hQMTRC3j4kI8DjTP4m3I2wQZUMPVbGwfcbQAFXTyQjLZ3Zy/xlhPhMi/4OovCOifJzG2gcl
+1WzZogKX21ZkWf71WWvXIVcd65alatNX+VSjB+HybgZMp4nk5MlRszeg03iV9p3uJhZgbIAtSKX+
+wwqKsoiw7/6FMrSO3epKYAq/F1rew6qFdxqUxk/vAk0gJ/iLyAG3NTDL424AnKT1olU3Kozox/qC
+LXcfwqmjrZIgLUYRFVRYrcgOB9RC/4YSFdeUB7S3wSbUKCx4pJwIuw4UE/+sX6NlMZ6siQgX6P/o
+sjvXGvyoHeewCw6C5qOq4mqI67lz1NwIqF4Q8g==</SignatureValue><KeyInfo><X509Data><X509SubjectName>C=FR,ST=Paris,L=Paris,O=Talend Inc.,OU=R&amp;D,CN=Talend Code Signing certificate</X509SubjectName><X509Certificate>MIIFADCCAuigAwIBAgIIA2OsD6bRyj0wDQYJKoZIhvcNAQELBQAwgY0xCzAJBgNVBAYTAkZSMQ4w
+DAYDVQQIEwVQYXJpczEOMAwGA1UEBxMFUGFyaXMxFDASBgNVBAoTC1RhbGVuZCBJbmMuMQwwCgYD
+VQQLDANSJkQxFjAUBgNVBAMMDVRhbGVuZCBSJkQgQ0ExIjAgBgkqhkiG9w0BCQEWE3NlY3VyaXR5
+QHRhbGVuZC5jb20wHhcNMTkwNjAzMDgxODIwWhcNMjkwNjAzMDAwMDAwWjB7MSgwJgYDVQQDEx9U
+YWxlbmQgQ29kZSBTaWduaW5nIGNlcnRpZmljYXRlMQwwCgYDVQQLDANSJkQxFDASBgNVBAoTC1Rh
+bGVuZCBJbmMuMQ4wDAYDVQQHEwVQYXJpczEOMAwGA1UECBMFUGFyaXMxCzAJBgNVBAYTAkZSMIIB
+IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAp5TMF8BmRt8dY51t9kIDdDkoOKVVytJN2gn2
+DhMGi8hzpUofNDykJDhe9SPqyJdGZ6o/h7laTA0/CivKyPT1OJQ9E2gMHKs8cTZM/cO2w0Atlqkl
+alIxepol0DNnUtmECVBqdnVsJesfmdoeptxgJAtxYbquFsTsrATNY2cscXpwmOca/Ewip48WQLFx
+e5s067jaIsAQGRIqpIup3bOtWBySrtImJ40lQCPeEcl96qzkv3utaVaNc3ukkhYkCDbMbK8NVd1B
+CVeeIBAe+n/SdpHH20o+6eIiZecsBGDLwlTYrFvuVqAa6xI7y8Vdz6irjPAVBEtG/iOc782aJ/lZ
+TwIDAQABo3UwczAMBgNVHRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEF
+BQcDAzAdBgNVHQ4EFgQUGdfzQEbjQnANq28sfhEMTx+rsOcwHwYDVR0jBBgwFoAU530Lcvy1gZnG
+gCvZLOyCczK1qPcwDQYJKoZIhvcNAQELBQADggIBAEr22wnaQwZm2dhbUCqD+qZpTq2AF/tzxqAM
+eL/CiTjPbTblS4SNNwCKvTgMe9ucpUbenXmK7xE+DU9dN4om+t3VHbkOLQVyuLcd2WGsy7ZGwRvA
+f+TFwLbwjyTukOGm6Sd1qyZgvCPzBsKnft6vscvGy2yEpmFCeHJyBP8pvchg607zguRdNbkGYZXw
+G6jNipAbTtzdPTFKKr1bEf0sUGqMrlZIMPjflh2Vewu8ImNdX5IZdvBD6DdFVOC5wqV6u+W9ukE/
+mXZxDBYNl2AF7FTh04ucEVN3mHv7m2L0uFvUlhxchcagJhJsdQG+A0LVCemHbp6CSNQJx02KxqUG
+hakvpzhOyLo91h8YAQrEZJdNuKA8IYmBrFZQZDCz0uywKSyFfzPyJhvxylCLG/iDPPfE0VWcrMJ/
+WQJly/2XPg/NBCTF3pSKS0kCiA7PeaI3cWkMYYA3PMwYDvzqs1opBRglG7ikj0bQxSm3lcjMuuvW
+gBRksFKjP3K/nztsjSoYITOM9jR29ReIL3v0E8RbAFwA2RGq6Dxd0ixfbucMesy5Gnr8tfYy6rW+
+qSQqd3ah4+PSzBNVwIB4ytpdrG3SlhCI2i2Th8ek8Sjsaquh9qPAerWNd2+84HWOOGj1Xe1qc6vg
+qqu6JoK9EXKDiwBqDVkueIa+MhamE1VDnhn2pPui</X509Certificate></X509Data></KeyInfo><Object><SignatureProperties><SignatureProperty Id="_f0798868-39aa-4093-8a2b-b74bf9148a21" Target="#_723e04ae-f007-4e36-ad4d-7edfaf955e88"><Timestamp>2020-10-08 03:02:47</Timestamp></SignatureProperty></SignatureProperties></Object></Signature></talendfile:ProcessType>
