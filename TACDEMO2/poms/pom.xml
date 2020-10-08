@@ -20,6 +20,8 @@
     <module>jobs/process/Spanset/US/ERP/sub_interfaceftpget_us_all_0.1</module>
     <module>jobs/process/Spanset/US/ERP/sub_cont_filehandlinginboxread_us_0.1</module>
     <module>jobs/process/Spanset/US/ERP/sub_cust_filehandlinginboxread_us_0.1</module>
+    <module>code/routines</module>
+    <module>code/beans</module>
   </modules>
   <properties>
     <signer.version>7.3.1</signer.version>
