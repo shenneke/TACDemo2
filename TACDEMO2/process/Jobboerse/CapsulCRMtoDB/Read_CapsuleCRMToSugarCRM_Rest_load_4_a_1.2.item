@@ -219,7 +219,7 @@
     <elementParameter field="TEXT" name="PROPERTIES_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
     <elementParameter field="TEXT" name="SCHEMA_DB_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
     <elementParameter field="TEXT" name="USER_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PASS_IMPLICIT_CONTEXT" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PASS_IMPLICIT_CONTEXT" show="false" value="enc:system.encryption.key.v1:KCplHYdBTagrJvlKf6Fvc3dkerwAXc+DTHLaV/mP"/>
     <elementParameter field="FILE" name="DBFILE_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
     <elementParameter field="DBTABLE" name="DBTABLE_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
     <elementParameter field="TEXT" name="QUERY_CONDITION_IMPLICIT_CONTEXT" show="false" value="&quot;&quot;"/>
@@ -254,7 +254,7 @@
     <elementParameter field="TEXT" name="PROPERTIES" show="false" value="&quot;&quot;"/>
     <elementParameter field="TEXT" name="SCHEMA_DB" show="false" value="&quot;&quot;"/>
     <elementParameter field="TEXT" name="USER" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PASS" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PASS" show="false" value="enc:system.encryption.key.v1:rDsLO456/61PEYyeQqI7MHf0gwHOAMHgNVUmvq+k"/>
     <elementParameter field="FILE" name="DBFILE" show="false" value="&quot;&quot;"/>
     <elementParameter field="DBTABLE" name="TABLE_STATS" show="false" value="&quot;&quot;"/>
     <elementParameter field="DBTABLE" name="TABLE_LOGS" show="false" value="&quot;&quot;"/>
@@ -412,7 +412,7 @@
     <elementParameter field="CHECK" name="NEED_AUTH" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_TYPE" show="false" value="BASIC"/>
     <elementParameter field="TEXT" name="AUTH_USERNAME" show="false" value="&quot;username&quot;"/>
-    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="PoLvNyVG2XWndNDdLn696A=="/>
+    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="enc:system.encryption.key.v1:S4E7eRGenbtPqWRQepgTY1+DT51hd9U+ZWY8plmjGCqdy7B8/lM="/>
     <elementParameter field="TEXT" name="AUTH_BEARER_TOKEN" show="false" value="&quot;&quot;"/>
     <elementParameter field="CHECK" name="NEED_AUTHORIZATION" show="false" value="false"/>
     <elementParameter field="TEXT" name="ROLE" show="false" value="&quot;&quot;"/>
@@ -445,7 +445,7 @@
     <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
     <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="8080"/>
     <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="enc:system.encryption.key.v1:fCe8r8t9Ie02yWKM4PtPESorycPwHYsn98z+beWX"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRESTClient_4">
       <column defaultValue="" key="false" length="0" name="body" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Document" usefulColumn="true"/>
@@ -556,6 +556,7 @@
     <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="UTF-8"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="CHECK" name="SPLIT_LIST" value="false"/>
     <metadata connector="FLOW" label="metadataTagsJL" name="tExtractJSONFields_2">
       <column comment="" key="false" length="7" name="id" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
       <column comment="" key="false" length="24" name="name" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
@@ -601,7 +602,7 @@
     <elementParameter field="TEXT" name="PORT" value="context.Mysqldb_port"/>
     <elementParameter field="TEXT" name="DBNAME" value="context.Mysqldb_name"/>
     <elementParameter field="TEXT" name="USER" value="context.Mysqldb_user_name"/>
-    <elementParameter field="PASSWORD" name="PASS" value="8pW6Nmy2kucwSCzFmMiQjqRjqZZDoYBsrWwDEDMQoYY="/>
+    <elementParameter field="PASSWORD" name="PASS" value="enc:system.encryption.key.v1:f76uoQd6ivd4wS3VzoCFtUAVAq7P/vGW/Ozj5O+lTlWT+PLVs0T9B+WFcb4+mJGzefQ+lw=="/>
     <elementParameter field="DBTABLE" name="TABLE" value="&quot;tags&quot;"/>
     <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
     <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT_OR_UPDATE"/>
@@ -805,7 +806,7 @@
     <elementParameter field="CHECK" name="NEED_AUTH" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_TYPE" show="false" value="BASIC"/>
     <elementParameter field="TEXT" name="AUTH_USERNAME" show="false" value="&quot;username&quot;"/>
-    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="PoLvNyVG2XWndNDdLn696A=="/>
+    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="enc:system.encryption.key.v1:au2QccF0oy1ZxBFXbapCERyJej9TkkaLQzhqDdiTd7pPY6KCPOs="/>
     <elementParameter field="TEXT" name="AUTH_BEARER_TOKEN" show="false" value="&quot;&quot;"/>
     <elementParameter field="CHECK" name="NEED_AUTHORIZATION" show="false" value="false"/>
     <elementParameter field="TEXT" name="ROLE" show="false" value="&quot;&quot;"/>
@@ -838,7 +839,7 @@
     <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
     <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="8080"/>
     <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="enc:system.encryption.key.v1:GVYarfxWKjUduchdU0lS28e4jrhdgGf5J1lIhNiJ"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRESTClient_1">
       <column defaultValue="" key="false" length="0" name="body" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Document" usefulColumn="true"/>
@@ -1053,6 +1054,7 @@
     <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="UTF-8"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="CHECK" name="SPLIT_LIST" value="false"/>
     <metadata connector="FLOW" label="metadataParties" name="tExtractJSONFields_1">
       <column comment="" key="false" length="8" name="id" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
       <column comment="" key="false" length="139" name="owner" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
@@ -1139,7 +1141,7 @@
     <elementParameter field="TEXT" name="PORT" value="context.Mysqldb_port"/>
     <elementParameter field="TEXT" name="DBNAME" value="context.Mysqldb_name"/>
     <elementParameter field="TEXT" name="USER" value="context.Mysqldb_user_name"/>
-    <elementParameter field="PASSWORD" name="PASS" value="8pW6Nmy2kucwSCzFmMiQjqRjqZZDoYBsrWwDEDMQoYY="/>
+    <elementParameter field="PASSWORD" name="PASS" value="enc:system.encryption.key.v1:VK/rGZSI9m3mzOeVQc4Tg0fmjYVZH9LnHPQChUENzEmQwzDDRgEI5aS6K2LSnk5nanhmyQ=="/>
     <elementParameter field="DBTABLE" name="TABLE" value="&quot;parties&quot;"/>
     <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
     <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT_OR_UPDATE"/>
@@ -1371,7 +1373,7 @@
     <elementParameter field="CHECK" name="NEED_AUTH" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_TYPE" show="false" value="BASIC"/>
     <elementParameter field="TEXT" name="AUTH_USERNAME" show="false" value="&quot;username&quot;"/>
-    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="PoLvNyVG2XWndNDdLn696A=="/>
+    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="enc:system.encryption.key.v1:t7K4XW9RuQWexuvx4gBNSupD+xRFoWZWHbtWDHjAUTdXW2mptbM="/>
     <elementParameter field="TEXT" name="AUTH_BEARER_TOKEN" show="false" value="&quot;&quot;"/>
     <elementParameter field="CHECK" name="NEED_AUTHORIZATION" show="false" value="false"/>
     <elementParameter field="TEXT" name="ROLE" show="false" value="&quot;&quot;"/>
@@ -1404,7 +1406,7 @@
     <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
     <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="8080"/>
     <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="enc:system.encryption.key.v1:M1pOP73E6u6iICMANjZD2e6WbUeg4p5iNm/M7GsS"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRESTClient_10">
       <column defaultValue="" key="false" length="0" name="body" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Document" usefulColumn="true"/>
@@ -1579,6 +1581,7 @@
     <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="UTF-8"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="CHECK" name="SPLIT_LIST" value="false"/>
     <metadata connector="FLOW" label="metadataTasksJL" name="tExtractJSONFields_5">
       <column comment="" key="false" length="9" name="id" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
       <column comment="" key="false" length="152" name="creator" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
@@ -1617,7 +1620,7 @@
     <elementParameter field="TEXT" name="PORT" value="context.Mysqldb_port"/>
     <elementParameter field="TEXT" name="DBNAME" value="context.Mysqldb_name"/>
     <elementParameter field="TEXT" name="USER" value="context.Mysqldb_user_name"/>
-    <elementParameter field="PASSWORD" name="PASS" value="8pW6Nmy2kucwSCzFmMiQjqRjqZZDoYBsrWwDEDMQoYY="/>
+    <elementParameter field="PASSWORD" name="PASS" value="enc:system.encryption.key.v1:fAmcSNgld7xcg9mJvX2SuFxiUt7FlUpoyojRezcEFExmMayLbC9ZSQj6esWVkv7W7FINPg=="/>
     <elementParameter field="DBTABLE" name="TABLE" value="&quot;Tasks&quot;"/>
     <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
     <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT_OR_UPDATE"/>
@@ -1755,7 +1758,7 @@
     <elementParameter field="CHECK" name="NEED_AUTH" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_TYPE" show="false" value="BASIC"/>
     <elementParameter field="TEXT" name="AUTH_USERNAME" show="false" value="&quot;username&quot;"/>
-    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="PoLvNyVG2XWndNDdLn696A=="/>
+    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="enc:system.encryption.key.v1:QjDtP6mb1YYOxkTHa4tZCThv1I7OPZtJjviGMvXswAL9CyRGpIg="/>
     <elementParameter field="TEXT" name="AUTH_BEARER_TOKEN" show="false" value="&quot;&quot;"/>
     <elementParameter field="CHECK" name="NEED_AUTHORIZATION" show="false" value="false"/>
     <elementParameter field="TEXT" name="ROLE" show="false" value="&quot;&quot;"/>
@@ -1788,7 +1791,7 @@
     <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
     <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="8080"/>
     <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="enc:system.encryption.key.v1:VFLW5ZlHjNWUW2DhQIRdxhqV6lGuTnKFdj0dnFhn"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRESTClient_6">
       <column defaultValue="" key="false" length="0" name="body" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Document" usefulColumn="true"/>
@@ -1959,6 +1962,7 @@
     <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="UTF-8"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="CHECK" name="SPLIT_LIST" value="false"/>
     <metadata connector="FLOW" label="metadataNotesJL" name="tExtractJSONFields_3">
       <column comment="" key="true" length="50" name="id" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
       <column comment="" key="false" length="10000" name="attachments___" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
@@ -2010,7 +2014,7 @@
     <elementParameter field="TEXT" name="PORT" value="context.Mysqldb_port"/>
     <elementParameter field="TEXT" name="DBNAME" value="context.Mysqldb_name"/>
     <elementParameter field="TEXT" name="USER" value="context.Mysqldb_user_name"/>
-    <elementParameter field="PASSWORD" name="PASS" value="8pW6Nmy2kucwSCzFmMiQjqRjqZZDoYBsrWwDEDMQoYY="/>
+    <elementParameter field="PASSWORD" name="PASS" value="enc:system.encryption.key.v1:IVBc7OAaNWWYp3pRcKUUI/4RBGC6lFbfdEMFcJ76AJ2VhQhfdrUMft+V0pUOFuYD0IdZ4g=="/>
     <elementParameter field="DBTABLE" name="TABLE" value="&quot;notes&quot;"/>
     <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
     <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT_OR_UPDATE"/>
@@ -2139,7 +2143,7 @@
     <elementParameter field="CHECK" name="NEED_AUTH" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_TYPE" show="false" value="BASIC"/>
     <elementParameter field="TEXT" name="AUTH_USERNAME" show="false" value="&quot;username&quot;"/>
-    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="PoLvNyVG2XWndNDdLn696A=="/>
+    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="enc:system.encryption.key.v1:Xd/eiv1mFfxFhd+84CIAslb9YP0JowR50fEQawdVY8nVxS7+/gI="/>
     <elementParameter field="TEXT" name="AUTH_BEARER_TOKEN" show="false" value="&quot;&quot;"/>
     <elementParameter field="CHECK" name="NEED_AUTHORIZATION" show="false" value="false"/>
     <elementParameter field="TEXT" name="ROLE" show="false" value="&quot;&quot;"/>
@@ -2172,7 +2176,7 @@
     <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
     <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="8080"/>
     <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="enc:system.encryption.key.v1:pfsp6GJhu5IrJSxkMbEyTCtKoalUnerdUY5NZYlM"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRESTClient_12">
       <column defaultValue="" key="false" length="0" name="body" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Document" usefulColumn="true"/>
@@ -2344,6 +2348,7 @@
     <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="UTF-8"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="CHECK" name="SPLIT_LIST" value="false"/>
     <metadata connector="FLOW" label="metadataTasksOpen" name="tExtractJSONFields_6">
       <column comment="" key="false" length="8" name="id" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
       <column comment="" key="false" length="51" name="category" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
@@ -2502,7 +2507,7 @@
     <elementParameter field="TEXT" name="PORT" value="context.Mysqldb_port"/>
     <elementParameter field="TEXT" name="DBNAME" value="context.Mysqldb_name"/>
     <elementParameter field="TEXT" name="USER" value="context.Mysqldb_user_name"/>
-    <elementParameter field="PASSWORD" name="PASS" value="8pW6Nmy2kucwSCzFmMiQjqRjqZZDoYBsrWwDEDMQoYY="/>
+    <elementParameter field="PASSWORD" name="PASS" value="enc:system.encryption.key.v1:P5Qcqx38BZy5WJBw7yoSQNCOJaRCbtrZn9+j7jEFXvTRhobeDWxyvl7PdgDzMTg5RvX5XA=="/>
     <elementParameter field="DBTABLE" name="TABLE" value="&quot;openTasks&quot;"/>
     <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
     <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT_OR_UPDATE"/>
@@ -2715,7 +2720,7 @@
     <elementParameter field="CHECK" name="NEED_AUTH" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_TYPE" show="false" value="BASIC"/>
     <elementParameter field="TEXT" name="AUTH_USERNAME" show="false" value="&quot;username&quot;"/>
-    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="PoLvNyVG2XWndNDdLn696A=="/>
+    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="enc:system.encryption.key.v1:NC1c3oletMXX4wB54GQAVSev7VYCG1OR0NIESYQESrjOy7fOlqs="/>
     <elementParameter field="TEXT" name="AUTH_BEARER_TOKEN" show="false" value="&quot;&quot;"/>
     <elementParameter field="CHECK" name="NEED_AUTHORIZATION" show="false" value="false"/>
     <elementParameter field="TEXT" name="ROLE" show="false" value="&quot;&quot;"/>
@@ -2748,7 +2753,7 @@
     <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
     <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="8080"/>
     <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="enc:system.encryption.key.v1:PgrzrLPGlYYvpxs/y/GvC65StCd3RinaaFlXf8Y5"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRESTClient_8">
       <column defaultValue="" key="false" length="0" name="body" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Document" usefulColumn="true"/>
@@ -2946,6 +2951,7 @@
     <elementParameter field="ENCODING_TYPE" name="ENCODING" show="false" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" show="false" value="UTF-8"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="CHECK" name="SPLIT_LIST" value="false"/>
     <metadata connector="FLOW" label="metadataEmailJL" name="tExtractJSONFields_4">
       <column comment="" key="false" length="-1" name="id" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
       <column comment="" key="false" length="1387" name="attachments___" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
@@ -2990,7 +2996,7 @@
     <elementParameter field="TEXT" name="PORT" value="context.Mysqldb_port"/>
     <elementParameter field="TEXT" name="DBNAME" value="context.Mysqldb_name"/>
     <elementParameter field="TEXT" name="USER" value="context.Mysqldb_user_name"/>
-    <elementParameter field="PASSWORD" name="PASS" value="8pW6Nmy2kucwSCzFmMiQjqRjqZZDoYBsrWwDEDMQoYY="/>
+    <elementParameter field="PASSWORD" name="PASS" value="enc:system.encryption.key.v1:dvo7G06Fkpxj8xQk76ddsOxj8E3aqbAI2J+nkXNbABeNwSRNfAlLfjqApnJfDv92O02n2Q=="/>
     <elementParameter field="DBTABLE" name="TABLE" value="&quot;emails&quot;"/>
     <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
     <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT_OR_UPDATE"/>
@@ -3217,7 +3223,7 @@
     <elementParameter field="CHECK" name="NEED_AUTH" value="false"/>
     <elementParameter field="CLOSED_LIST" name="AUTH_TYPE" show="false" value="BASIC"/>
     <elementParameter field="TEXT" name="AUTH_USERNAME" show="false" value="&quot;username&quot;"/>
-    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="PoLvNyVG2XWndNDdLn696A=="/>
+    <elementParameter field="PASSWORD" name="AUTH_PASSWORD" show="false" value="enc:system.encryption.key.v1:yLuDiekGFNBLLcuRkrkbxKZgpf56bDNYO0UYh7/RA0isPxf1t3s="/>
     <elementParameter field="TEXT" name="AUTH_BEARER_TOKEN" show="false" value="&quot;&quot;"/>
     <elementParameter field="CHECK" name="NEED_AUTHORIZATION" show="false" value="false"/>
     <elementParameter field="TEXT" name="ROLE" show="false" value="&quot;&quot;"/>
@@ -3250,7 +3256,7 @@
     <elementParameter field="TEXT" name="PROXY_HOST" show="false" value="&quot;61.163.92.4&quot;"/>
     <elementParameter field="TEXT" name="PROXY_PORT" show="false" value="8080"/>
     <elementParameter field="TEXT" name="PROXY_USERNAME" show="false" value="&quot;&quot;"/>
-    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="0RMsyjmybrE="/>
+    <elementParameter field="PASSWORD" name="PROXY_PASSWORD" show="false" value="enc:system.encryption.key.v1:vd+JlONkHOYgxGAGSWROFK8M/BBGw7ffWo0FFNFA"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
     <metadata connector="FLOW" name="tRESTClient_14">
       <column defaultValue="" key="false" length="0" name="body" nullable="true" originalLength="-1" precision="0" sourceType="" type="id_Document" usefulColumn="true"/>
@@ -3387,6 +3393,7 @@
     <elementParameter field="ENCODING_TYPE" name="ENCODING" value="&quot;UTF-8&quot;"/>
     <elementParameter field="TECHNICAL" name="ENCODING:ENCODING_TYPE" value="UTF-8"/>
     <elementParameter field="TEXT" name="CONNECTION_FORMAT" value="row"/>
+    <elementParameter field="CHECK" name="SPLIT_LIST" value="false"/>
     <metadata connector="FLOW" label="metadataAttachments" name="tExtractJSONFields_7">
       <column comment="" key="false" length="-1" name="noteID" nullable="true" originalLength="-1" pattern="" precision="-1" sourceType="" type="id_String" usefulColumn="true"/>
       <column comment="" key="false" length="8" name="id" nullable="true" pattern="&quot;dd-MM-yyyy&quot;" precision="0" type="id_String" usefulColumn="true"/>
@@ -3434,7 +3441,7 @@
     <elementParameter field="TEXT" name="PORT" value="context.Mysqldb_port"/>
     <elementParameter field="TEXT" name="DBNAME" value="context.Mysqldb_name"/>
     <elementParameter field="TEXT" name="USER" value="context.Mysqldb_user_name"/>
-    <elementParameter field="PASSWORD" name="PASS" value="8pW6Nmy2kucwSCzFmMiQjqRjqZZDoYBsrWwDEDMQoYY="/>
+    <elementParameter field="PASSWORD" name="PASS" value="enc:system.encryption.key.v1:kqJJMZiY/8+tdYlChwXXj/59UcOa3j1+0C+E6m7+jKQL77Q8ZgtTz7Pn1iBU811muXMOEQ=="/>
     <elementParameter field="DBTABLE" name="TABLE" value="&quot;documents&quot;"/>
     <elementParameter field="CLOSED_LIST" name="TABLE_ACTION" value="CREATE_IF_NOT_EXISTS"/>
     <elementParameter field="CLOSED_LIST" name="DATA_ACTION" value="INSERT_OR_UPDATE"/>
@@ -4040,13 +4047,13 @@
     <elementParameter field="COLOR" name="SUBJOB_TITLE_COLOR" show="false" value="92;131;150"/>
     <elementParameter field="COLOR" name="SUBJOB_COLOR" value="207;226;236"/>
   </subjob>
-<Signature xmlns="http://www.w3.org/2000/09/xmldsig#" Id="_1db9b7a9-7322-42f8-86a3-56cdad1bf26b"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/><DigestValue>p002ziIFl+pjEexStCr/3tpUbDdE+/lrmHo6QF0G+wbWAuNhHfkbvOFJ1gxlhjy6yELuDzG1FC5J
-WsizOBJeFQ==</DigestValue></Reference><Reference Type="http://www.w3.org/2000/09/xmldsig#SignatureProperties" URI="#_a94c2907-2ee0-4cf3-85fc-e0c42edfab59"><Transforms><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/><DigestValue>zLNKKvk6aIzd+CqO7LGVkIP4rwAePJGpc5y1IXTZRx8IJGFqfz0nC1C7Jhcgq421AWxZFECCH/xM
-yaltGIcebw==</DigestValue></Reference></SignedInfo><SignatureValue>c4+7ZyNFZ347QLyaOSMBG26GFfZrPKWXZYsfhHc4C6Ftt4c1fTd3iWWYG/lAcVjwDUsSPMu8e+A5
-doXKCkSdN6DyX2RqHab2GkLj1xsu4G0pOQT50mv2uvyyDICxdyS9boSmXMd0OhbP8+IPJ2W8X9uF
-nZTcWaaUSBJuT9mkIT67kGhE8EgIV3oO3S5chQkLCvgcjDlw5lNPIXmTK+AxLet7U5wM5Z8jWrXz
-cRno0rubfmH10CUo1Vyrj+6ni9WW8rZkQgEKL+0ayGhkUVm4hQK73+I8i4WPrn0ezjl/DHVYIjSx
-6+U710zD9dLGgNg2IPtYo5JvVwS2VidcvoQe7Q==</SignatureValue><KeyInfo><X509Data><X509SubjectName>C=FR,ST=Paris,L=Paris,O=Talend Inc.,OU=R&amp;D,CN=Talend Code Signing certificate</X509SubjectName><X509Certificate>MIIFADCCAuigAwIBAgIIA2OsD6bRyj0wDQYJKoZIhvcNAQELBQAwgY0xCzAJBgNVBAYTAkZSMQ4w
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#" Id="_fcff5220-184b-4342-884a-0a29b813cf8e"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/><DigestValue>3fWZ7mDuwCQDtMqzxH3Wnqh9Vs4y+Hr+Tu1ZgP4ktCqwLeceCAQNjwdxvSlgIqbQUh3okvQpuZ1O
+bdwLwwiNTA==</DigestValue></Reference><Reference Type="http://www.w3.org/2000/09/xmldsig#SignatureProperties" URI="#_febdd6af-b252-4bfe-a9d6-259ebc096648"><Transforms><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></Transforms><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/><DigestValue>iE6g5shppqIjoIezLNl5z5Dp8PiFvQju9PgDdPTbWiWFaEXWVQkumxgD43DyvkgOf6uW3TDa39il
+ODD0QIqT4A==</DigestValue></Reference></SignedInfo><SignatureValue>g0K2feVjWwnwluGFnyimnwS5ohf4sN/jGUryaACi9VVxyNNmYaalvQKT/VJWGGsmYsSch+fGBTbI
+6zjbS8kk5yEK4Dmz7rkjgQHyySAMByyI0nF5ACVXMtmn56ksFxdX1kNCziojrEoO5M19ltwQJLD2
+2hwBsxD+KhqOrZULuzGvjGYrFnIk/09JPqnRjIG9sE6pXsCfoe1lXjdzG+fP+3ffKFASoTYIUSzz
+bCUsMikzNXqq0Qlx7a1ju/z/yuhWhhTgVJoHTveYPWmYGvMwChB1EoyK5XOw7x7f91q9NIiamQPP
+Z9o4E9GI0BLRFH2Bq3Fy3tqxxkhL7JGTj77L6w==</SignatureValue><KeyInfo><X509Data><X509SubjectName>C=FR,ST=Paris,L=Paris,O=Talend Inc.,OU=R&amp;D,CN=Talend Code Signing certificate</X509SubjectName><X509Certificate>MIIFADCCAuigAwIBAgIIA2OsD6bRyj0wDQYJKoZIhvcNAQELBQAwgY0xCzAJBgNVBAYTAkZSMQ4w
 DAYDVQQIEwVQYXJpczEOMAwGA1UEBxMFUGFyaXMxFDASBgNVBAoTC1RhbGVuZCBJbmMuMQwwCgYD
 VQQLDANSJkQxFjAUBgNVBAMMDVRhbGVuZCBSJkQgQ0ExIjAgBgkqhkiG9w0BCQEWE3NlY3VyaXR5
 QHRhbGVuZC5jb20wHhcNMTkwNjAzMDgxODIwWhcNMjkwNjAzMDAwMDAwWjB7MSgwJgYDVQQDEx9U
@@ -4068,4 +4075,4 @@ hakvpzhOyLo91h8YAQrEZJdNuKA8IYmBrFZQZDCz0uywKSyFfzPyJhvxylCLG/iDPPfE0VWcrMJ/
 WQJly/2XPg/NBCTF3pSKS0kCiA7PeaI3cWkMYYA3PMwYDvzqs1opBRglG7ikj0bQxSm3lcjMuuvW
 gBRksFKjP3K/nztsjSoYITOM9jR29ReIL3v0E8RbAFwA2RGq6Dxd0ixfbucMesy5Gnr8tfYy6rW+
 qSQqd3ah4+PSzBNVwIB4ytpdrG3SlhCI2i2Th8ek8Sjsaquh9qPAerWNd2+84HWOOGj1Xe1qc6vg
-qqu6JoK9EXKDiwBqDVkueIa+MhamE1VDnhn2pPui</X509Certificate></X509Data></KeyInfo><Object><SignatureProperties><SignatureProperty Id="_a94c2907-2ee0-4cf3-85fc-e0c42edfab59" Target="#_1db9b7a9-7322-42f8-86a3-56cdad1bf26b"><Timestamp>2020-10-08 03:02:46</Timestamp></SignatureProperty></SignatureProperties></Object></Signature></talendfile:ProcessType>
+qqu6JoK9EXKDiwBqDVkueIa+MhamE1VDnhn2pPui</X509Certificate></X509Data></KeyInfo><Object><SignatureProperties><SignatureProperty Id="_febdd6af-b252-4bfe-a9d6-259ebc096648" Target="#_fcff5220-184b-4342-884a-0a29b813cf8e"><Timestamp>2020-10-08 03:07:41</Timestamp></SignatureProperty></SignatureProperties></Object></Signature></talendfile:ProcessType>

@@ -8,6 +8,19 @@
   <packaging>pom</packaging>
   <name>TACDEMO2 Codes Master</name>
   <url>http://www.talend.org/</url>
+  <modules>
+    <module>jobs/process/Foerderservice/suitetosugarcrm_rest_activity_load_1.2</module>
+    <module>jobs/process/Jobboerse/CapsulCRMtoDB/read_capsulecrmtosugarcrm_rest_load_4_a_1.2</module>
+    <module>jobs/process/Roechling/employeeservice_0.1</module>
+    <module>jobs/process/Roechling/employeeservice_1.0</module>
+    <module>jobs/process/Schramm/Lib/loadsettings_1.0</module>
+    <module>jobs/process/Spanset/US/ERP/interfacesagetosugarcrm_us_all_0.1</module>
+    <module>jobs/process/Spanset/US/ERP/sub_interfacecsvtosugarcrm_contact_rest_us_1.2</module>
+    <module>jobs/process/Spanset/US/ERP/sub_interfacecsvtosugarcrm_customer_rest_us_1.2</module>
+    <module>jobs/process/Spanset/US/ERP/sub_interfaceftpget_us_all_0.1</module>
+    <module>jobs/process/Spanset/US/ERP/sub_cont_filehandlinginboxread_us_0.1</module>
+    <module>jobs/process/Spanset/US/ERP/sub_cust_filehandlinginboxread_us_0.1</module>
+  </modules>
   <properties>
     <signer.version>7.3.1</signer.version>
     <talend.project.name>TACDEMO2</talend.project.name>
